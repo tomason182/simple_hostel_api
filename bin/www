@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import logger from "../src/utils/logger";
+
 /**
  * Module dependencies.
  */
@@ -7,6 +9,7 @@ require("dotenv").config();
 const app = require("../src/app");
 const debug = require("debug")("simple-hostel-api:server");
 const http = require("http");
+const connect = require("../src/adapters/config/mongo_config");
 
 /**
  * Get port from environment and store in Express.
@@ -22,12 +25,25 @@ app.set("port", port);
 const server = http.createServer(app);
 
 /**
+ * Connect to the Database
+ */
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, console.log(`Server started on port ${port}`));
+connect.connectClient().then(() => {
+  server.listen(port, console.log(`Server started on port ${port}`));
+});
+
 server.on("error", onError);
 server.on("listening", onListening);
+
+process.on("exit", onShutdown);
+process.on("SIGTERM", onShutdown);
+process.on("SIGINT", onShutdown);
+process.on("uncaughtException", onErrorShutdown);
+process.on("unhandledRejection", onErrorShutdown);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -83,4 +99,28 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
+}
+
+/**
+ * Handling shutdowns
+ */
+
+async function onShutdown() {
+  logger.info("Shutting down the server...");
+  await connect.disconnect();
+  server.close(() => {
+    logger.info("Closed out remaining connections");
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    logger.error("Forcing shutdown");
+    process.exit(1);
+  }, 10000);
+}
+
+async function onErrorShutdown(error) {
+  logger.error("An unexpected error occurred", error);
+  await connect.disconnect();
+  process.exit(1);
 }
