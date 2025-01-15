@@ -16,6 +16,11 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Require errors middleware
+const {
+  notFound,
+  errorLog,
+  errorHandler,
+} = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -25,7 +30,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+// Use error middleware
+app.use(notFound);
+app.use(errorLog);
+app.use(errorHandler);
 
 module.exports = app;
