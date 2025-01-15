@@ -10,6 +10,10 @@ const compression = require("compression");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
+// Import all necessary routes
+
+// Import core services
+
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
   console.log = function () {};
