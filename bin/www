@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import logger from "../src/utils/logger";
-
 /**
  * Module dependencies.
  */
@@ -10,6 +8,7 @@ const app = require("../src/app");
 const debug = require("debug")("simple-hostel-api:server");
 const http = require("http");
 const connect = require("../src/adapters/config/mongo_config");
+const logger = require("../src/utils/logger");
 
 /**
  * Get port from environment and store in Express.

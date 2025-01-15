@@ -53,7 +53,7 @@ class MongoConnect {
       if (this.isConnected) {
         await this.client.close();
         this.isConnected = false;
-        logger.log("MongoDB connection close");
+        logger.info("MongoDB connection close");
       }
     } catch (e) {
       logger.error("Error closing connection", e);
