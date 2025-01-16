@@ -3,30 +3,30 @@ const bcrypt = require("bcrypt");
 class User {
   constructor({
     username,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     role = null,
     isValidEmail = false,
   }) {
     this.username = username;
-    this.first_name = first_name;
-    this.last_name = last_name;
-    this.hashed_password = null;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.hashedPassword = null;
     this.role = role;
     this.isValidEmail = isValidEmail;
-    this.created_at = new Date();
-    this.updated_at = new Date();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
   }
 
   // Getter for hashed password
   getHashedPassword() {
-    return this.hashed_password;
+    return this.hashedPassword;
   }
 
   // Setter for hashed password
   async setHashedPassword(password, saltRounds = 10) {
     try {
-      this.hashed_password = await bcrypt.hash(password, saltRounds);
+      this.hashedPassword = await bcrypt.hash(password, saltRounds);
     } catch (e) {
       throw new Error("Error hashing the password");
     }
@@ -59,7 +59,7 @@ class User {
 
   // Setter for update at
   setUpdateAt() {
-    this.updated_At = new Date();
+    this.updatedAt = new Date();
   }
 }
 

@@ -15,8 +15,10 @@ class UserService {
 
     const user = new User(username, first_name, last_name);
 
-    await this.userRepository.save(this.user);
+    await this.userRepository.save(user);
 
     return user;
   }
 }
+
+module.exports = UserService;
