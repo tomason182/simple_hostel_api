@@ -9,13 +9,22 @@ class Property {
     email = null,
   }) {
     this.property_name = property_name;
-    this.street = street;
-    this.city = city;
-    this.postal_code = postal_code;
-    this.country_code = country_code;
-    this.phone_number = phone_number;
-    this.email = email;
+    this.address = {
+      street,
+      city,
+      postal_code,
+      country_code,
+    };
+    this.contact_info = {
+      phone_number,
+      email,
+    };
     this.create_at = new Date();
+    this.update_at = new Date();
+  }
+
+  // Update setter
+  setUpdateAt() {
     this.update_at = new Date();
   }
 }
