@@ -1,26 +1,63 @@
 class Property {
   constructor({
-    property_name,
+    propertyName,
     street = null,
     city = null,
-    postal_code = null,
-    country_code = null,
-    phone_number = null,
+    postalCode = null,
+    countryCode = null,
+    phoneNumber = null,
     email = null,
   }) {
-    this.property_name = property_name;
+    this.propertyName = propertyName;
     this.address = {
       street,
       city,
-      postal_code,
-      country_code,
+      postalCode,
+      countryCode,
     };
-    this.contact_info = {
-      phone_number,
+    this.contactInfo = {
+      phoneNumber,
       email,
     };
-    this.create_at = new Date();
-    this.update_at = new Date();
+    this.currencies = {
+      baseCurrency: null,
+      paymentCurrency: null,
+    };
+    this.policies = {
+      paymentMethod: [],
+      depositAmount: 0,
+      checkIn: {
+        from: null,
+        to: null,
+      },
+      checkOut: {
+        from: null,
+        to: null,
+      },
+      cancellationPolicy: {
+        allowCancellation: false,
+        days: 0,
+      },
+      petsPolicy: {
+        allow: false,
+      },
+      minorsPolicy: {
+        allow: false,
+        roomTypes: null, // all rooms | private rooms | null
+      },
+      description: "",
+    };
+
+    this.createAt = new Date();
+    this.updateAt = new Date();
+  }
+
+  // Setter for currencies
+  setCurrencies(baseCurrency = null, paymentCurrency = null) {
+    this.currencies = {
+      baseCurrency,
+      paymentCurrency,
+    };
   }
 
   // Update setter
