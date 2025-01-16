@@ -12,7 +12,6 @@ class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.hashedPassword = null;
-    this.role = role;
     this.isValidEmail = isValidEmail;
     this.createdAt = new Date();
     this.updatedAt = new Date();
