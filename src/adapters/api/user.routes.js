@@ -56,7 +56,7 @@ router.post("/register", [
         throw new Error("Unable to verify reCaptcha");
       }
 
-      const user = await userService.registerUser(
+      const user = await userService.createUser(
         username,
         password,
         firstName,

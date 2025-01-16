@@ -5,7 +5,7 @@ class UserService {
     this.userRepository = userRepository;
   }
 
-  async registerUser(username, first_name, last_name = null) {
+  async createUser(username, first_name, last_name = null) {
     try {
       // Check if the user already exist.
       const userExist = await this.userRepository.findUserByUsername(username);
