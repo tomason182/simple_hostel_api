@@ -38,14 +38,12 @@ class Property {
         allowCancellation: false,
         days: 0,
       },
-      petsPolicy: {
-        allow: false,
-      },
+      allowPets: false,
       minorsPolicy: {
         allow: false,
         roomTypes: null, // all rooms | private rooms | null
       },
-      description: "",
+      description: null,
     };
 
     this.createAt = new Date();
