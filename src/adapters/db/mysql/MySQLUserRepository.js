@@ -9,14 +9,15 @@ export class MySQLUserRepository extends UserRepository {
   async save(userData, connection) {
     try {
       const query =
-        "INSERT INTO users (username, first_name, last_name, hashed_password, role, is_valid_email, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?)";
+        "INSERT INTO users (username, first_name, last_name, hashed_password, is_valid_email, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?)";
       const params = [
         userData.username,
         userData.firstName,
         userData.lastName,
         userData.hashedPassword,
-        userData.role,
         userData.isValidEmail,
+        userData.createdAt,
+        userData.updatedAt,
       ];
 
       const [result] = await (connection || this.pool).execute(query, params);

@@ -9,8 +9,7 @@ class UserService {
     try {
       // Check if the user already exist.
       const userExist = await this.userRepository.findUserByUsername(
-        userData.username,
-        connection
+        userData.username
       );
 
       if (userExist !== null) {
@@ -20,8 +19,10 @@ class UserService {
       const user = new User(
         userData.username,
         userData.first_name,
-        userData.last_name
+        userData.last_name || null
       );
+
+      await user.setHashedPassword(userData.password);
 
       const result = await this.userRepository.save(user, connection);
 
