@@ -1,30 +1,41 @@
-require("dotenv").config();
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
-const logger = require("../src/utils/logger");
-const passport = require("passport");
-const cors = require("cors");
-const compression = require("compression");
-const helmet = require("helmet");
-const rateLimit = require("express-rate-limit");
+import "dotenv/config";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import logger from "../src/utils/logger.js";
+import passport from "passport";
+import cors from "cors";
+import compression from "compression";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 // Import all necessary routes
+import { userRoutes } from "./adapters/api/user.routes.js";
+
+// Import adapter repositories
+import { MySQLUserRepository } from "./adapters/db/mysql/MySQLUserRepository.js";
+import { MySQLPropertyRepository } from "./adapters/db/mysql/MySQLPropertyRepository.js";
+import { MySQLTransactionManager } from "./adapters/db/mysql/MySQLTransactionManager.js";
+import { MySQLAccessControlRepository } from "./adapters/db/mysql/MySQLAccessControlRepository.js";
 
 // Import core services
+import { propertyService } from "./core/PropertyService.js";
+import { UserService } from "./core/UserService.js";
+import { UserCompositeService } from "./core/UserCompositeService";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
   console.log = function () {};
 }
 
+// Get MySQL connection
+import { mysqlPool } from "./adapters/config/mysql_config";
+
+// Initialize adapters
+
 // Require errors middleware
-const {
-  notFound,
-  errorLog,
-  errorHandler,
-} = require("./middleware/errorMiddleware");
+import { notFound, errorLog, errorHandler } from "./middleware/errorMiddleware";
 
 // Define a stream object with a write function for morgan to use
 const stream = {
@@ -33,7 +44,7 @@ const stream = {
   },
 };
 
-const app = express();
+export const app = express();
 
 const corsOptions = {
   origen:
@@ -73,5 +84,3 @@ app.use(errorHandler);
 process.on("unhandledRejection", (reason, promise) => {
   logger.error("Unhandled rejection", reason);
 });
-
-module.exports = app;

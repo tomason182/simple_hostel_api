@@ -1,9 +1,9 @@
-const winston = require("winston");
-const path = require("path");
+import { winston } from "winston";
+import { path } from "path";
 
 const backendLogDir = path.join(__dirname, "logs/hostel_api");
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: "info",
   format: winston.format.json(),
   transports: [
@@ -24,5 +24,3 @@ if (process.env.NODE_ENV !== "production") {
     })
   );
 }
-
-module.exports = logger;

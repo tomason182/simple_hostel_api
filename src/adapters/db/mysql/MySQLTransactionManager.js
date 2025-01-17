@@ -1,6 +1,4 @@
-const {
-  TransactionManagerPort,
-} = require("../../../core/ports/TransactionManagerPort");
+import { TransactionManagerPort } from "../../../core/ports/TransactionManagerPort";
 
 export class MySQLTransactionManager extends TransactionManagerPort {
   constructor(mysqlPool) {

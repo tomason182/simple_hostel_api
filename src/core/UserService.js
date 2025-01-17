@@ -1,6 +1,6 @@
-const User = require("./entities/User");
+import { User } from "./entities/User.js";
 
-class UserService {
+export class UserService {
   constructor(userRepository) {
     this.userRepository = userRepository;
   }
@@ -34,5 +34,3 @@ class UserService {
     }
   }
 }
-
-module.exports = UserService;

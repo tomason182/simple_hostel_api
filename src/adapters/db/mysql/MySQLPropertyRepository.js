@@ -1,6 +1,4 @@
-const {
-  PropertyRepository,
-} = require("../../../core/ports/PropertyRepository");
+import { PropertyRepository } from "../../../core/ports/PropertyRepository";
 
 export class MySQLPropertyRepository extends PropertyRepository {
   constructor(mysqlPool) {

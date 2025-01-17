@@ -1,4 +1,4 @@
-const { UserRepository } = require("../../../core/ports/UserRepository");
+import { UserRepository } from "../../../core/ports/UserRepository";
 
 export class MySQLUserRepository extends UserRepository {
   constructor(mysqlPool) {

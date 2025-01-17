@@ -1,8 +1,8 @@
-const http = require("node:http");
-const https = require("node:https");
-const { URL } = require("node:url");
+import { http } from "node:http";
+import { https } from "node:https";
+import { URL } from "node:url";
 
-function fetchDataHelper(url, options = {}, bodyData = null) {
+export function fetchDataHelper(url, options = {}, bodyData = null) {
   return new Promise((resolve, reject) => {
     // Parse the URL
     const parseUrl = new URL(url);
@@ -71,5 +71,3 @@ function fetchDataHelper(url, options = {}, bodyData = null) {
     req.end();
   });
 }
-
-module.exports = fetchDataHelper;

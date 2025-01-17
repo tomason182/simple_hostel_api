@@ -3,12 +3,14 @@
 /**
  * Module dependencies.
  */
-require("dotenv").config();
-const app = require("../src/app");
-const debug = require("debug")("simple-hostel-api:server");
-const http = require("http");
-const connect = require("../src/adapters/config/mongo_config");
-const logger = require("../src/utils/logger");
+import "dotenv/config";
+import { app } from "../src/app";
+import createDebug from "debug";
+import http from "http";
+import mysqlPool from "../src/adapters/config/mysql_config";
+import logger from "../src/utils/logger";
+
+const debug = createDebug("simple-hostel-api:server");
 
 /**
  * Get port from environment and store in Express.
@@ -31,7 +33,7 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-connect.connectClient().then(() => {
+mysqlPool.connectPool().then(() => {
   server.listen(port, console.log(`Server started on port ${port}`));
 });
 
@@ -106,7 +108,7 @@ function onListening() {
 
 async function onShutdown() {
   logger.info("Shutting down the server...");
-  await connect.disconnect();
+  await mysqlPool.disconnect();
   server.close(() => {
     logger.info("Closed out remaining connections");
     process.exit(0);
@@ -120,6 +122,6 @@ async function onShutdown() {
 
 async function onErrorShutdown(error) {
   logger.error("An unexpected error occurred", error);
-  await connect.disconnect();
+  await mysqlPool.disconnect();
   process.exit(1);
 }

@@ -1,6 +1,6 @@
-const Property = require("./entities/Property");
+import { Property } from "./entities/Property";
 
-class PropertyService {
+export class PropertyService {
   constructor(PropertyRepository) {
     this.PropertyRepository = PropertyRepository;
   }
@@ -19,5 +19,3 @@ class PropertyService {
     }
   }
 }
-
-module.exports = PropertyService;

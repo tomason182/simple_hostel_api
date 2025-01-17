@@ -1,5 +1,5 @@
-const logger = require("../../utils/logger");
-const { MongoClient } = require("mongodb");
+import { logger } from "../../utils/logger";
+import { MongoClient } from "mongodb";
 
 class MongoConnect {
   constructor() {
@@ -69,5 +69,4 @@ class MongoConnect {
   }
 }
 
-const connect = new MongoConnect();
-module.exports = connect;
+export const connect = new MongoConnect();

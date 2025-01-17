@@ -1,6 +1,6 @@
-const bcrypt = require("bcrypt");
+import { bcrypt } from "bcrypt";
 
-class User {
+export class User {
   constructor({ username, firstName, lastName, isValidEmail = false }) {
     this.username = username;
     this.firstName = firstName;
@@ -55,5 +55,3 @@ class User {
     this.updatedAt = new Date();
   }
 }
-
-module.exports = User;

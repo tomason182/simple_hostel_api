@@ -1,13 +1,13 @@
-const express = require("express");
-const { userRegistrationSchema } = require("./schemas/userSchema");
-const verifyCaptcha = require("../../utils/verifyCaptcha");
-const userCompositeService = require("../../core/UserCompositeService");
-const {
+import express from "express";
+import { userRegistrationSchema } from "./schemas/userSchema";
+import { verifyCaptcha } from "../../utils/verifyCaptcha";
+import { UserCompositeService } from "../../core/UserCompositeService";
+import {
   checkSchema,
   validationResult,
   matchedData,
   body,
-} = require("express-validator");
+} from "express-validator";
 
 const router = express.Router();
 
@@ -67,7 +67,7 @@ router.post("/register", [
         email: username,
       };
 
-      const user = await userCompositeService.createUserWithProperty(
+      const user = await UserCompositeService.createUserWithProperty(
         userData,
         propertyData
       );

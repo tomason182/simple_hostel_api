@@ -1,4 +1,4 @@
-class Property {
+export class Property {
   constructor({
     propertyName,
     street = null,
@@ -63,12 +63,3 @@ class Property {
     this.update_at = new Date();
   }
 }
-
-module.exports = Property;
-
-const propertyName = "La casa de tomas";
-const email = "tomas@mail.com";
-
-const property = new Property({ propertyName, email });
-const phoneNumber = property.contactInfo.phoneNumber;
-console.log(phoneNumber);

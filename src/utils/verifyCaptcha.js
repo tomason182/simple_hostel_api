@@ -1,7 +1,7 @@
-require("dotenv").config();
-const fetchDataHelper = require("../utils/fetchDataHelper");
+import "dotenv/config";
+import { fetchDataHelper } from "../utils/fetchDataHelper.js";
 
-async function verifyCaptcha(captchaToken) {
+export async function verifyCaptcha(captchaToken) {
   const secretKey = process.env.SITE_PRIVATE_KEY;
   const url = "https://www.google.com/recaptcha/api/siteverify";
   const options = {
@@ -29,5 +29,3 @@ async function verifyCaptcha(captchaToken) {
     return false;
   }
 }
-
-module.exports = verifyCaptcha;

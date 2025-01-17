@@ -1,6 +1,6 @@
-const mysql = require("mysql2/promise");
-const logger = require("../../utils/logger");
-const { error } = require("winston");
+import { mysql } from "mysql2/promise";
+import { logger } from "../../utils/logger";
+import { error } from "winston";
 
 class MySQLConnect {
   constructor() {
@@ -94,6 +94,4 @@ class MySQLConnect {
   }
 }
 
-const connect = new MySQLConnect();
-
-module.exports = connect;
+export const mysqlPool = new MySQLConnect();
