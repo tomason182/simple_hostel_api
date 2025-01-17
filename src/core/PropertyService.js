@@ -1,4 +1,4 @@
-import { Property } from "./entities/Property";
+import { Property } from "./entities/Property.js";
 
 export class PropertyService {
   constructor(PropertyRepository) {

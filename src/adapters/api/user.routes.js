@@ -1,7 +1,7 @@
 import express from "express";
-import { userRegistrationSchema } from "./schemas/userSchema";
-import { verifyCaptcha } from "../../utils/verifyCaptcha";
-import { UserCompositeService } from "../../core/UserCompositeService";
+import { userRegistrationSchema } from "./schemas/userSchema.js";
+import { verifyCaptcha } from "../../utils/verifyCaptcha.js";
+import { UserCompositeService } from "../../core/UserCompositeService.js";
 import {
   checkSchema,
   validationResult,

@@ -1,4 +1,4 @@
-import { PropertyRepository } from "../../../core/ports/PropertyRepository";
+import { PropertyRepository } from "../../../core/ports/PropertyRepository.js";
 
 export class MySQLPropertyRepository extends PropertyRepository {
   constructor(mysqlPool) {

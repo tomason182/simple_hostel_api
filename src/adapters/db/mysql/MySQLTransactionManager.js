@@ -1,4 +1,4 @@
-import { TransactionManagerPort } from "../../../core/ports/TransactionManagerPort";
+import { TransactionManagerPort } from "../../../core/ports/TransactionManagerPort.js";
 
 export class MySQLTransactionManager extends TransactionManagerPort {
   constructor(mysqlPool) {

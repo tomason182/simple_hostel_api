@@ -22,7 +22,7 @@ import { MySQLAccessControlRepository } from "./adapters/db/mysql/MySQLAccessCon
 // Import core services
 import { propertyService } from "./core/PropertyService.js";
 import { UserService } from "./core/UserService.js";
-import { UserCompositeService } from "./core/UserCompositeService";
+import { UserCompositeService } from "./core/UserCompositeService.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -30,12 +30,16 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Get MySQL connection
-import { mysqlPool } from "./adapters/config/mysql_config";
+import { mysqlPool } from "./adapters/config/mysql_config.js";
 
 // Initialize adapters
 
 // Require errors middleware
-import { notFound, errorLog, errorHandler } from "./middleware/errorMiddleware";
+import {
+  notFound,
+  errorLog,
+  errorHandler,
+} from "./middleware/errorMiddleware.js";
 
 // Define a stream object with a write function for morgan to use
 const stream = {

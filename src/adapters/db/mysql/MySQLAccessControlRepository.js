@@ -1,4 +1,4 @@
-import { AccessControlService } from "../../../core/ports/AccessControlService";
+import { AccessControlService } from "../../../core/ports/AccessControlService.js";
 
 export class MySQLAccessControlRepository extends AccessControlService {
   constructor(mysqlPool) {

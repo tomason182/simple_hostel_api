@@ -1,4 +1,4 @@
-import { UserRepository } from "../../../core/ports/UserRepository";
+import { UserRepository } from "../../../core/ports/UserRepository.js";
 
 export class MySQLUserRepository extends UserRepository {
   constructor(mysqlPool) {
