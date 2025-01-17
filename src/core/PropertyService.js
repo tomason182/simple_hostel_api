@@ -7,10 +7,7 @@ class PropertyService {
 
   async createProperty(propertyName, email, connection = null) {
     try {
-      const property = new Property({
-        propertyName: propertyName,
-        email: email,
-      });
+      const property = new Property({ propertyName, email });
 
       await this.PropertyRepository.save(property, connection);
       return property;
