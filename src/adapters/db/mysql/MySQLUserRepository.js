@@ -20,7 +20,7 @@ export class MySQLUserRepository extends UserRepository {
       ];
 
       const [result] = await (connection || this.pool).execute(query, params);
-      return { id: result.insertedId, ...userData };
+      return { id: result.insertId, ...userData };
     } catch (e) {
       throw new Error(`Error occurred when saving a user: ${e.message}`);
     }

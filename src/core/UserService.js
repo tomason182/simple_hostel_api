@@ -5,11 +5,11 @@ class UserService {
     this.userRepository = userRepository;
   }
 
-  async createUser(username, first_name, last_name = null, connection = null) {
+  async createUser(userData, connection = null) {
     try {
       // Check if the user already exist.
       const userExist = await this.userRepository.findUserByUsername(
-        username,
+        userData.username,
         connection
       );
 
@@ -17,11 +17,15 @@ class UserService {
         throw new Error("User already exist");
       }
 
-      const user = new User(username, first_name, last_name);
+      const user = new User(
+        userData.username,
+        userData.first_name,
+        userData.last_name
+      );
 
-      await this.userRepository.save(user, connection);
+      const result = await this.userRepository.save(user, connection);
 
-      return user;
+      return result; // {id: userId, ...userData }
     } catch (e) {
       throw new Error(
         `An error occurred when trying to register a user: ${e.message}`

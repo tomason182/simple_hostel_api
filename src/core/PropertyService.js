@@ -5,12 +5,15 @@ class PropertyService {
     this.PropertyRepository = PropertyRepository;
   }
 
-  async createProperty(propertyName, email, connection = null) {
+  async createProperty(propertyData, connection) {
     try {
-      const property = new Property({ propertyName, email });
+      const property = new Property({
+        propertyName: propertyData.propertyName,
+        email: propertyData.email,
+      });
 
-      await this.PropertyRepository.save(property, connection);
-      return property;
+      const result = await this.PropertyRepository.save(property, connection);
+      return result;
     } catch (e) {
       throw `An error occurred when trying to create a property: ${e.message}`;
     }
