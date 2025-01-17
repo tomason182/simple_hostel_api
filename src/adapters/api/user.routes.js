@@ -1,7 +1,7 @@
 import express from "express";
 import { userRegistrationSchema } from "./schemas/userSchema.js";
 import { verifyCaptcha } from "../../utils/verifyCaptcha.js";
-import { UserCompositeService } from "../../core/UserCompositeService.js";
+import { userCompositeService } from "../../app.js";
 import {
   checkSchema,
   validationResult,
@@ -67,7 +67,7 @@ router.post("/register", [
         email: username,
       };
 
-      const user = await UserCompositeService.createUserWithProperty(
+      const user = await userCompositeService.createUserWithProperty(
         userData,
         propertyData
       );

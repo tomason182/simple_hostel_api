@@ -10,7 +10,7 @@ import compression from "compression";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
-// Import all necessary routes
+// Import Routes
 import { userRoutes } from "./adapters/api/user.routes.js";
 
 // Import adapter repositories
@@ -20,9 +20,10 @@ import { MySQLTransactionManager } from "./adapters/db/mysql/MySQLTransactionMan
 import { MySQLAccessControlRepository } from "./adapters/db/mysql/MySQLAccessControlRepository.js";
 
 // Import core services
-import { propertyService } from "./core/PropertyService.js";
-import { UserService } from "./core/UserService.js";
+import { PropertyService } from "./core/PropertyService.js";
+import { UserService, UserService } from "./core/UserService.js";
 import { UserCompositeService } from "./core/UserCompositeService.js";
+import { AccessControlService } from "./core/ports/AccessControlService.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -33,6 +34,21 @@ if (process.env.NODE_ENV === "production") {
 import { mysqlPool } from "./adapters/config/mysql_config.js";
 
 // Initialize adapters
+const userRepository = new MySQLUserRepository(mysqlPool);
+const propertyRepository = new MySQLPropertyRepository(mysqlPool);
+const accessControl = new MySQLAccessControlRepository(mysqlPool);
+const transactionManager = new MySQLTransactionManager(mysqlPool);
+
+// Initialize and export the core services
+export const propertyService = new PropertyService(propertyRepository);
+export const userService = new UserService(userRepository);
+export const accessControlService = new AccessControlService();
+export const userCompositeService = new UserCompositeService(
+  userService,
+  propertyService,
+  accessControlService,
+  transactionManager
+);
 
 // Require errors middleware
 import {
@@ -79,6 +95,9 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+// Use routes
+app.use("/api/v2/user", userRoutes);
 
 // Use error middleware
 app.use(notFound);
