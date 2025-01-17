@@ -1,7 +1,7 @@
 const express = require("express");
 const { userRegistrationSchema } = require("./schemas/userSchema");
 const verifyCaptcha = require("../../utils/verifyCaptcha");
-const userService = require("../../core/UserService");
+const userCompositeService = require("../../core/UserCompositeService");
 const {
   checkSchema,
   validationResult,
@@ -56,12 +56,22 @@ router.post("/register", [
         throw new Error("Unable to verify reCaptcha");
       }
 
-      const user = await userService.createUser(
+      const userData = {
         username,
         password,
         firstName,
-        propertyName
+      };
+
+      const propertyData = {
+        propertyName,
+        email: username,
+      };
+
+      const user = await userCompositeService.createUserWithProperty(
+        userData,
+        propertyData
       );
+
       return res.status(200).json(user);
     } catch (e) {
       next(e);
