@@ -1,13 +1,7 @@
 const bcrypt = require("bcrypt");
 
 class User {
-  constructor({
-    username,
-    firstName,
-    lastName,
-    role = null,
-    isValidEmail = false,
-  }) {
+  constructor({ username, firstName, lastName, isValidEmail = false }) {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
