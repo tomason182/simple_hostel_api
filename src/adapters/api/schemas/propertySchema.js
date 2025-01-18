@@ -6,9 +6,9 @@ export const propertySchema = {
     isLength: {
       options: {
         min: 1,
-        max: 250,
+        max: 255,
       },
-      errorMessage: "Property name maximum length is 250 characters",
+      errorMessage: "Property name maximum length is 255 characters",
     },
   },
   street: {
@@ -19,7 +19,7 @@ export const propertySchema = {
     isLength: {
       options: {
         min: 1,
-        max: 100,
+        max: 255,
       },
       errorMessage: "Street maximum length is 100 characters",
     },
@@ -32,7 +32,7 @@ export const propertySchema = {
     isLength: {
       options: {
         min: 1,
-        max: 100,
+        max: 255,
       },
       errorMonitor: "City name maximum length is 100 characters",
     },
