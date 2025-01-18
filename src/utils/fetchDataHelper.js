@@ -1,6 +1,6 @@
-import { http } from "node:http";
-import { https } from "node:https";
-import { URL } from "node:url";
+import http from "node:http";
+import https from "node:https";
+import URL from "node:url";
 
 export function fetchDataHelper(url, options = {}, bodyData = null) {
   return new Promise((resolve, reject) => {

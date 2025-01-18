@@ -1,4 +1,4 @@
-import { bcrypt } from "bcrypt";
+import bcrypt from "bcrypt";
 
 export class User {
   constructor({ username, firstName, lastName, isValidEmail = false }) {

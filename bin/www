@@ -6,9 +6,9 @@
 import "dotenv/config";
 import { app } from "../src/app.js";
 import createDebug from "debug";
-import http from "http";
-import mysqlPool from "../src/adapters/config/mysql_config.js";
-import logger from "../src/utils/logger.js";
+import http from "node:http";
+import { mysqlPool } from "../src/adapters/config/mysql_config.js";
+import { logger } from "../src/utils/logger.js";
 
 const debug = createDebug("simple-hostel-api:server");
 

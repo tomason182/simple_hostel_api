@@ -1,9 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
+import { fileURLToPath } from "url";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import logger from "../src/utils/logger.js";
+import { logger } from "../src/utils/logger.js";
 import passport from "passport";
 import cors from "cors";
 import compression from "compression";
@@ -11,7 +12,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 // Import Routes
-import { userRoutes } from "./adapters/api/user.routes.js";
+import { router as userRoutes } from "./adapters/api/user.routes.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -41,6 +42,9 @@ const corsOptions = {
       : ["http://localhost:5173", "http://localhost:5174"],
   credentials: true,
 };
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors(corsOptions));
 app.use(morgan("combined", { stream }));

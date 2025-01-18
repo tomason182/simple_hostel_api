@@ -9,7 +9,7 @@ import {
   body,
 } from "express-validator";
 
-const router = express.Router();
+export const router = express.Router();
 
 router.post("/register", [
   checkSchema(userRegistrationSchema),

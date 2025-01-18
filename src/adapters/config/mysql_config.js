@@ -1,6 +1,5 @@
-import { mysql } from "mysql2/promise";
+import mysql from "mysql2/promise";
 import { logger } from "../../utils/logger.js";
-import { error } from "winston";
 
 class MySQLConnect {
   constructor() {
