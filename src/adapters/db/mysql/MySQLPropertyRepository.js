@@ -20,7 +20,7 @@ export class MySQLPropertyRepository extends PropertyRepository {
 
       // Insert property contact info in contact_info table
       const contactInfoQuery =
-        "INSERT INTO contact_info (property_id, phone_number, email) VALUES(?,?,?)";
+        "INSERT INTO contacts_info (property_id, phone_number, email) VALUES(?,?,?)";
       const contactInfoParams = [
         result.insertId,
         propertyData.contactInfo.phoneNumber,

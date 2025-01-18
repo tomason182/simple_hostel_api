@@ -5,16 +5,6 @@ CREATE DATABASE IF NOT EXISTS simple_hostel_db;
 USE simple_hostel_db;
 
 
--- Create access control table
-CREATE TABLE IF NOT EXISTS access_control (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  property_id INT NOT NULL,
-  role ENUM("admin", "manager", "employee") NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user(id),
-  FOREIGN KEY (property_id) REFERENCES property(id) 
-)
-
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,15 +15,25 @@ CREATE TABLE IF NOT EXISTS users (
   is_valid_email BOOLEAN NOT NULL,
   last_resend_email BIGINT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Create property table
-CREATE TABLE IF NOT EXISTS property (
+CREATE TABLE IF NOT EXISTS properties (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_name VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Create access control table
+CREATE TABLE IF NOT EXISTS access_control (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  property_id INT NOT NULL,
+  role ENUM("admin", "manager", "employee") NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (property_id) REFERENCES properties(id)
 );
 
 -- Create addresses table
@@ -44,16 +44,16 @@ CREATE TABLE IF NOT EXISTS addresses (
   city VARCHAR(255),
   postal_code INT(20),
   country_code VARCHAR(2),
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create contact info table
-CREATE TABLE IF NOT EXISTS contact_info (
+CREATE TABLE IF NOT EXISTS contacts_info (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
   phone_number VARCHAR(30),
   email VARCHAR(255),
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create currencies table
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS currencies (
   property_id INT NOT NULL,
   base_currency VARCHAR(3),
   payment_currency VARCHAR(3),
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create policies table
@@ -79,8 +79,8 @@ CREATE TABLE IF NOT EXISTS policies (
   allow_minors BOOLEAN DEFAULT false,
   minors_room_types ENUM("all_rooms", "only_private_rooms"),
   description TEXT, 
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
-)
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
 
 -- Create cancellation policies table.
 CREATE TABLE IF NOT EXISTS cancellation_policies (
@@ -88,10 +88,8 @@ CREATE TABLE IF NOT EXISTS cancellation_policies (
   property_id INT NOT NULL,
   days_before_check_in INT,
   amount_refound DECIMAL(3,2),
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
-)
-
-
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
 -- Create room types table.
 
 -- Create products table.
