@@ -38,11 +38,25 @@ export const userRegistrationSchema = {
       errorMessage: "First name must not be empty",
     },
     escape: true,
+    isLength: {
+      options: {
+        min: 1,
+        max: 70,
+      },
+      errorMessage:
+        "First name is required and maximum length is 70 characters",
+    },
   },
   lastName: {
     in: ["body"],
     optional: true,
     trim: true,
     escape: true,
+    isLength: {
+      options: {
+        max: 100,
+      },
+      errorMessage: "Last name maximum length is 100 characters",
+    },
   },
 };
