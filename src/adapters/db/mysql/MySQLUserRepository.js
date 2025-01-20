@@ -9,15 +9,14 @@ export class MySQLUserRepository extends UserRepository {
   async save(userData, connection) {
     try {
       const query =
-        "INSERT INTO users (username, first_name, last_name, hashed_password, is_valid_email, created_at, updated_at) VALUES(?,?,?,?,?,?,?,?)";
+        "INSERT INTO users (username, first_name, last_name, password_hash, is_valid_email, last_resend_email) VALUES(?,?,?,?,?,?)";
       const params = [
         userData.username,
         userData.firstName,
         userData.lastName,
         userData.hashedPassword,
         userData.isValidEmail,
-        userData.createdAt,
-        userData.updatedAt,
+        userData.lastResendEmail,
       ];
 
       const [result] = await (connection || this.pool).execute(query, params);
@@ -29,7 +28,7 @@ export class MySQLUserRepository extends UserRepository {
 
   async findUserByUsername(username) {
     try {
-      const query = "SELECT * FROM user WHERE  username = ? LIMIT 1";
+      const query = "SELECT * FROM users WHERE  username = ? LIMIT 1";
       const params = [username];
 
       const [result] = await this.pool.execute(query, params);
