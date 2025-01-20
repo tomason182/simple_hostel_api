@@ -5,3 +5,6 @@ export const router = express.Router();
 
 // Register new user
 router.post("/register", userController.userRegister);
+
+// Confirm email route
+router.post("/confirm-email/:token");
