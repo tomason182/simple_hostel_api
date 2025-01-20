@@ -11,8 +11,8 @@ export class User {
   }
 
   // Getter for hashed password
-  getHashedPassword() {
-    return this.hashedPassword;
+  getPasswordHash() {
+    return this.passwordHash;
   }
 
   // Setter for hashed password
