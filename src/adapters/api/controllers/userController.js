@@ -6,8 +6,14 @@ import {
   validationResult,
   matchedData,
   body,
+  param,
 } from "express-validator";
 
+import { services } from "../../../../bin/www";
+
+// @desc    Register a new user
+// @route   POST /api/v2/users/register
+// @access  Public
 export const userRegister = [
   checkSchema(userRegistrationSchema),
   body("propertyName")
@@ -66,8 +72,6 @@ export const userRegister = [
         email: username,
       };
 
-      const services = initializeServices();
-
       const userWithProperty =
         await services.userCompositeService.createUserWithProperty(
           userData,
@@ -77,6 +81,27 @@ export const userRegister = [
       return res
         .status(200)
         .json({ msg: "Email sent", access_control_id: userWithProperty });
+    } catch (e) {
+      next(e);
+    }
+  },
+];
+
+// @desc    finish user registration
+// @route   api/v2/confirm-email/:token
+// @access  Public
+export const finishUserRegister = [
+  param("token").isJWT().withMessage("Invalid JWT token"),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const token = req.params.token;
+
+      console.log(token);
     } catch (e) {
       next(e);
     }
