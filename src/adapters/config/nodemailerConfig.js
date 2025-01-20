@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { NodemailerEmailNotificationRepository } from "../notifications/email/NodemailerEmailNotificationRepository.js";
 
 export function createEmailNotification() {
@@ -9,14 +10,8 @@ export function createEmailNotification() {
     port: process.env.NODE_ENV === "production" ? 465 : 587,
     secure: process.env.NODE_ENV === "production",
     auth: {
-      user:
-        process.env.NODE_ENV === "production"
-          ? process.env.ACCOUNT_USER_PROD
-          : process.env.ACCOUNT_USER_DEV,
-      pass:
-        process.env.NODE_ENV === "production"
-          ? process.env.ACCOUNT_PASS_PROD
-          : process.env.ACCOUNT_PASS_DEV,
+      user: process.env.ACCOUNT_USER,
+      pass: process.env.ACCOUNT_PASS,
     },
     tls: {
       rejectUnauthorized: process.env.NODE_ENV === "production",

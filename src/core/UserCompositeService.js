@@ -35,14 +35,10 @@ export class UserCompositeService {
         const token = jwtTokenGenerator(user.id);
 
         const confirmationLink =
-          (process.env.NODE_ENV = "production"
-            ? process.env.API_URL_PROD
-            : process.env.API_URL_DEV) +
-          "accounts/email-validation/" +
-          token;
+          process.env.API_URL + "accounts/email-validation/" + token;
 
         const to = userData.username;
-        const from = `Simple Hostel <${process.env.ACCOUNT_USER_DEV}>`;
+        const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
         const subject = "Confirm your email for SimpleHostel";
         const body = confirmationMailBody(userData, confirmationLink);
 

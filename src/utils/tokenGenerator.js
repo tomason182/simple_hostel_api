@@ -7,6 +7,7 @@ export function jwtTokenGenerator(userId, expiresIn = "8h") {
   };
 
   const token = sign(payload, process.env.JWT_SECRET, { expiresIn });
+  return token;
 }
 
 export function jwtTokenValidation(token) {
