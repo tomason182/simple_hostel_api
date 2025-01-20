@@ -10,7 +10,9 @@ import { MySQLAccessControlRepository } from "../adapters/db/mysql/MySQLAccessCo
 import { PropertyService } from "../core/PropertyService.js";
 import { UserService } from "../core/UserService.js";
 import { UserCompositeService } from "../core/UserCompositeService.js";
-import { AccessControlService } from "../core/ports/AccessControlService.js";
+
+// Import nodemailer email notification service
+import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -21,15 +23,17 @@ export default function initializeServices() {
   const propertyRepository = new MySQLPropertyRepository(mysqlPool);
   const accessControlService = new MySQLAccessControlRepository(mysqlPool);
   const transactionManager = new MySQLTransactionManager(mysqlPool);
+  const emailService = createEmailNotification();
 
-  // Initialize and export the core services
+  // Initialize the core services
   const propertyService = new PropertyService(propertyRepository);
   const userService = new UserService(userRepository);
   const userCompositeService = new UserCompositeService(
     userService,
     propertyService,
     accessControlService,
-    transactionManager
+    transactionManager,
+    emailService
   );
 
   return {
