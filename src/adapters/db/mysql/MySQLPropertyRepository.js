@@ -9,14 +9,11 @@ export class MySQLPropertyRepository extends PropertyRepository {
   async save(propertyData, connection) {
     try {
       // Insert property name in property table
-      const propertyQuery =
-        "INSERT INTO properties (property_name,created_at, update_at) VALUES(?,?,?)";
-      const propertyParams = [
-        propertyData.propertyName,
-        propertyData.createdAt,
-        propertyData.updateAt,
-      ];
+      const propertyQuery = "INSERT INTO properties (property_name) VALUES(?)";
+      const propertyParams = [propertyData.propertyName];
       const [result] = await connection.execute(propertyQuery, propertyParams);
+
+      console.log("Property id: ", result.insertId);
 
       // Insert property contact info in contact_info table
       const contactInfoQuery =
@@ -49,36 +46,6 @@ export class MySQLPropertyRepository extends PropertyRepository {
         propertyData.currencies.paymentCurrency,
       ];
       await connection.execute(currenciesQuery, currenciesParams);
-
-      // Insert property policies in policies table
-      const policies = propertyData.policies;
-      const policiesQuery =
-        "INSERT INTO policies (property_id, deposit_amount, check_in_from, check_in_to, check_out_from, check_out_to, allow_cancellation, cancellation_days, allow_pets, minors_allow, minors_room_types, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      const policiesParams = [
-        result.insertId,
-        policies.depositAmount,
-        policies.checkIn.from,
-        policies.checkIn.to,
-        policies.checkOut.from,
-        policies.checkOut.to,
-        policies.cancellationPolicy.allowCancellation,
-        policies.cancellationPolicy.days,
-        policies.allowPets,
-        policies.minorsPolicy.allow,
-        policies.minorsPolicy.roomTypes,
-        policies.description,
-      ];
-      await connection.execute(policiesQuery, policiesParams);
-
-      // Insert payment methods
-      const paymentMethods = propertyData.policies.paymentMethods;
-      const paymentQuery =
-        "INSERT INTO payment_methods (property_id, method) VALUES (?,?)";
-
-      for (const method of paymentMethods) {
-        const paymentParam = [result.insertId, method];
-        await connection.execute(paymentQuery, paymentParam);
-      }
 
       return { id: result.insertId, ...propertyData };
     } catch (e) {
