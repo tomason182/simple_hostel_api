@@ -16,13 +16,15 @@ export class UserService {
         throw new Error("User already exist");
       }
 
-      const user = new User(
-        userData.username,
-        userData.first_name,
-        userData.last_name || null
-      );
+      const user = new User({
+        username: userData.username,
+        firstName: userData.firstName,
+        lastName: userData.lastName || null,
+      });
 
       await user.setHashedPassword(userData.password);
+
+      user.setEmailResend();
 
       const result = await this.userRepository.save(user, connection);
 
