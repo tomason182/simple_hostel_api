@@ -22,7 +22,7 @@ export class UserService {
         lastName: userData.lastName || null,
       });
 
-      await user.setHashedPassword(userData.password);
+      await user.setPasswordHahs(userData.password);
 
       user.setEmailResend();
 

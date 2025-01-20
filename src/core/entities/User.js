@@ -5,7 +5,7 @@ export class User {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.hashedPassword = null;
+    this.passwordHash = null;
     this.isValidEmail = isValidEmail;
     this.lastResendEmail = null;
   }
@@ -16,18 +16,18 @@ export class User {
   }
 
   // Setter for hashed password
-  async setHashedPassword(password, saltRounds = 10) {
+  async setPasswordHahs(password, saltRounds = 10) {
     try {
-      this.hashedPassword = await bcrypt.hash(password, saltRounds);
+      this.passwordHash = await bcrypt.hash(password, saltRounds);
     } catch (e) {
       throw new Error("Error hashing the password");
     }
   }
 
   // Method for compare passwords
-  async comparePasswords(password, hashedPassword) {
+  async comparePasswords(password, passwordHash) {
     try {
-      const result = await bcrypt.compare(password, hashedPassword);
+      const result = await bcrypt.compare(password, passwordHash);
       return result;
     } catch (e) {
       throw new Error("An error occurred verifying the password");

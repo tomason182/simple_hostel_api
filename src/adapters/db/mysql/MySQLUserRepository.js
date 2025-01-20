@@ -14,7 +14,7 @@ export class MySQLUserRepository extends UserRepository {
         userData.username,
         userData.firstName,
         userData.lastName,
-        userData.hashedPassword,
+        userData.passwordHash,
         userData.isValidEmail,
         userData.lastResendEmail,
       ];
