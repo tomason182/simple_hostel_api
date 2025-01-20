@@ -50,7 +50,7 @@ export class UserCompositeService {
 
         return accessControlID;
       } catch (e) {
-        throw new Error(`Unable to create user with property: ${e.message}`);
+        throw e;
       }
     });
   }

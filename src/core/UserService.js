@@ -30,9 +30,7 @@ export class UserService {
 
       return result; // {id: userId, ...userData }
     } catch (e) {
-      throw new Error(
-        `An error occurred when trying to register a user: ${e.message}`
-      );
+      throw e;
     }
   }
 }
