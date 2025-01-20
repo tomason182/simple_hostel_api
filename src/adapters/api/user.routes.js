@@ -71,12 +71,15 @@ router.post("/register", [
 
       const services = initializeServices();
 
-      const user = await services.userCompositeService.createUserWithProperty(
-        userData,
-        propertyData
-      );
+      const userWithProperty =
+        await services.userCompositeService.createUserWithProperty(
+          userData,
+          propertyData
+        );
 
-      return res.status(200).json(user);
+      return res
+        .status(200)
+        .json({ msg: "Email sent", access_control_id: userWithProperty });
     } catch (e) {
       next(e);
     }
