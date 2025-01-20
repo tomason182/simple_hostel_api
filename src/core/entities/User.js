@@ -1,14 +1,13 @@
 import bcrypt from "bcrypt";
 
 export class User {
-  constructor({ username, firstName, lastName, isValidEmail = false }) {
+  constructor({ username, firstName, lastName = null, isValidEmail = false }) {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
     this.hashedPassword = null;
     this.isValidEmail = isValidEmail;
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
+    this.lastResendEmail = null;
   }
 
   // Getter for hashed password
@@ -45,13 +44,13 @@ export class User {
     return this.role;
   }
 
+  // Set last resend email
+  setEmailResend() {
+    this.lastResendEmail = Date.now();
+  }
+
   // Setter for valid email
   setValidEmail(isValid) {
     this.isValidEmail = isValid;
-  }
-
-  // Setter for update at
-  setUpdateAt() {
-    this.updatedAt = new Date();
   }
 }
