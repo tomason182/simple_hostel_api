@@ -1,4 +1,4 @@
-import { NodemailerEmailNotificationRepository } from "../notifications/email/NodemailerEmailNotificationRepository";
+import { NodemailerEmailNotificationRepository } from "../notifications/email/NodemailerEmailNotificationRepository.js";
 
 export function createEmailNotification() {
   const nodemailerConfig = {

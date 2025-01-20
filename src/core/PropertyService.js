@@ -12,8 +12,6 @@ export class PropertyService {
         email: propertyData.email,
       });
 
-      console.log("Property data: ", property);
-
       const result = await this.PropertyRepository.save(property, connection);
       return result;
     } catch (e) {

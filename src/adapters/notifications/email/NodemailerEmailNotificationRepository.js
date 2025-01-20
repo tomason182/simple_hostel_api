@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { emailNotificationService } from "../../../core/ports/EmailNotificationService";
+import { emailNotificationService } from "../../../core/ports/EmailNotificationService.js";
 
 export class NodemailerEmailNotificationRepository extends emailNotificationService {
   constructor(config) {
