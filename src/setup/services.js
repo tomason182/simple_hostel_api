@@ -19,13 +19,12 @@ export default function initializeServices() {
 
   const userRepository = new MySQLUserRepository(mysqlPool);
   const propertyRepository = new MySQLPropertyRepository(mysqlPool);
-  const accessControl = new MySQLAccessControlRepository(mysqlPool);
+  const accessControlService = new MySQLAccessControlRepository(mysqlPool);
   const transactionManager = new MySQLTransactionManager(mysqlPool);
 
   // Initialize and export the core services
   const propertyService = new PropertyService(propertyRepository);
   const userService = new UserService(userRepository);
-  const accessControlService = new AccessControlService();
   const userCompositeService = new UserCompositeService(
     userService,
     propertyService,

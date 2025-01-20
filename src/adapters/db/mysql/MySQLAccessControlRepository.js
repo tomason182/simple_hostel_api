@@ -13,7 +13,7 @@ export class MySQLAccessControlRepository extends AccessControlService {
         "INSERT INTO access_control (user_id, property_id, role) VALUES (?,?,?)";
       const params = [userId, propertyId, role];
 
-      const [result] = (connection || this.pool).execute(query, params);
+      const [result] = await (connection || this.pool).execute(query, params);
       return result.insertId;
     } catch (e) {
       throw e;

@@ -19,7 +19,7 @@ export class UserCompositeService {
           PropertyData,
           connection
         );
-        const role = "owner";
+        const role = "admin";
         const accessControlID = await this.accessControlService.save(
           user.id,
           property.id,
@@ -29,7 +29,7 @@ export class UserCompositeService {
 
         return accessControlID;
       } catch (e) {
-        throw e;
+        throw new Error(`Unable to create user with property: ${e.message}`);
       }
     });
   }
