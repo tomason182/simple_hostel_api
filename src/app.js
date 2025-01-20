@@ -12,7 +12,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 // Import Routes
-import { router as userRoutes } from "./adapters/api/user.routes.js";
+import { router as userRoutes } from "./adapters/api/routes/userRoutes.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {

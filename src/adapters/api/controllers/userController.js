@@ -1,7 +1,6 @@
-import express from "express";
-import { userRegistrationSchema } from "./schemas/userSchema.js";
-import { verifyCaptcha } from "../../utils/verifyCaptcha.js";
-import initializeServices from "../../setup/services.js";
+import { userRegistrationSchema } from "../schemas/userSchema.js";
+import { verifyCaptcha } from "../../../utils/verifyCaptcha.js";
+import initializeServices from "../../../setup/services.js";
 import {
   checkSchema,
   validationResult,
@@ -9,15 +8,13 @@ import {
   body,
 } from "express-validator";
 
-export const router = express.Router();
-
-router.post("/register", [
+export const userRegister = [
   checkSchema(userRegistrationSchema),
   body("propertyName")
     .trim()
     .escape()
-    .isLength({ min: 1, max: 200 })
-    .withMessage("Property name maximum length is 200 characters"),
+    .isLength({ min: 1, max: 255 })
+    .withMessage("Property name maximum length is 255 characters"),
   body("acceptTerms").isBoolean().withMessage("Accept terms must be boolean"),
   body("captchaToken").trim().escape(),
   async (req, res, next) => {
@@ -47,16 +44,16 @@ router.post("/register", [
       // Comment accept terms and captcha validation for testing.
 
       /*       if (acceptTerms !== true) {
-        throw new Error(
-          "Terms and conditions must be accepted before registration"
-        );
-      }
-
-      isCaptchaTokenValid = await verifyCaptcha(captchaToken);
-
-      if (isCaptchaTokenValid === false) {
-        throw new Error("Unable to verify reCaptcha");
-      } */
+            throw new Error(
+              "Terms and conditions must be accepted before registration"
+            );
+          }
+    
+          isCaptchaTokenValid = await verifyCaptcha(captchaToken);
+    
+          if (isCaptchaTokenValid === false) {
+            throw new Error("Unable to verify reCaptcha");
+          } */
 
       const userData = {
         username,
@@ -84,4 +81,4 @@ router.post("/register", [
       next(e);
     }
   },
-]);
+];
