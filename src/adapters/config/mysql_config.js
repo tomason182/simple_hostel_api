@@ -93,4 +93,4 @@ class MySQLConnect {
   }
 }
 
-export const mysqlPool = new MySQLConnect();
+export const mysqlConnect = new MySQLConnect();

@@ -7,7 +7,7 @@ import "dotenv/config";
 import { app } from "../src/app.js";
 import createDebug from "debug";
 import http from "node:http";
-import { mysqlPool } from "../src/adapters/config/mysql_config.js";
+import { mysqlConnect } from "../src/adapters/config/mysql_config.js";
 import { logger } from "../src/utils/logger.js";
 
 const debug = createDebug("simple-hostel-api:server");
@@ -33,7 +33,7 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-mysqlPool.connectPool().then(() => {
+mysqlConnect.connectPool().then(() => {
   server.listen(port, console.log(`Server started on port ${port}`));
 });
 
@@ -108,7 +108,7 @@ function onListening() {
 
 async function onShutdown() {
   logger.info("Shutting down the server...");
-  await mysqlPool.disconnect();
+  await mysqlConnect.disconnect();
   server.close(() => {
     logger.info("Closed out remaining connections");
     process.exit(0);
@@ -122,6 +122,6 @@ async function onShutdown() {
 
 async function onErrorShutdown(error) {
   logger.error("An unexpected error occurred", error);
-  await mysqlPool.disconnect();
+  await mysqlConnect.disconnect();
   process.exit(1);
 }

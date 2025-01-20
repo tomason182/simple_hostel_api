@@ -69,7 +69,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Use routes
-app.use("/api/v2/user", userRoutes);
+app.use("/api/v2/users", userRoutes);
 
 // Use error middleware
 app.use(notFound);
