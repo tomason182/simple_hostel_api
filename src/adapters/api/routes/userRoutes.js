@@ -16,4 +16,4 @@ router.post(
 );
 
 // Create a new user to an existing property
-router.post("/create");
+router.post("/create", userController.createUser);

@@ -6,7 +6,6 @@ import {
   matchedData,
   body,
   param,
-  matchedData,
 } from "express-validator";
 
 import { services } from "../../../../bin/www";
@@ -139,7 +138,7 @@ export const resendEmailVerification = [
 // @access  Private
 export const createUser = [
   checkSchema(userRegistrationSchema),
-  body(role)
+  body("role")
     .trim()
     .isIn(["admin", "manager", "employee"])
     .withMessage("Role must be one of the following: admin, manager, employee"),
@@ -150,21 +149,22 @@ export const createUser = [
         return res.status(400).json(errors.array());
       }
 
-      const matchedData = matchedData(req);
+      const { username, password, firstName, lastName, role } =
+        matchedData(req);
 
       const userData = {
-        username: matchedData.username,
-        password: matchedData.password,
-        firstName: matchedData.firstName,
-        lastName: matchedData.lastName || null,
-        role: matchedData.role,
+        username,
+        password,
+        firstName,
+        lastName: lastName || null,
+        role,
       };
 
       if (role === "admin") {
         throw new Error("Admin user can not be created");
       }
 
-      const propertyId = 1; // Ver de donde sacar property id.
+      const propertyId = 19; // Ver de donde sacar property id.
 
       const result =
         await services.userCompositeService.createUserWithAccessControl(
