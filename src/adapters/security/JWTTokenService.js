@@ -1,4 +1,4 @@
-import { TokenService } from "../../core/ports/TokenService";
+import { TokenService } from "../../core/ports/TokenService.js";
 import pkg from "jsonwebtoken";
 const { sign, verify } = pkg;
 

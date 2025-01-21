@@ -44,7 +44,7 @@ mysqlConnect
   .then(() => {
     services = initializeServices();
   })
-  .catch(e => logger.error("Ocurrio un error."));
+  .catch(e => logger.error("Ocurrio un error.", e));
 
 server.on("error", onError);
 server.on("listening", onListening);
