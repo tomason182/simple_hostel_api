@@ -37,7 +37,8 @@ export class UserService {
 
   async validateEmail(token) {
     try {
-      const userId = await this.tokenService.verifyToken(token);
+      const decoded = await this.tokenService.verifyToken(token);
+      const userId = decoded.sub;
       const result = await this.userRepository.validateUserEmail(userId);
       return result;
     } catch (e) {
