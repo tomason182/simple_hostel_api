@@ -91,4 +91,41 @@ export class UserService {
       throw e;
     }
   }
+
+  async authUser(email, password) {
+    try {
+      const user = this.userRepository.findUserByUsername(email);
+      if (user === null) {
+        throw new Error(
+          "We couldn't sign you in. Please check your username, password or verify your email"
+        );
+      }
+
+      console.log(user);
+      if (user.is_valid_email === 0) {
+        throw new Error(
+          "We couldn't sign you in. Please check your username, password or verify your email"
+        );
+      }
+
+      const validPassword = await new User().comparePasswords(
+        password,
+        user.password_hash
+      );
+      if (!validPassword) {
+        throw new Error(
+          "We couldn't sign you in. Please check your username, password or verify your email"
+        );
+      }
+
+      const token = this.tokenService.generateToken(user.id, "8hs");
+      return {
+        username: user.username,
+        firstName: user.first_name,
+        token,
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

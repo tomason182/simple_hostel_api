@@ -1,4 +1,7 @@
-import { userRegistrationSchema } from "../schemas/userSchema.js";
+import {
+  userRegistrationSchema,
+  userLoginSchema,
+} from "../schemas/userSchema.js";
 import { verifyCaptcha } from "../../../utils/verifyCaptcha.js";
 import {
   checkSchema,
@@ -173,6 +176,42 @@ export const createUser = [
         );
 
       return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  },
+];
+
+// @desc Authenticate a user
+// @route POST /api/v2/users/auth
+// @access Public
+export const user_auth = [
+  checkSchema(userLoginSchema),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        res.status(401);
+        throw new Error(
+          "We could't sign you in. Please check your username, password or verify your email."
+        );
+      }
+
+      const { username, password } = matchedData(req);
+
+      const result = this.userService.authUser(username, password);
+
+      return res
+        .cookie("jwt", result.token, {
+          path: "/",
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          signed: true,
+          sameSite: "strict",
+          maxAge: 3600 * 8 * 1000, // 8hs in milliseconds.
+        })
+        .status(200)
+        .json({ username: result.username, firstName: result.firstName });
     } catch (e) {
       next(e);
     }

@@ -30,7 +30,7 @@ export class User {
       const result = await bcrypt.compare(password, passwordHash);
       return result;
     } catch (e) {
-      throw new Error("An error occurred verifying the password");
+      return false;
     }
   }
 
