@@ -3,18 +3,17 @@ import pkg from "jsonwebtoken";
 const { sign, verify } = pkg;
 
 export class JWTTokenService extends TokenService {
-  constructor(secret, expiration) {
+  constructor(secret) {
     super();
     this.secret = secret;
-    this.expiration = expiration;
   }
 
-  generateToken(userId) {
+  generateToken(userId, expiration) {
     const payload = {
       sub: userId,
     };
 
-    const token = sign(payload, this.secret, { expiresIn: this.expiration });
+    const token = sign(payload, this.secret, { expiresIn: expiration });
     return token;
   }
 
