@@ -223,12 +223,28 @@ export const authUser = [
 // @access  Private
 export const validateUser = (req, res, next) => {
   try {
-    const signedCookie = req.signedCookie["jwt"];
+    const signedCookie = req.signedCookies["jwt"];
 
-    const decoded = services.tokenService.validateToken(signedCookie);
+    const decoded = services.tokenService.verifyToken(signedCookie);
 
-    return res.status(200).json({ decoded });
+    return res.status(200).json({ userId: decoded.sub });
   } catch (e) {
     next(e);
   }
+};
+
+// @desc    Logout a user
+// @route   GET /api/v1/users/logout
+// @access  Private
+export const userLogout = (req, res, next) => {
+  return res
+    .cookie("jwt", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      signed: true,
+      sameSite: "strict",
+      maxAge: 0,
+    })
+    .status(200)
+    .json({ msg: "User logout" });
 };

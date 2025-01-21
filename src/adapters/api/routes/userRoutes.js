@@ -20,3 +20,9 @@ router.post("/create", userController.createUser);
 
 // Authenticate a user
 router.post("/auth", userController.authUser);
+
+// Validate a user
+router.get("/validate", userController.validateUser);
+
+// logout a user
+router.get("/logout", userController.userLogout);
