@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS access_control (
   user_id INT NOT NULL,
   property_id INT NOT NULL,
   role ENUM("admin", "manager", "employee") NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (property_id) REFERENCES properties(id)
 );
 
