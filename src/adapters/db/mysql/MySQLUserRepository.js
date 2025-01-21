@@ -26,13 +26,13 @@ export class MySQLUserRepository extends UserRepository {
     }
   }
 
-  async findUserByUsername(username) {
+  async findUserByUsername(username, connection) {
     try {
       const query =
         "SELECT id, username, first_name, last_name, is_valid_email, last_resend_email FROM users WHERE  username = ? LIMIT 1";
       const params = [username];
 
-      const [result] = await this.pool.execute(query, params);
+      const [result] = await (connection || this.pool).execute(query, params);
       return result[0] || null;
     } catch (e) {
       throw new Error(

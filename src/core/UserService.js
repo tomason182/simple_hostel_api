@@ -12,7 +12,8 @@ export class UserService {
     try {
       // Check if the user already exist.
       const userExist = await this.userRepository.findUserByUsername(
-        userData.username
+        userData.username,
+        connection
       );
 
       if (userExist !== null) {
