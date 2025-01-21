@@ -51,4 +51,33 @@ export class UserCompositeService {
       }
     });
   }
+
+  async createUserWithAccessControl(userData, propertyId) {
+    return this.transactionManagerPort.runInTransaction(async connection => {
+      try {
+        // Check if property has 5 or more users
+        const allUsers = await this.propertyService.findAllPropertyUsers(
+          propertyId,
+          connection
+        );
+        if (allUsers.length > 4) {
+          throw new Error(
+            "Team members creation limited reached. You can not create more than 5 team members."
+          );
+        }
+
+        const user = await this.userService.createUser(userData, connection);
+        const accessControlID = await this.accessControlService.save(
+          user.id,
+          propertyId,
+          userData.role,
+          connection
+        );
+
+        return accessControlID;
+      } catch (e) {
+        throw e;
+      }
+    });
+  }
 }
