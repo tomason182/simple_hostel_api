@@ -14,3 +14,6 @@ router.post(
   "/resend-email-verification",
   userController.resendEmailVerification
 );
+
+// Create a new user to an existing property
+router.post("/create");
