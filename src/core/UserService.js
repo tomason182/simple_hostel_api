@@ -77,7 +77,7 @@ export class UserService {
       };
 
       const confirmationLink =
-        process.env.API_URL + "accounts/email-validation" + token;
+        process.env.API_URL + "accounts/email-validation/" + token;
       const to = userData.username;
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Confirm your email for SimpleHostel";
