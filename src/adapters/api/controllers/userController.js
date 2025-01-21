@@ -9,7 +9,6 @@ import {
 } from "express-validator";
 
 import { services } from "../../../../bin/www";
-import { jwtTokenValidation } from "../../../utils/tokenGenerator.js";
 
 // @desc    Register a new user
 // @route   POST /api/v2/users/register
@@ -101,10 +100,7 @@ export const finishUserRegister = [
 
       const token = req.params.token;
 
-      const decoded = jwtTokenValidation(token);
-      const userId = decoded.sub;
-
-      const result = await services.userService.validateEmail(userId);
+      const result = await services.userService.validateEmail(token);
 
       console.log(result);
 

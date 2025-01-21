@@ -1,4 +1,3 @@
-import { jwtTokenGenerator } from "../utils/tokenGenerator.js";
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
 
 export class UserCompositeService {
@@ -7,13 +6,15 @@ export class UserCompositeService {
     propertyService,
     accessControlService,
     transactionManagerPort,
-    emailService
+    emailService,
+    tokenService
   ) {
     this.userService = userService;
     this.propertyService = propertyService;
     this.accessControlService = accessControlService;
     this.transactionManagerPort = transactionManagerPort;
     this.emailService = emailService;
+    this.tokenService = tokenService;
   }
 
   async createUserWithProperty(userData, PropertyData) {
@@ -32,7 +33,7 @@ export class UserCompositeService {
           connection
         );
 
-        const token = jwtTokenGenerator(user.id);
+        const token = this.tokenService.generateToken(user.id, 900); // expiration 900 seg || 15min
 
         const confirmationLink =
           process.env.API_URL + "accounts/email-validation/" + token;

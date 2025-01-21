@@ -22,8 +22,7 @@ export class JWTTokenService extends TokenService {
       const decoded = verify(token, this.secret);
       return decoded;
     } catch (e) {
-      console.error(e.message);
-      return false;
+      throw new Error("Invalid or expired token");
     }
   }
 }

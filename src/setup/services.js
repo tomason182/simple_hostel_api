@@ -35,7 +35,8 @@ export default function initializeServices() {
     propertyService,
     accessControlService,
     transactionManager,
-    emailService
+    emailService,
+    tokenService
   );
 
   return {
