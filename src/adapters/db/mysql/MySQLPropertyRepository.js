@@ -54,12 +54,12 @@ export class MySQLPropertyRepository extends PropertyRepository {
     }
   }
 
-  async findAllPropertyUsers(propertyId, connection = null) {
+  async findUsers(propertyId, connection = null) {
     try {
       const query = "SELECT * FROM access_control WHERE property_id = ?";
       const params = [propertyId];
 
-      const result = await (connection || this.pool).execute(query, params);
+      const [result] = await (connection || this.pool).execute(query, params);
       return result;
     } catch (e) {
       throw e;

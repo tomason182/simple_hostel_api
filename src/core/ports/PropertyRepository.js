@@ -3,7 +3,7 @@ export class PropertyRepository {
     throw new Error("Method save for Property is not implemented");
   }
 
-  async findAllPropertyUsers() {
+  async findUsers() {
     throw new Error("Method findAllPropertyUser is not implemented");
   }
 }

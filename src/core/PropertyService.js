@@ -18,4 +18,17 @@ export class PropertyService {
       throw `An error occurred when trying to create a property: ${e.message}`;
     }
   }
+
+  async findAllPropertyUsers(propertyId, connection) {
+    try {
+      const result = await this.PropertyRepository.findUsers(
+        propertyId,
+        connection
+      );
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
