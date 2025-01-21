@@ -114,3 +114,25 @@ export const finishUserRegister = [
     }
   },
 ];
+
+// @desc resend email
+// @route POST /api/v2/users/resend-email-verification
+// @public
+export const resendEmailVerification = [
+  body("email").trim().isEmail().withMessage("Not a valid email address"),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const { email } = req.body;
+
+      const result = await services.userService.resendEmail(email);
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  },
+];
