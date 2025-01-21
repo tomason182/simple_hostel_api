@@ -86,7 +86,7 @@ export class UserService {
 
       await this.emailService.sendEmail(to, subject, body, from);
 
-      return user;
+      return userData;
     } catch (e) {
       throw e;
     }
