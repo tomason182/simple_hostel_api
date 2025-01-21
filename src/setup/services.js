@@ -13,6 +13,7 @@ import { UserCompositeService } from "../core/UserCompositeService.js";
 
 // Import nodemailer email notification service
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
+import { createTokenService } from "../adapters/config/tokenConfig.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -24,10 +25,11 @@ export default function initializeServices() {
   const accessControlService = new MySQLAccessControlRepository(mysqlPool);
   const transactionManager = new MySQLTransactionManager(mysqlPool);
   const emailService = createEmailNotification();
+  const tokenService = createTokenService();
 
   // Initialize the core services
   const propertyService = new PropertyService(propertyRepository);
-  const userService = new UserService(userRepository);
+  const userService = new UserService(userRepository, tokenService);
   const userCompositeService = new UserCompositeService(
     userService,
     propertyService,

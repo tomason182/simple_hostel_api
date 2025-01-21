@@ -11,6 +11,6 @@ router.post("/confirm-email/:token", userController.finishUserRegister);
 
 // Resend email
 router.post(
-  "resend-email-verification",
+  "/resend-email-verification",
   userController.resendEmailVerification
 );
