@@ -1,9 +1,11 @@
 import { User } from "./entities/User.js";
+import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
 
 export class UserService {
-  constructor(userRepository, tokenService) {
+  constructor(userRepository, tokenService, emailService) {
     this.userRepository = userRepository;
     this.tokenService = tokenService;
+    this.emailService = emailService;
   }
 
   async createUser(userData, connection = null) {
@@ -63,9 +65,26 @@ export class UserService {
         throw new Error("Please wait 5 minutes before requesting a new email");
       }
 
-      await this.userRepository.updateLastResendEmail(user.id);
+      const lastResendEmail = Date.now();
 
-      console.log(user);
+      await this.userRepository.updateLastResendEmail(user.id, lastResendEmail);
+
+      const token = this.tokenService.generateToken(user.id, 900);
+
+      const userData = {
+        username: user.username,
+        firstName: user.first_name,
+      };
+
+      const confirmationLink =
+        process.env.API_URL + "accounts/email-validation" + token;
+      const to = userData.username;
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Confirm your email for SimpleHostel";
+      const body = confirmationMailBody(userData, confirmationLink);
+
+      await this.emailService.sendEmail(to, subject, body, from);
+
       return user;
     } catch (e) {
       throw e;

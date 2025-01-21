@@ -10,4 +10,8 @@ export class UserRepository {
   async validateUserEmail() {
     throw new Error("validateUserEmail method not implemented");
   }
+
+  async updateLastResendEmail() {
+    throw new Error("updateLastResendEmail method not implemented");
+  }
 }

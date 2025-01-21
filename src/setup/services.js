@@ -29,7 +29,11 @@ export default function initializeServices() {
 
   // Initialize the core services
   const propertyService = new PropertyService(propertyRepository);
-  const userService = new UserService(userRepository, tokenService);
+  const userService = new UserService(
+    userRepository,
+    tokenService,
+    emailService
+  );
   const userCompositeService = new UserCompositeService(
     userService,
     propertyService,

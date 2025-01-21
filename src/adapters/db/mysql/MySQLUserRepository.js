@@ -54,4 +54,21 @@ export class MySQLUserRepository extends UserRepository {
       throw new Error(`An error occurred when trying to validate user email`);
     }
   }
+
+  async updateLastResendEmail(userId, lastResendEmail) {
+    try {
+      const query = "UPDATE users SET last_resend_email = ? WHERE id = ?";
+      const params = [lastResendEmail, userId];
+
+      const [result] = await this.pool.execute(query, params);
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred when trying to update last resend email: ${e.message}`
+      );
+    }
+  }
 }
