@@ -1,7 +1,11 @@
 import express from "express";
+import { createTokenService } from "../../../adapters/config/tokenConfig.js";
+import authMiddleware from "../../../middleware/authMiddleware.js";
 import * as userController from "../controllers/userController.js";
 
 export const router = express.Router();
+
+const tokenService = createTokenService();
 
 // Register new user
 router.post("/register", userController.userRegister);
@@ -16,12 +20,13 @@ router.post(
 );
 
 // Create a new user to an existing property
-router.post("/create", userController.createUser);
+router.post("/create", authMiddleware(tokenService), userController.createUser);
 
 // Authenticate a user
 router.post("/auth", userController.authUser);
 
 // Validate a user
+// Esta ruta creo que esta al pedo. Se valida con el authmiddelware.
 router.get("/validate", userController.validateUser);
 
 // logout a user
