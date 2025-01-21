@@ -185,7 +185,7 @@ export const createUser = [
 // @desc Authenticate a user
 // @route POST /api/v2/users/auth
 // @access Public
-export const user_auth = [
+export const authUser = [
   checkSchema(userLoginSchema),
   async (req, res, next) => {
     try {
@@ -199,7 +199,7 @@ export const user_auth = [
 
       const { username, password } = matchedData(req);
 
-      const result = this.userService.authUser(username, password);
+      const result = await services.userService.authUser(username, password);
 
       return res
         .cookie("jwt", result.token, {
@@ -217,3 +217,18 @@ export const user_auth = [
     }
   },
 ];
+
+// @desc    Validate log in
+// @route   GET /api/v2/users/validate
+// @access  Private
+export const validateUser = (req, res, next) => {
+  try {
+    const signedCookie = req.signedCookie["jwt"];
+
+    const decoded = services.tokenService.validateToken(signedCookie);
+
+    return res.status(200).json({ decoded });
+  } catch (e) {
+    next(e);
+  }
+};

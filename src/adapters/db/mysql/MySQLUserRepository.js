@@ -28,8 +28,7 @@ export class MySQLUserRepository extends UserRepository {
 
   async findUserByUsername(username, connection) {
     try {
-      const query =
-        "SELECT id, username, first_name, last_name, is_valid_email, last_resend_email FROM users WHERE  username = ? LIMIT 1";
+      const query = "SELECT * FROM users WHERE  username = ? LIMIT 1";
       const params = [username];
 
       const [result] = await (connection || this.pool).execute(query, params);

@@ -17,3 +17,6 @@ router.post(
 
 // Create a new user to an existing property
 router.post("/create", userController.createUser);
+
+// Authenticate a user
+router.post("/auth", userController.authUser);

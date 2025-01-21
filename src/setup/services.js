@@ -48,5 +48,7 @@ export default function initializeServices() {
     userService,
     accessControlService,
     userCompositeService,
+    emailService,
+    tokenService,
   };
 }

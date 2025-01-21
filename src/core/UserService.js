@@ -92,33 +92,34 @@ export class UserService {
     }
   }
 
-  async authUser(email, password) {
+  async authUser(username, password) {
     try {
-      const user = this.userRepository.findUserByUsername(email);
+      const user = await this.userRepository.findUserByUsername(username);
+
       if (user === null) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
       }
 
-      console.log(user);
       if (user.is_valid_email === 0) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
       }
 
-      const validPassword = await new User().comparePasswords(
-        password,
-        user.password_hash
-      );
+      const validPassword = await new User(
+        user.username,
+        user.firstName
+      ).comparePasswords(password, user.password_hash);
+
       if (!validPassword) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
       }
 
-      const token = this.tokenService.generateToken(user.id, "8hs");
+      const token = this.tokenService.generateToken(user.id, "8h");
       return {
         username: user.username,
         firstName: user.first_name,
