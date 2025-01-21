@@ -7,4 +7,4 @@ export const router = express.Router();
 router.post("/register", userController.userRegister);
 
 // Confirm email route
-router.post("/confirm-email/:token");
+router.post("/confirm-email/:token", userController.finishUserRegister);

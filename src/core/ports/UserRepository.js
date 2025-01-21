@@ -6,4 +6,8 @@ export class UserRepository {
   async findUserByUsername() {
     throw new Error("FindUserByUsername method not implemented");
   }
+
+  async validateUserEmail() {
+    throw new Error("validateUserEmail method not implemented");
+  }
 }

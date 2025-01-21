@@ -1,6 +1,5 @@
 import { userRegistrationSchema } from "../schemas/userSchema.js";
 import { verifyCaptcha } from "../../../utils/verifyCaptcha.js";
-import initializeServices from "../../../setup/services.js";
 import {
   checkSchema,
   validationResult,
@@ -10,6 +9,7 @@ import {
 } from "express-validator";
 
 import { services } from "../../../../bin/www";
+import { jwtTokenValidation } from "../../../utils/tokenGenerator.js";
 
 // @desc    Register a new user
 // @route   POST /api/v2/users/register
@@ -101,7 +101,14 @@ export const finishUserRegister = [
 
       const token = req.params.token;
 
-      console.log(token);
+      const decoded = jwtTokenValidation(token);
+      const userId = decoded.sub;
+
+      const result = await services.userService.validateEmail(userId);
+
+      console.log(result);
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

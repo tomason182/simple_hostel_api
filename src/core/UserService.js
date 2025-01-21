@@ -33,4 +33,13 @@ export class UserService {
       throw e;
     }
   }
+
+  async validateEmail(userId) {
+    try {
+      const result = await this.userRepository.validateUserEmail(userId);
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

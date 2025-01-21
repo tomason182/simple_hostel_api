@@ -39,4 +39,19 @@ export class MySQLUserRepository extends UserRepository {
       );
     }
   }
+
+  async validateUserEmail(userId) {
+    try {
+      const query = "UPDATE users SET is_valid_email = true WHERE id = ?";
+      const params = [userId];
+
+      const [result] = await this.pool.execute(query, params);
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(`An error occurred when trying to validate user email`);
+    }
+  }
 }
