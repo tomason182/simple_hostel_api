@@ -16,7 +16,7 @@ export class User {
   }
 
   // Setter for hashed password
-  async setPasswordHahs(password, saltRounds = 10) {
+  async setPasswordHash(password, saltRounds = 10) {
     try {
       this.passwordHash = await bcrypt.hash(password, saltRounds);
     } catch (e) {

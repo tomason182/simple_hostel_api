@@ -26,7 +26,7 @@ export class UserService {
         lastName: userData.lastName || null,
       });
 
-      await user.setPasswordHahs(userData.password);
+      await user.setPasswordHash(userData.password);
 
       user.setEmailResend();
 
