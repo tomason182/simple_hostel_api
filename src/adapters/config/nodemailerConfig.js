@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { NodemailerEmailNotificationRepository } from "../notifications/email/NodemailerEmailNotificationRepository.js";
+import { NodemailerEmailNotificationService } from "../notifications/email/NodemailerEmailNotificationService.js";
 
 export function createEmailNotification() {
   const nodemailerConfig = {
@@ -18,5 +18,5 @@ export function createEmailNotification() {
     },
   };
 
-  return new NodemailerEmailNotificationRepository(nodemailerConfig);
+  return new NodemailerEmailNotificationService(nodemailerConfig);
 }

@@ -62,4 +62,4 @@ router.post("/auth", checkSchema(userLoginSchema), userController.authUser);
 router.get("/validate", userController.validateUser);
 
 // logout a user
-router.get("/logout", userController.userLogout);
+router.get("/logout", userController.logoutUser);

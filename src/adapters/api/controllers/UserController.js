@@ -1,7 +1,7 @@
 import { verifyCaptcha } from "../../../utils/verifyCaptcha.js";
 import { validationResult, matchedData } from "express-validator";
 
-import { UserInputPort } from "../../../core/ports/UserInputPort";
+import { UserInputPort } from "../../../core/ports/UserInputPort.js";
 
 export class UserController extends UserInputPort {
   constructor() {

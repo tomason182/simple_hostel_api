@@ -1,4 +1,4 @@
-class UserOutputPort {
+export class UserOutputPort {
   constructor(userRepository, tokenService, emailService) {
     (this.userRepository = userRepository),
       (this.tokenService = tokenService),
