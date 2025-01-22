@@ -1,11 +1,9 @@
 import { verifyCaptcha } from "../../../utils/verifyCaptcha.js";
 import { validationResult, matchedData } from "express-validator";
 
-import { UserInputPort } from "../../../core/ports/UserInputPort.js";
-
-export class UserController extends UserInputPort {
-  constructor() {
-    super();
+export class UserController {
+  constructor(userInputPort) {
+    this.userInputPort = userInputPort;
   }
 
   // @desc    Register a new user
@@ -60,7 +58,7 @@ export class UserController extends UserInputPort {
         email: username,
       };
 
-      const userWithProperty = await super.createUserWithProperty(
+      const userWithProperty = await this.userInputPort.createUserWithProperty(
         userData,
         propertyData
       );
@@ -85,7 +83,7 @@ export class UserController extends UserInputPort {
 
       const token = req.params.token;
 
-      const result = await super.validateEmail(token);
+      const result = await this.userInputPort.validateEmail(token);
 
       console.log(result);
 
@@ -107,7 +105,7 @@ export class UserController extends UserInputPort {
 
       const { email } = req.body;
 
-      const result = await super.resendEmail(email);
+      const result = await this.userInputPort.resendEmail(email);
       return res.status(200).json(result);
     } catch (e) {
       next(e);
@@ -141,7 +139,7 @@ export class UserController extends UserInputPort {
 
       const propertyId = 19; // Ver de donde sacar property id.
 
-      const result = await super.createUserWithAccessControl(
+      const result = await this.userInputPort.createUserWithAccessControl(
         userData,
         propertyId
       );
@@ -167,7 +165,7 @@ export class UserController extends UserInputPort {
 
       const { username, password } = matchedData(req);
 
-      const result = await super.authUser(username, password);
+      const result = await this.userInputPort.authUser(username, password);
 
       return res
         .cookie("jwt", result.token, {
@@ -192,7 +190,7 @@ export class UserController extends UserInputPort {
     try {
       const signedCookie = req.signedCookies["jwt"];
 
-      const decoded = super.verifyToken(signedCookie);
+      const decoded = this.userInputPort.verifyToken(signedCookie);
 
       return res.status(200).json({ userId: decoded.sub });
     } catch (e) {

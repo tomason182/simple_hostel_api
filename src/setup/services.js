@@ -20,6 +20,9 @@ import { UserOutputPort } from "../core/ports/UserOutputPort.js";
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
 import { createTokenService } from "../adapters/config/tokenConfig.js";
 
+// Import controllers
+import { UserController } from "../adapters/api/controllers/UserController.js";
+
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
 
@@ -57,4 +60,14 @@ export default function initializeServices() {
     tokenService,
     emailService
   );
+
+  const userController = new UserController(userInputPort);
+
+  return {
+    userController,
+    userInputPort,
+    userOutputPort,
+    propertyOutputPort,
+    transactionManagerPort,
+  };
 }
