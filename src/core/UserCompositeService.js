@@ -1,95 +1,90 @@
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
+import { TransactionManagerPort } from "./ports/TransactionManagerPort.js";
 
-export class UserCompositeService {
-  constructor(
-    userService,
-    propertyService,
-    accessControlService,
-    transactionManagerPort,
-    emailService,
-    tokenService
-  ) {
-    this.userService = userService;
-    this.propertyService = propertyService;
-    this.accessControlService = accessControlService;
-    this.transactionManagerPort = transactionManagerPort;
-    this.emailService = emailService;
-    this.tokenService = tokenService;
+export class UserCompositeService extends TransactionManagerPort {
+  constructor(mysqlPool) {
+    super();
+    this.mysqlPool = mysqlPool;
   }
 
   async createUserWithProperty(userData, PropertyData) {
-    return this.transactionManagerPort.runInTransaction(async connection => {
-      try {
-        const user = await this.userService.createUser(userData, connection);
-        const property = await this.propertyService.createProperty(
-          PropertyData,
-          connection
-        );
-        const role = "admin";
-        const accessControlID = await this.accessControlService.save(
-          user.id,
-          property.id,
-          role,
-          connection
-        );
+    const conn = await this.mysqlPool.getConnection();
+    try {
+      await conn.beginTransaction();
 
-        const token = this.tokenService.generateToken(user.id, 900); // expiration 900 seg || 15min
+      const user = await super.createUser(userData, conn);
+      const property = await super.createProperty(PropertyData, conn);
+      const role = "admin";
+      const accessControlID = await super.saveAccessControl(
+        user.id,
+        property.id,
+        role,
+        conn
+      );
+      const token = super.generateToken(user.id, 900);
 
-        const confirmationLink =
-          process.env.API_URL + "accounts/email-validation/" + token;
+      const confirmationLink =
+        process.env.API_URL + "accounts/email-validation/" + token;
 
-        const to = userData.username;
-        const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
-        const subject = "Confirm your email for SimpleHostel";
-        const body = confirmationMailBody(userData, confirmationLink);
+      const to = userData.username;
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Confirm your email for SimpleHostel";
+      const body = confirmationMailBody(userData, confirmationLink);
 
-        await this.emailService.sendEmail(to, subject, body, from);
+      await super.sendEmail(to, subject, body, from);
 
-        return accessControlID;
-      } catch (e) {
-        throw e;
-      }
-    });
+      await conn.commit();
+      return accessControlID;
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      await conn.release();
+    }
   }
 
   async createUserWithAccessControl(userData, propertyId) {
-    return this.transactionManagerPort.runInTransaction(async connection => {
-      try {
-        // Check if property has 5 or more users
-        const allUsers = await this.propertyService.findAllPropertyUsers(
-          propertyId,
-          connection
+    const conn = await this.mysqlPool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      const allPropertyUsers = await super.findAllPropertyUsers(
+        propertyId,
+        conn
+      );
+
+      if (allPropertyUsers.length > 4) {
+        throw new Error(
+          "Team members creation limited reached. You can not create more than 5 team members."
         );
-        if (allUsers.length > 4) {
-          throw new Error(
-            "Team members creation limited reached. You can not create more than 5 team members."
-          );
-        }
-
-        const user = await this.userService.createUser(userData, connection);
-        const accessControlID = await this.accessControlService.save(
-          user.id,
-          propertyId,
-          userData.role,
-          connection
-        );
-
-        const token = this.tokenService.generateToken(user.id, 900); // expiration 900 seg || 15min
-
-        const confirmationLink =
-          process.env.API_URL + "accounts/email-validation/" + token;
-
-        const to = userData.username;
-        const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
-        const subject = "Confirm your email for SimpleHostel";
-        const body = confirmationMailBody(userData, confirmationLink);
-
-        await this.emailService.sendEmail(to, subject, body, from);
-
-        return accessControlID;
-      } catch (e) {
-        throw e;
       }
-    });
+
+      const user = await super.createUser(userData, conn);
+      const accessControlID = await super.saveAccessControl(
+        user.id,
+        propertyId,
+        userData.role,
+        conn
+      );
+      const token = super.generateToken(user.id, 900); // Expires in 900 seg || 15 min
+
+      const confirmationLink =
+        process.env.API_URL + "accounts/email-validation/" + token;
+
+      const to = userData.username;
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Confirm your email for SimpleHostel";
+      const body = confirmationMailBody(userData, confirmationLink);
+
+      await super.sendEmail(to, subject, body, from);
+
+      await conn.commit();
+      return accessControlID;
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      await conn.release();
+    }
   }
 }

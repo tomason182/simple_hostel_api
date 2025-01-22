@@ -1,10 +1,8 @@
-import { TokenService } from "../../core/ports/TokenService.js";
 import pkg from "jsonwebtoken";
 const { sign, verify } = pkg;
 
-export class JWTTokenService extends TokenService {
+export class JWTTokenService {
   constructor(secret) {
-    super();
     this.secret = secret;
   }
 

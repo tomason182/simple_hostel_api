@@ -1,17 +1,16 @@
 import { User } from "./entities/User.js";
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
+import { UserOutputPort } from "./ports/UserOutputPort.js";
 
-export class UserService {
-  constructor(userRepository, tokenService, emailService) {
-    this.userRepository = userRepository;
-    this.tokenService = tokenService;
-    this.emailService = emailService;
+export class UserService extends UserOutputPort {
+  constructor() {
+    super();
   }
 
   async createUser(userData, connection = null) {
     try {
       // Check if the user already exist.
-      const userExist = await this.userRepository.findUserByUsername(
+      const userExist = await super.findUserByUsername(
         userData.username,
         connection
       );
@@ -30,7 +29,7 @@ export class UserService {
 
       user.setEmailResend();
 
-      const result = await this.userRepository.save(user, connection);
+      const result = await super.save(user, connection);
 
       return result; // {id: userId, ...userData }
     } catch (e) {
@@ -40,9 +39,9 @@ export class UserService {
 
   async validateEmail(token) {
     try {
-      const decoded = await this.tokenService.verifyToken(token);
+      const decoded = await super.verifyToken(token);
       const userId = decoded.sub;
-      const result = await this.userRepository.validateUserEmail(userId);
+      const result = await super.validateUserEmail(userId);
       return result;
     } catch (e) {
       throw e;
@@ -51,7 +50,7 @@ export class UserService {
 
   async resendEmail(email) {
     try {
-      const user = await this.userRepository.findUserByUsername(email);
+      const user = await super.findUserByUsername(email);
       if (user === null) {
         throw new Error("User not found");
       }
@@ -68,9 +67,9 @@ export class UserService {
 
       const lastResendEmail = Date.now();
 
-      await this.userRepository.updateLastResendEmail(user.id, lastResendEmail);
+      await super.updateLastResendEmail(user.id, lastResendEmail);
 
-      const token = this.tokenService.generateToken(user.id, 900);
+      const token = super.generateToken(user.id, 900);
 
       const userData = {
         username: user.username,
@@ -84,7 +83,7 @@ export class UserService {
       const subject = "Confirm your email for SimpleHostel";
       const body = confirmationMailBody(userData, confirmationLink);
 
-      await this.emailService.sendEmail(to, subject, body, from);
+      await super.sendEmail(to, subject, body, from);
 
       return userData;
     } catch (e) {
@@ -94,7 +93,7 @@ export class UserService {
 
   async authUser(username, password) {
     try {
-      const user = await this.userRepository.findUserByUsername(username);
+      const user = await super.findUserByUsername(username);
 
       if (user === null) {
         throw new Error(
@@ -119,7 +118,7 @@ export class UserService {
         );
       }
 
-      const token = this.tokenService.generateToken(user.id, "8h");
+      const token = super.generateToken(user.id, "8h");
       return {
         username: user.username,
         firstName: user.first_name,

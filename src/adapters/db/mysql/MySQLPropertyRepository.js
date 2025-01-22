@@ -1,8 +1,5 @@
-import { PropertyRepository } from "../../../core/ports/PropertyRepository.js";
-
-export class MySQLPropertyRepository extends PropertyRepository {
+export class MySQLPropertyRepository {
   constructor(mysqlPool) {
-    super();
     this.pool = mysqlPool;
   }
 
