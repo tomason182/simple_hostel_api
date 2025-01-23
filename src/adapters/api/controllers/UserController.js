@@ -9,7 +9,7 @@ export class UserController {
   // @desc    Register a new user
   // @route   POST /api/v2/users/register
   // @access  Public
-  async userRegister(req, res, next) {
+  userRegister = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty) {
@@ -69,12 +69,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc    finish user registration
   // @route   api/v2/confirm-email/:token
   // @access  Public
-  async finishUserRegister(req, res, next) {
+  finishUserRegister = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -91,12 +91,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc resend email
   // @route POST /api/v2/users/resend-email-verification
   // @public
-  async resendEmailVerification(req, res, next) {
+  resendEmailVerification = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -110,12 +110,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc    Create a new user for existing property
   // @route   POST /api/v2/users/create
   // @access  Private
-  async createUser(req, res, next) {
+  createUser = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -148,12 +148,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc Authenticate a user
   // @route POST /api/v2/users/auth
   // @access Public
-  async authUser(req, res, next) {
+  authUser = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -181,12 +181,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc    Validate log in
   // @route   GET /api/v2/users/validate
   // @access  Private
-  async validateUser(req, res, next) {
+  validateUser = (req, res, next) => {
     try {
       const signedCookie = req.signedCookies["jwt"];
 
@@ -196,12 +196,12 @@ export class UserController {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   // @desc    Logout a user
   // @route   GET /api/v1/users/logout
   // @access  Private
-  logoutUser(req, res, next) {
+  logoutUser = (req, res, next) => {
     return res
       .cookie("jwt", "", {
         httpOnly: true,
@@ -212,5 +212,5 @@ export class UserController {
       })
       .status(200)
       .json({ msg: "User logout" });
-  }
+  };
 }
