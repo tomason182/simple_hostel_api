@@ -7,7 +7,7 @@ export class PropertyOutputPort {
     return this.propertyRepository.save(propertyData, connection);
   }
 
-  findUsers(propertyId, connection) {
-    return this.propertyRepository.findUser(propertyId, connection);
+  findAllPropertyUsers(propertyId, connection) {
+    return this.propertyRepository.findAllPropertyUsers(propertyId, connection);
   }
 }

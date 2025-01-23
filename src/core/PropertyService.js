@@ -21,7 +21,7 @@ export class PropertyService {
 
   async findAllPropertyUsers(propertyId, connection) {
     try {
-      const result = await this.propertyOutputPort.findUsers(
+      const result = await this.propertyOutputPort.findAllPropertyUsers(
         propertyId,
         connection
       );

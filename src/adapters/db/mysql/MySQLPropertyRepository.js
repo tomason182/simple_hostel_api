@@ -51,7 +51,7 @@ export class MySQLPropertyRepository {
     }
   }
 
-  async findUsers(propertyId, connection = null) {
+  async findAllPropertyUsers(propertyId, connection = null) {
     try {
       const query = "SELECT * FROM access_control WHERE property_id = ?";
       const params = [propertyId];
