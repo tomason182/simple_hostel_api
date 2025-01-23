@@ -82,5 +82,14 @@ export function createUserRoutes(services) {
     userController.updateUserProfile
   );
 
+  // Edit user profile
+  router.put(
+    "/profile/edit/:id",
+    authMiddleware(tokenService),
+    checkSchema(userUpdateSchema),
+    param("id").trim().isInt().withMessage("not a valid ID"),
+    userController.editUserProfile
+  );
+
   return router;
 }

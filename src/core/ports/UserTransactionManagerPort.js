@@ -18,8 +18,8 @@ export class UserTransactionManagerPort {
     return this.userService.createUser(userData, connection);
   }
 
-  findUserAccessControl(userId, connection) {
-    return this.accessControlService.find(userId, connection);
+  updateUserProfile(userData, connection) {
+    return this.userService.updateUserProfile(userData, connection);
   }
 
   // Property methods
@@ -34,6 +34,14 @@ export class UserTransactionManagerPort {
   // AccessControl methods
   saveAccessControl(userId, propertyId, role, connection) {
     return this.accessControlService.save(userId, propertyId, role, connection);
+  }
+
+  findUserAccessControl(userId, connection) {
+    return this.accessControlService.find(userId, connection);
+  }
+
+  updateUserAccessControl(userData, connection) {
+    return this.accessControlService.update(userData, connection);
   }
 
   // Security methods

@@ -29,8 +29,8 @@ export class UserOutputPort {
     );
   }
 
-  updateUser(userId, userData) {
-    return this.userRepository.updateUser(userId, userData);
+  updateUser(userData, connection) {
+    return this.userRepository.updateUser(userData, connection);
   }
 
   // Security methods

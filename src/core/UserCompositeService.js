@@ -109,4 +109,29 @@ export class UserCompositeService {
       await conn.release();
     }
   }
+
+  async editUserProfile(userData) {
+    const conn = await this.mysqlPool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      await this.userTransactionManagerPort.updateUserProfile(userData, conn);
+      await this.userTransactionManagerPort.updateUserAccessControl(
+        userData,
+        conn
+      );
+
+      await conn.commit();
+
+      console.log("HERE!");
+      return {
+        msg: `User with ID ${userData.id} updated successfully`,
+      };
+    } catch (e) {
+      await conn.rollback();
+      throw e;
+    } finally {
+      await conn.release();
+    }
+  }
 }

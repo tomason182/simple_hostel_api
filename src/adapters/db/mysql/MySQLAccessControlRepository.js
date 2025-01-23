@@ -27,4 +27,25 @@ export class MySQLAccessControlRepository {
       throw e;
     }
   }
+
+  async update(userData, connection) {
+    try {
+      const query = "UPDATE access_control SET role = ? WHERE user_id = ?";
+      const params = [userData.role, userData.id];
+
+      const [result] = await (connection || this.pool).execute(query, params);
+
+      if (result.affectedRows === 0 && result.changedRows === 0) {
+        throw new Error(`Can not update user with ID: ${userData.id}`);
+      }
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `Unexpected error occurred trying to update access control: ${e.message}`
+      );
+    }
+  }
 }

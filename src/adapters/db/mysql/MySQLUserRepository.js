@@ -83,13 +83,21 @@ export class MySQLUserRepository {
     }
   }
 
-  async updateUser(userId, userData) {
+  async updateUser(userData, connection) {
     try {
       const query =
         "UPDATE users SET first_name = ?, last_name = ? WHERE id = ?";
-      const params = [userData.firstName, userData.lastName || null, userId];
+      const params = [
+        userData.firstName,
+        userData.lastName || null,
+        userData.id,
+      ];
 
-      const [result] = await this.pool.execute(query, params);
+      const [result] = await (connection || this.pool).execute(query, params);
+
+      if (result.affectedRows === 0 && result.changedRows === 0) {
+        throw new Error(`Can not update user with ID: ${userData.id}`);
+      }
       return {
         affectedRows: result.affectedRows,
         changedRows: result.changedRows,

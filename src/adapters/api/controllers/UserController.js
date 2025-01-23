@@ -240,11 +240,33 @@ export class UserController {
       }
 
       const userId = req.user;
+      let userData = matchedData(req);
+      userData = {
+        ...userData,
+        id: userId,
+      };
+
+      const result = await this.userInputPort.updateUserProfile(userData);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Edit users info
+  // @route PUT /api/v1/users/profile/:id
+  // @access Private
+  editUserProfile = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
       const userData = matchedData(req);
-      const result = await this.userInputPort.updateUserProfile(
-        userData,
-        userId
-      );
+
+      const result = await this.userInputPort.editUserProfile(userData);
 
       return res.status(200).json(result);
     } catch (e) {

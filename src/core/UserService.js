@@ -154,11 +154,14 @@ export class UserService {
   }
 
   // Update user profile
-  async updateUserProfile(userData, userId) {
+  async updateUserProfile(userData, connection = null) {
     try {
-      const updateUser = await this.userOutputPort.updateUser(userId, userData);
+      const updatedUser = await this.userOutputPort.updateUser(
+        userData,
+        connection
+      );
 
-      return updateUser;
+      return updatedUser;
     } catch (e) {
       throw e;
     }
