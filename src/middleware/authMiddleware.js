@@ -7,7 +7,7 @@ export default function authMiddleware(tokenService) {
     }
     try {
       const payload = tokenService.verifyToken(token);
-      req.user = payload.userId;
+      req.user = payload.sub;
       next();
     } catch (e) {
       return res.status(401).json({ msg: "Unauthorized" });

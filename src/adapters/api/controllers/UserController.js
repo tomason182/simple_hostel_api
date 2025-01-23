@@ -123,6 +123,7 @@ export class UserController {
       }
 
       const mainUserId = req.user;
+      console.log("mainUserID: ", mainUserId);
 
       const { username, password, firstName, lastName, role } =
         matchedData(req);

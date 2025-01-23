@@ -61,6 +61,8 @@ export class UserCompositeService {
           conn
         );
 
+      console.log(accessControl);
+
       const propertyId = accessControl.property_id;
 
       const allPropertyUsers =
