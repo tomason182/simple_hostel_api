@@ -228,4 +228,27 @@ export class UserController {
       next(e);
     }
   };
+
+  // @desc    Update user profile
+  // @route   PUT /api/v1/users/profile/
+  // @access  Private
+  updateUserProfile = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const userId = req.user;
+      const userData = matchedData(req);
+      const result = await this.userInputPort.updateUserProfile(
+        userData,
+        userId
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

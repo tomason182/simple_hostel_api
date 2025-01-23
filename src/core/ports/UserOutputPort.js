@@ -6,27 +6,31 @@ export class UserOutputPort {
   }
 
   // User repository methods
-  async findUserByUsername(username, connection) {
-    return await this.userRepository.findUserByUsername(username, connection);
+  findUserByUsername(username, connection) {
+    return this.userRepository.findUserByUsername(username, connection);
   }
 
   findUserById(userId) {
     return this.userRepository.findUserById(userId);
   }
 
-  async validateUserEmail(userId) {
-    return await this.userRepository.validateUserEmail(userId);
+  validateUserEmail(userId) {
+    return this.userRepository.validateUserEmail(userId);
   }
 
-  async save(user, connection) {
-    return await this.userRepository.save(user, connection);
+  save(user, connection) {
+    return this.userRepository.save(user, connection);
   }
 
-  async updateLastResendEmail(userId, lastResendEmailTime) {
-    return await this.userRepository.updateLastResendEmail(
+  updateLastResendEmail(userId, lastResendEmailTime) {
+    return this.userRepository.updateLastResendEmail(
       userId,
       lastResendEmailTime
     );
+  }
+
+  updateUser(userId, userData) {
+    return this.userRepository.updateUser(userId, userData);
   }
 
   // Security methods
@@ -39,7 +43,7 @@ export class UserOutputPort {
   }
 
   // Email sender methods
-  async sendEmail(to, subject, body, from) {
+  sendEmail(to, subject, body, from) {
     return this.emailService(to, subject, body, from);
   }
 }

@@ -94,3 +94,31 @@ export const userLoginSchema = {
       "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
   },
 };
+
+export const userUpdateSchema = {
+  firstName: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "First name must not be empty",
+    },
+    trim: true,
+    escape: true,
+  },
+  lastName: {
+    in: ["body"],
+    optional: true,
+    trim: true,
+    escape: true,
+  },
+  role: {
+    in: ["body"],
+    trim: true,
+    escape: true,
+    isIn: {
+      options: [["admin", "manager", "employee"]],
+      errorMessage:
+        "Role must be one of the followings: admin, manager, employee",
+    },
+  },
+};

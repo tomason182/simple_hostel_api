@@ -152,4 +152,15 @@ export class UserService {
       throw e;
     }
   }
+
+  // Update user profile
+  async updateUserProfile(userData, userId) {
+    try {
+      const updateUser = await this.userOutputPort.updateUser(userId, userData);
+
+      return updateUser;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

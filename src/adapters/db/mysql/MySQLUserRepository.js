@@ -82,4 +82,22 @@ export class MySQLUserRepository {
       );
     }
   }
+
+  async updateUser(userId, userData) {
+    try {
+      const query =
+        "UPDATE users SET first_name = ?, last_name = ? WHERE id = ?";
+      const params = [userData.firstName, userData.lastName || null, userId];
+
+      const [result] = await this.pool.execute(query, params);
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred when trying to update the user: ${e.message}`
+      );
+    }
+  }
 }

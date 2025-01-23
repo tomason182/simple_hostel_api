@@ -5,6 +5,7 @@ import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
   userRegistrationSchema,
   userLoginSchema,
+  userUpdateSchema,
 } from "../schemas/userSchema.js";
 
 export function createUserRoutes(services) {
@@ -71,6 +72,14 @@ export function createUserRoutes(services) {
     "/profile",
     authMiddleware(tokenService),
     userController.getUserProfile
+  );
+
+  // update user profile
+  router.put(
+    "/profile/",
+    authMiddleware(tokenService),
+    checkSchema(userUpdateSchema),
+    userController.updateUserProfile
   );
 
   return router;
