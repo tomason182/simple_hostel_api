@@ -1,16 +1,15 @@
 import { User } from "./entities/User.js";
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
-import { UserOutputPort } from "./ports/UserOutputPort.js";
 
-export class UserService extends UserOutputPort {
-  constructor() {
-    super();
+export class UserService {
+  constructor(userOutputPort) {
+    this.userOutputPort = userOutputPort;
   }
 
   async createUser(userData, connection = null) {
     try {
       // Check if the user already exist.
-      const userExist = await super.findUserByUsername(
+      const userExist = await this.userOutputPort.findUserByUsername(
         userData.username,
         connection
       );
@@ -29,7 +28,7 @@ export class UserService extends UserOutputPort {
 
       user.setEmailResend();
 
-      const result = await super.save(user, connection);
+      const result = await this.userOutputPort.save(user, connection);
 
       return result; // {id: userId, ...userData }
     } catch (e) {
@@ -39,9 +38,9 @@ export class UserService extends UserOutputPort {
 
   async validateEmail(token) {
     try {
-      const decoded = await super.verifyToken(token);
+      const decoded = await this.userOutputPort.verifyToken(token);
       const userId = decoded.sub;
-      const result = await super.validateUserEmail(userId);
+      const result = await this.userOutputPort.validateUserEmail(userId);
       return result;
     } catch (e) {
       throw e;
@@ -50,7 +49,7 @@ export class UserService extends UserOutputPort {
 
   async resendEmail(email) {
     try {
-      const user = await super.findUserByUsername(email);
+      const user = await this.userOutputPort.findUserByUsername(email);
       if (user === null) {
         throw new Error("User not found");
       }
@@ -67,9 +66,9 @@ export class UserService extends UserOutputPort {
 
       const lastResendEmail = Date.now();
 
-      await super.updateLastResendEmail(user.id, lastResendEmail);
+      await this.userOutputPort.updateLastResendEmail(user.id, lastResendEmail);
 
-      const token = super.generateToken(user.id, 900);
+      const token = this.userOutputPort.generateToken(user.id, 900);
 
       const userData = {
         username: user.username,
@@ -83,7 +82,7 @@ export class UserService extends UserOutputPort {
       const subject = "Confirm your email for SimpleHostel";
       const body = confirmationMailBody(userData, confirmationLink);
 
-      await super.sendEmail(to, subject, body, from);
+      await this.userOutputPort.sendEmail(to, subject, body, from);
 
       return userData;
     } catch (e) {
@@ -93,7 +92,7 @@ export class UserService extends UserOutputPort {
 
   async authUser(username, password) {
     try {
-      const user = await super.findUserByUsername(username);
+      const user = await this.userOutputPort.findUserByUsername(username);
 
       if (user === null) {
         throw new Error(
@@ -118,7 +117,7 @@ export class UserService extends UserOutputPort {
         );
       }
 
-      const token = super.generateToken(user.id, "8h");
+      const token = this.userOutputPort.generateToken(user.id, "8h");
       return {
         username: user.username,
         firstName: user.first_name,

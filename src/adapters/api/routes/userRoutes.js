@@ -12,6 +12,8 @@ export function createUserRoutes(services) {
 
   const tokenService = createTokenService();
 
+  const userController = services.userController;
+
   // Register new user
   router.post(
     "/register",
@@ -23,21 +25,21 @@ export function createUserRoutes(services) {
       .withMessage("Property name maximum length is 255 characters"),
     body("acceptTerms").isBoolean().withMessage("Accept terms must be boolean"),
     body("captchaToken").trim().escape(),
-    services.userController.userRegister
+    userController.userRegister
   );
 
   // Confirm email
   router.post(
     "/confirm-email/:token",
     param("token").isJWT().withMessage("Invalid JWT token"),
-    services.userController.finishUserRegister
+    userController.finishUserRegister
   );
 
   // Resend email
   router.post(
     "/resend-email-verification",
     body("email").trim().isEmail().withMessage("Not a valid email address"),
-    services.userController.resendEmailVerification
+    userController.resendEmailVerification
   );
 
   // Create a new user to an existing property
@@ -51,22 +53,18 @@ export function createUserRoutes(services) {
       .withMessage(
         "Role must be one of the following: admin, manager, employee"
       ),
-    services.userController.createUser
+    userController.createUser
   );
 
   // Authenticate a user
-  router.post(
-    "/auth",
-    checkSchema(userLoginSchema),
-    services.userController.authUser
-  );
+  router.post("/auth", checkSchema(userLoginSchema), userController.authUser);
 
   // Validate a user
   // Esta ruta creo que esta al pedo. Se valida con el authmiddelware.
-  router.get("/validate", services.userController.validateUser);
+  router.get("/validate", userController.validateUser);
 
   // logout a user
-  router.get("/logout", services.userController.logoutUser);
+  router.get("/logout", userController.logoutUser);
 
   return router;
 }

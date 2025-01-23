@@ -1,10 +1,9 @@
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
-import { TransactionManagerPort } from "./ports/TransactionManagerPort.js";
 
-export class UserCompositeService extends TransactionManagerPort {
-  constructor(mysqlPool) {
-    super();
+export class UserCompositeService {
+  constructor(mysqlPool, userTransactionManagerPort) {
     this.mysqlPool = mysqlPool;
+    this.userTransactionManagerPort = userTransactionManagerPort;
   }
 
   async createUserWithProperty(userData, PropertyData) {
@@ -12,16 +11,23 @@ export class UserCompositeService extends TransactionManagerPort {
     try {
       await conn.beginTransaction();
 
-      const user = await super.createUser(userData, conn);
-      const property = await super.createProperty(PropertyData, conn);
-      const role = "admin";
-      const accessControlID = await super.saveAccessControl(
-        user.id,
-        property.id,
-        role,
+      const user = await this.userTransactionManagerPort.createUser(
+        userData,
         conn
       );
-      const token = super.generateToken(user.id, 900);
+      const property = await this.userTransactionManagerPort.createProperty(
+        PropertyData,
+        conn
+      );
+      const role = "admin";
+      const accessControlID =
+        await this.userTransactionManagerPort.saveAccessControl(
+          user.id,
+          property.id,
+          role,
+          conn
+        );
+      const token = this.userTransactionManagerPort.generateToken(user.id, 900);
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
@@ -31,7 +37,7 @@ export class UserCompositeService extends TransactionManagerPort {
       const subject = "Confirm your email for SimpleHostel";
       const body = confirmationMailBody(userData, confirmationLink);
 
-      await super.sendEmail(to, subject, body, from);
+      await this.userTransactionManagerPort.sendEmail(to, subject, body, from);
 
       await conn.commit();
       return accessControlID;
@@ -48,10 +54,11 @@ export class UserCompositeService extends TransactionManagerPort {
     try {
       await conn.beginTransaction();
 
-      const allPropertyUsers = await super.findAllPropertyUsers(
-        propertyId,
-        conn
-      );
+      const allPropertyUsers =
+        await this.userTransactionManagerPort.findAllPropertyUsers(
+          propertyId,
+          conn
+        );
 
       if (allPropertyUsers.length > 4) {
         throw new Error(
@@ -59,14 +66,18 @@ export class UserCompositeService extends TransactionManagerPort {
         );
       }
 
-      const user = await super.createUser(userData, conn);
-      const accessControlID = await super.saveAccessControl(
-        user.id,
-        propertyId,
-        userData.role,
+      const user = await this.userTransactionManagerPort.createUser(
+        userData,
         conn
       );
-      const token = super.generateToken(user.id, 900); // Expires in 900 seg || 15 min
+      const accessControlID =
+        await this.userTransactionManagerPort.saveAccessControl(
+          user.id,
+          propertyId,
+          userData.role,
+          conn
+        );
+      const token = this.userTransactionManagerPort.generateToken(user.id, 900); // Expires in 900 seg || 15 min
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
@@ -76,7 +87,7 @@ export class UserCompositeService extends TransactionManagerPort {
       const subject = "Confirm your email for SimpleHostel";
       const body = confirmationMailBody(userData, confirmationLink);
 
-      await super.sendEmail(to, subject, body, from);
+      await this.userTransactionManagerPort.sendEmail(to, subject, body, from);
 
       await conn.commit();
       return accessControlID;

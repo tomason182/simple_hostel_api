@@ -1,4 +1,4 @@
-export class TransactionManagerPort {
+export class UserTransactionManagerPort {
   constructor(
     userService,
     propertyService,

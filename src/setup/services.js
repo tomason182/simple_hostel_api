@@ -11,10 +11,10 @@ import { UserService } from "../core/UserService.js";
 import { UserCompositeService } from "../core/UserCompositeService.js";
 
 // Import ports
-import { PropertyOutputPort } from "../core/ports/PropertyOutputPort.js";
-import { TransactionManagerPort } from "../core/ports/TransactionManagerPort.js";
 import { UserInputPort } from "../core/ports/UserInputPort.js";
 import { UserOutputPort } from "../core/ports/UserOutputPort.js";
+import { PropertyOutputPort } from "../core/ports/PropertyOutputPort.js";
+import { UserTransactionManagerPort } from "../core/ports/UserTransactionManagerPort.js";
 
 // Import nodemailer email notification service
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
@@ -35,25 +35,21 @@ export default function initializeServices() {
   const emailService = createEmailNotification();
   const tokenService = createTokenService();
 
-  // Initialize the core services
-  const propertyService = new PropertyService();
-  const userService = new UserService();
-  const userCompositeService = new UserCompositeService(mysqlPool);
-
-  // Initialize the ports
-  const propertyOutputPort = new PropertyOutputPort(propertyRepository);
-  const userInputPort = new UserInputPort(
-    userService,
-    userCompositeService,
-    emailService,
-    tokenService
-  );
+  // Initialize output ports
   const userOutputPort = new UserOutputPort(
     userRepository,
     tokenService,
     emailService
   );
-  const transactionManagerPort = new TransactionManagerPort(
+
+  const propertyOutputPort = new PropertyOutputPort(propertyRepository);
+
+  // Initialize the core services
+  const propertyService = new PropertyService(propertyOutputPort);
+  const userService = new UserService(userOutputPort);
+
+  // Initialize transaction manager ports
+  const userTransactionManagerPort = new UserTransactionManagerPort(
     userService,
     propertyService,
     accessControlService,
@@ -61,13 +57,23 @@ export default function initializeServices() {
     emailService
   );
 
+  // Initialize composite services
+  const userCompositeService = new UserCompositeService(
+    mysqlPool,
+    userTransactionManagerPort
+  );
+
+  // Initialize input ports
+  const userInputPort = new UserInputPort(
+    userService,
+    userCompositeService,
+    emailService,
+    tokenService
+  );
+
   const userController = new UserController(userInputPort);
 
   return {
     userController,
-    userInputPort,
-    userOutputPort,
-    propertyOutputPort,
-    transactionManagerPort,
   };
 }

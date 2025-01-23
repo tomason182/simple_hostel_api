@@ -1,9 +1,8 @@
 import { Property } from "./entities/Property.js";
-import { PropertyOutputPort } from "./ports/PropertyOutputPort.js";
 
-export class PropertyService extends PropertyOutputPort {
-  constructor() {
-    super();
+export class PropertyService {
+  constructor(propertyOutputPort) {
+    this.propertyOutputPort = propertyOutputPort;
   }
 
   async createProperty(propertyData, connection) {
@@ -13,7 +12,7 @@ export class PropertyService extends PropertyOutputPort {
         email: propertyData.email,
       });
 
-      const result = await super.save(property, connection);
+      const result = await this.propertyOutputPort.save(property, connection);
       return result;
     } catch (e) {
       throw `An error occurred when trying to create a property: ${e.message}`;
@@ -22,7 +21,10 @@ export class PropertyService extends PropertyOutputPort {
 
   async findAllPropertyUsers(propertyId, connection) {
     try {
-      const result = await super.findUsers(propertyId, connection);
+      const result = await this.propertyOutputPort.findUsers(
+        propertyId,
+        connection
+      );
 
       return result;
     } catch (e) {
