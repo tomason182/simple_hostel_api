@@ -7,11 +7,8 @@ export class UserInputPort {
   }
 
   // Composite services
-  createUserWithAccessControl(userData, propertyId) {
-    return this.userCompositeService.createUserWithAccessControl(
-      userData,
-      propertyId
-    );
+  addUserToProperty(mainUserId, userData) {
+    return this.userCompositeService.addUserToProperty(mainUserId, userData);
   }
 
   createUserWithProperty(userData, propertyData) {

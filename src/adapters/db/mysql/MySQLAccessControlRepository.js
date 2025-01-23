@@ -16,4 +16,15 @@ export class MySQLAccessControlRepository {
       throw e;
     }
   }
+
+  async find(userId, connection) {
+    try {
+      const query = "SELECT * FROM access_control WHERE user_id = ?";
+      const params = [userId];
+      const [result] = await (connection || this.pool).execute(query, params);
+      return result[0];
+    } catch (e) {
+      throw e;
+    }
+  }
 }

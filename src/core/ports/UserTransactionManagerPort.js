@@ -18,6 +18,10 @@ export class UserTransactionManagerPort {
     return this.userService.createUser(userData, connection);
   }
 
+  findUserAccessControl(userId, connection) {
+    return this.accessControlService.find(userId, connection);
+  }
+
   // Property methods
   createProperty(propertyData, connection) {
     return this.propertyService.createProperty(propertyData, connection);

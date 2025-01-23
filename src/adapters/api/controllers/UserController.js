@@ -122,6 +122,8 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
+      const mainUserId = req.user;
+
       const { username, password, firstName, lastName, role } =
         matchedData(req);
 
@@ -137,11 +139,9 @@ export class UserController {
         throw new Error("Admin user can not be created");
       }
 
-      const propertyId = 19; // Ver de donde sacar property id.
-
-      const result = await this.userInputPort.createUserWithAccessControl(
-        userData,
-        propertyId
+      const result = await this.userInputPort.addUserToProperty(
+        mainUserId,
+        userData
       );
 
       return res.status(200).json(result);

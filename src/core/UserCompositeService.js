@@ -49,10 +49,19 @@ export class UserCompositeService {
     }
   }
 
-  async createUserWithAccessControl(userData, propertyId) {
+  async addUserToProperty(mainUserId, userData) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
+
+      // Get the access control for the user.
+      const accessControl =
+        await this.userTransactionManagerPort.findUserAccessControl(
+          mainUserId,
+          conn
+        );
+
+      const propertyId = accessControl.property_id;
 
       const allPropertyUsers =
         await this.userTransactionManagerPort.findAllPropertyUsers(
