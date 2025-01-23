@@ -87,8 +87,16 @@ export function createUserRoutes(services) {
     "/profile/edit/:id",
     authMiddleware(tokenService),
     checkSchema(userUpdateSchema),
-    param("id").trim().isInt().withMessage("not a valid ID"),
+    param("id").trim().isInt().withMessage("Not a valid ID"),
     userController.editUserProfile
+  );
+
+  // Delete user profile
+  router.delete(
+    "/profile/delete/:id",
+    authMiddleware(tokenService),
+    param("id").trim().isInt().withMessage("Not a valid ID"),
+    userController.deleteUserProfile
   );
 
   return router;

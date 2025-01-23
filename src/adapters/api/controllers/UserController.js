@@ -273,4 +273,63 @@ export class UserController {
       next(e);
     }
   };
+
+  // @desc    Delete user profile
+  // @route   DELETE /api/v1/users/profile/:id
+  // @access  Private
+  deleteUserProfile = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const data = matchedData(req);
+      console.log(data);
+
+      return res.status(200).json("ok");
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Delete account
+  // @route   DELETE /api/v1/users/account/delete/
+  // @access  Private
+  deleteUserAccount = async (req, res, next) => {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Get all property users
+  // @route GET /api/v1/users/all
+  // @access Private
+  getAllPropertyUsers = async (req, res, next) => {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Update password
+  // @route   PUT /api/v1/users/profile/change-password
+  // @access  Private
+  updateUserPassword = async (req, res, next) => {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Reset password
+  // @route   POST /api/v1/users/reset-password/init-change-pass/
+  // @access  Public
+  resetUserPassword = async (req, res, next) => {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  };
 }
