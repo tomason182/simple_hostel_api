@@ -92,24 +92,25 @@ export class UserService {
 
   async authUser(username, password) {
     try {
-      const user = await this.userOutputPort.findUserByUsername(username);
+      const userData = await this.userOutputPort.findUserByUsername(username);
 
-      if (user === null) {
+      if (userData === null) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
       }
 
-      if (user.is_valid_email === 0) {
+      if (userData.is_valid_email === 0) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
       }
 
-      const validPassword = await new User(
-        user.username,
-        user.firstName
-      ).comparePasswords(password, user.password_hash);
+      const validPassword = new User({
+        username: userData.username,
+        firstName: userData.firstName,
+        passwordHash: userData.password_hash,
+      }).comparePasswords(password);
 
       if (!validPassword) {
         throw new Error(
@@ -117,12 +118,36 @@ export class UserService {
         );
       }
 
-      const token = this.userOutputPort.generateToken(user.id, "8h");
+      const token = this.userOutputPort.generateToken(userData.id, "8h");
       return {
-        username: user.username,
-        firstName: user.first_name,
+        username: userData.username,
+        firstName: userData.first_name,
         token,
       };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Get user Profile
+  async getUserProfile(userId) {
+    try {
+      const userData = await this.userOutputPort.findUserById(userId);
+
+      const user = new User({
+        username: userData.username,
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        passwordHash: userData.password_hash,
+        isValidEmail: userData.is_valid_email,
+        lastResendEmail: userData.last_resend_email,
+        createdAt: userData.created_at,
+        updatedAt: userData.updated_at,
+      });
+
+      const userProfile = user.getUserProfile();
+
+      return userProfile;
     } catch (e) {
       throw e;
     }

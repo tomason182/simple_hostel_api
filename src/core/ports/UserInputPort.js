@@ -31,6 +31,10 @@ export class UserInputPort {
     return this.userService.authUser(username, password);
   }
 
+  getUserProfile(userId) {
+    return this.userService.getUserProfile(userId);
+  }
+
   // Token service
   verifyToken(token) {
     return this.tokenService.verifyToken(token);

@@ -66,5 +66,12 @@ export function createUserRoutes(services) {
   // logout a user
   router.get("/logout", userController.logoutUser);
 
+  // Get user profile
+  router.get(
+    "/profile",
+    authMiddleware(tokenService),
+    userController.getUserProfile
+  );
+
   return router;
 }

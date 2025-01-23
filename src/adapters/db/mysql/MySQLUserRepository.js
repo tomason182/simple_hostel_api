@@ -37,6 +37,20 @@ export class MySQLUserRepository {
     }
   }
 
+  async findUserById(userId) {
+    try {
+      const query = "SELECT * FROM users WHERE id = ? LIMIT 1";
+      const params = [userId];
+
+      const [result] = await this.pool.execute(query, params);
+      return result[0] || null;
+    } catch (e) {
+      throw new Error(
+        `An error occurred when trying to find user by IS: ${e.message}`
+      );
+    }
+  }
+
   async validateUserEmail(userId) {
     try {
       const query = "UPDATE users SET is_valid_email = true WHERE id = ?";

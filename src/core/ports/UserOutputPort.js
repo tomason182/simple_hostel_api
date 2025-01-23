@@ -10,6 +10,10 @@ export class UserOutputPort {
     return await this.userRepository.findUserByUsername(username, connection);
   }
 
+  findUserById(userId) {
+    return this.userRepository.findUserById(userId);
+  }
+
   async validateUserEmail(userId) {
     return await this.userRepository.validateUserEmail(userId);
   }

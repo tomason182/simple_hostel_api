@@ -214,4 +214,18 @@ export class UserController {
       .status(200)
       .json({ msg: "User logout" });
   };
+
+  // @desc    Get user profile
+  // @route   GET /api/v1/users/profile/
+  // @access  Private
+  getUserProfile = async (req, res, next) => {
+    try {
+      const userId = req.user;
+      const userProfile = await this.userInputPort.getUserProfile(userId);
+
+      return res.status(200).json(userProfile);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

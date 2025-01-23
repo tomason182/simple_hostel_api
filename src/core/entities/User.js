@@ -1,18 +1,41 @@
 import bcrypt from "bcrypt";
 
 export class User {
-  constructor({ username, firstName, lastName = null, isValidEmail = false }) {
+  #passwordHash;
+  constructor({
+    username,
+    firstName,
+    lastName = null,
+    passwordHash = null,
+    isValidEmail = false,
+    lastResendEmail = null,
+    createdAt = null,
+    updatedAt = null,
+  }) {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.passwordHash = null;
+    this.#passwordHash = passwordHash;
     this.isValidEmail = isValidEmail;
-    this.lastResendEmail = null;
+    this.lastResendEmail = lastResendEmail;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
 
   // Getter for hashed password
   getPasswordHash() {
     return this.passwordHash;
+  }
+
+  // GetUserProfile
+  getUserProfile() {
+    return {
+      username: this.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 
   // Setter for hashed password
@@ -25,9 +48,9 @@ export class User {
   }
 
   // Method for compare passwords
-  async comparePasswords(password, passwordHash) {
+  async comparePasswords(password) {
     try {
-      const result = await bcrypt.compare(password, passwordHash);
+      const result = await bcrypt.compare(password, this.passwordHash);
       return result;
     } catch (e) {
       return false;
