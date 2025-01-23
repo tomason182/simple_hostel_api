@@ -115,17 +115,18 @@ export class UserCompositeService {
     try {
       await conn.beginTransaction();
 
-      await this.userTransactionManagerPort.updateUserProfile(userData, conn);
-      await this.userTransactionManagerPort.updateUserAccessControl(
-        userData,
-        conn
-      );
+      const updatedUser =
+        await this.userTransactionManagerPort.updateUserProfile(userData, conn);
+      const updatedAccessControl =
+        await this.userTransactionManagerPort.updateUserAccessControl(
+          userData,
+          conn
+        );
 
       await conn.commit();
 
-      console.log("HERE!");
       return {
-        msg: `User with ID ${userData.id} updated successfully`,
+        msg: `${updatedUser.changedRows} user field updated. ${updatedAccessControl.changedRows} access control fields updated`,
       };
     } catch (e) {
       await conn.rollback();

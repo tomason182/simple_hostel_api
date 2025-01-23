@@ -95,9 +95,6 @@ export class MySQLUserRepository {
 
       const [result] = await (connection || this.pool).execute(query, params);
 
-      if (result.affectedRows === 0 && result.changedRows === 0) {
-        throw new Error(`Can not update user with ID: ${userData.id}`);
-      }
       return {
         affectedRows: result.affectedRows,
         changedRows: result.changedRows,
