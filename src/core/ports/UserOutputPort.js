@@ -26,11 +26,11 @@ export class UserOutputPort {
   }
 
   // Security methods
-  async verifyToken(token) {
-    return await this.tokenService.verifyToken(token);
+  verifyToken(token) {
+    return this.tokenService.verifyToken(token);
   }
 
-  async generateToken(userId, expirationTime) {
+  generateToken(userId, expirationTime) {
     return this.tokenService.generateToken(userId, expirationTime);
   }
 
