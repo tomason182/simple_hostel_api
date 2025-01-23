@@ -303,16 +303,6 @@ export class UserController {
     }
   };
 
-  // @desc Get all property users
-  // @route GET /api/v1/users/all
-  // @access Private
-  getAllPropertyUsers = async (req, res, next) => {
-    try {
-    } catch (e) {
-      next(e);
-    }
-  };
-
   // @desc    Update password
   // @route   PUT /api/v1/users/profile/change-password
   // @access  Private
@@ -327,6 +317,16 @@ export class UserController {
   // @route   POST /api/v1/users/reset-password/init-change-pass/
   // @access  Public
   resetUserPassword = async (req, res, next) => {
+    try {
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Get all property users
+  // @route GET /api/v1/users/all
+  // @access Private
+  getAllPropertyUsers = async (req, res, next) => {
     try {
     } catch (e) {
       next(e);

@@ -6,6 +6,7 @@ import {
   userRegistrationSchema,
   userLoginSchema,
   userUpdateSchema,
+  userChangePassSchema,
 } from "../schemas/userSchema.js";
 
 export function createUserRoutes(services) {
@@ -97,6 +98,21 @@ export function createUserRoutes(services) {
     authMiddleware(tokenService),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     userController.deleteUserProfile
+  );
+
+  // Delete account
+  router.delete(
+    "/accounts/delete/",
+    authMiddleware(tokenService),
+    userController.deleteUserAccount
+  );
+
+  // Update user password
+  router.put(
+    "/profile/change-pass/",
+    authMiddleware(tokenService),
+    checkSchema(userChangePassSchema),
+    userController.updateUserPassword
   );
 
   return router;
