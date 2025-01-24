@@ -63,6 +63,10 @@ export class UserCompositeService {
 
       console.log("Access control result: ", accessControl);
 
+      if (!accessControl) {
+        throw new Error("Unexpected error occurred");
+      }
+
       const propertyId = accessControl.property_id;
 
       const allPropertyUsers =
