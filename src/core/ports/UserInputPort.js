@@ -60,6 +60,10 @@ export class UserInputPort {
     );
   }
 
+  resetUserPassword(email) {
+    return this.userService.resetUserPassword(email);
+  }
+
   // Token service
   verifyToken(token) {
     return this.tokenService.verifyToken(token);

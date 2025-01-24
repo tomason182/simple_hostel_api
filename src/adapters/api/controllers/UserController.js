@@ -362,6 +362,15 @@ export class UserController {
   // @access  Public
   resetUserPassword = async (req, res, next) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+      const { username } = matchedData(req);
+
+      const result = await this.userInputPort.resetUserPassword(username);
+
+      return res.status(200).json({ msg: "email sent" });
     } catch (e) {
       next(e);
     }

@@ -7,6 +7,7 @@ import {
   userLoginSchema,
   userUpdateSchema,
   userChangePassSchema,
+  usernameSchema,
 } from "../schemas/userSchema.js";
 
 export function createUserRoutes(services) {
@@ -113,6 +114,13 @@ export function createUserRoutes(services) {
     authMiddleware(tokenService),
     checkSchema(userChangePassSchema),
     userController.updateUserPassword
+  );
+
+  // Reset password
+  router.post(
+    "/reset-password/init-change-pass",
+    checkSchema(usernameSchema),
+    userController.resetUserPassword()
   );
 
   return router;

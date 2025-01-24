@@ -71,6 +71,10 @@ export class User {
     this.lastResendEmail = Date.now();
   }
 
+  getEmailResend() {
+    return this.lastResendEmail;
+  }
+
   // Setter for valid email
   setValidEmail(isValid) {
     this.isValidEmail = isValid;

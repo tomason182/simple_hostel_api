@@ -191,3 +191,15 @@ export const userChangePassSchema = {
       "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols",
   },
 };
+
+export const usernameSchema = {
+  username: {
+    in: ["body"],
+    isEmail: {
+      bail: true,
+      errorMessage: "username is not a valid email",
+    },
+    trim: true,
+    normalizeEmail: true,
+  },
+};

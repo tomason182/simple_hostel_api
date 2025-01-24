@@ -1,5 +1,8 @@
 import { User } from "./entities/User.js";
-import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
+import {
+  confirmationMailBody,
+  resetPasswordBody,
+} from "../utils/emailBodyGenerator.js";
 
 export class UserService {
   constructor(userOutputPort) {
@@ -242,6 +245,50 @@ export class UserService {
       );
 
       return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async resetUserPassword(email) {
+    try {
+      const userExist = this.userOutputPort.findUserByUsername(email);
+      if (userExist === null) {
+        throw new Error(
+          "We couldn't find a matching account for the email address you entered. Please check the email address and try again."
+        );
+      }
+
+      const waitingPeriod = 5 * 60 * 1000; // 5min * 60 seg/min * 1000 ms/seg
+
+      if (Date.now() - userExist.last_resend_email < waitingPeriod) {
+        throw new Error("Please wait 5 minutes before requesting a new email");
+      }
+
+      const lastResendEmail = Date.now();
+
+      await this.userOutputPort.updateLastResendEmail(
+        userExist.id,
+        lastResendEmail
+      );
+
+      const userData = {
+        username: userExist.username,
+        firstName: userExist.first_name,
+      };
+
+      const token = this.userOutputPort.generateToken(userExist.id, 900);
+      const confirmationLink =
+        process.env.API_URL + "accounts/reset-password/new/" + token;
+      const to = userData.username;
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Reset your password";
+
+      const body = resetPasswordBody(userData, confirmationLink);
+
+      await this.userOutputPort.sendEmail(to, subject, body, from);
+
+      return true;
     } catch (e) {
       throw e;
     }

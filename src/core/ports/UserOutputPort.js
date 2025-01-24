@@ -12,7 +12,7 @@ export class UserOutputPort {
   }
 
   // User repository methods
-  findUserByUsername(username, connection) {
+  findUserByUsername(username, connection = null) {
     return this.userRepository.findUserByUsername(username, connection);
   }
 
@@ -61,8 +61,8 @@ export class UserOutputPort {
     return this.tokenService.verifyToken(token);
   }
 
-  generateToken(userId, expirationTime) {
-    return this.tokenService.generateToken(userId, expirationTime);
+  generateToken(userData, expirationTime) {
+    return this.tokenService.generateToken(userData, expirationTime);
   }
 
   // Email sender methods

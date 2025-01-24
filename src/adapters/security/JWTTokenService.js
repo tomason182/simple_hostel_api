@@ -6,9 +6,9 @@ export class JWTTokenService {
     this.secret = secret;
   }
 
-  generateToken(userAccessData, expiration) {
+  generateToken(userData, expiration) {
     const payload = {
-      sub: userAccessData,
+      sub: userData,
     };
 
     const token = sign(payload, this.secret, { expiresIn: expiration });

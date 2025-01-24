@@ -21,3 +21,28 @@ export function confirmationMailBody(userData, link) {
 
   return body;
 }
+
+export function resetPasswordBody(userData, link) {
+  const body = `<table align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #ffffff; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif; color: #333;">
+  <tr>
+    <td align="center" style="padding: 10px 0;">
+      <h2 style="color: #007BFF;">Password Reset</h2>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 20px; font-size: 1rem; line-height: 1.6;">
+      <p>Hi ${userData.firstName},</p>
+      <p>We've receive a request to reset your password for your SimpleHostel account. No changes to your account have been made yet.</p>
+      <p>You can reset your password by clicking in the link bellow:</p>
+      <p style="text-align: center; margin: 20px 0;">
+        <a href=${link} target="_blank" style="display: inline-block; padding: 12px 24px; color: #ffffff; background-color: #007BFF; border-radius: 4px; text-decoration: none; font-weight: bold;">Reset your password</a>
+      </p>
+      <p>If you didn&apos;t did not request a new password, please let us know by replaying to this email.</p>
+      <p><br>The SimpleHostel Team</p>
+    </td>
+  </tr>
+</table>
+`;
+
+  return body;
+}
