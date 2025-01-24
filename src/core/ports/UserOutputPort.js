@@ -39,8 +39,8 @@ export class UserOutputPort {
     return this.userRepository.updateUser(userData, connection);
   }
 
-  deleteUser(userId) {
-    return this.userRepository.deleteUser(userId);
+  deleteUser(userId, conn = null) {
+    return this.userRepository.deleteUser(userId, conn);
   }
 
   // Access control service

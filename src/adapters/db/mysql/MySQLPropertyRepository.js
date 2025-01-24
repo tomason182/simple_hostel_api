@@ -59,7 +59,24 @@ export class MySQLPropertyRepository {
       const [result] = await (connection || this.pool).execute(query, params);
       return result || null;
     } catch (e) {
-      throw e;
+      throw new Error`An error occurred trying to get all properties users`();
+    }
+  }
+
+  async deleteProperty(propertyId, conn = null) {
+    try {
+      const query = "DELETE FROM properties WHERE id = ?";
+      const params = [propertyId];
+
+      const [result] = await (conn || this.pool).execute(query, params);
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to delete property. Error: ${e.message}`
+      );
     }
   }
 }

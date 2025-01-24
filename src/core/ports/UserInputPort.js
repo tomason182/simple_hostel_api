@@ -22,6 +22,10 @@ export class UserInputPort {
     return this.userCompositeService.editUserProfile(propertyId, userData);
   }
 
+  deleteAccount(propertyId) {
+    return this.userCompositeService.deleteAccount(propertyId);
+  }
+
   // User services
   validateEmail(token) {
     return this.userService.validateEmail(token);

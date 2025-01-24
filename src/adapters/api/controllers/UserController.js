@@ -315,6 +315,17 @@ export class UserController {
   // @access  Private
   deleteUserAccount = async (req, res, next) => {
     try {
+      const propertyId = req.user.propertyId;
+      const userRole = req.user.role;
+
+      if (userRole !== "admin") {
+        res.status(403);
+        throw new Error("You do no have permission to delete this account.");
+      }
+
+      const result = await this.userInputPort.deleteAccount(propertyId);
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

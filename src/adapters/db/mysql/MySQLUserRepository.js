@@ -106,12 +106,12 @@ export class MySQLUserRepository {
     }
   }
 
-  async deleteUser(userId) {
+  async deleteUser(userId, conn = null) {
     try {
       const query = "DELETE from users WHERE id = ?";
       const params = [userId];
 
-      const [result] = await this.pool.execute(query, params);
+      const [result] = await (conn || this.pool).execute(query, params);
       console.log("Deleted result: ", result);
       return result;
     } catch (e) {

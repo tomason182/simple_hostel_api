@@ -138,4 +138,44 @@ export class UserCompositeService {
       await conn.release();
     }
   }
+
+  async deleteAccount(propertyId) {
+    const conn = await this.mysqlPool.getConnection();
+    try {
+      await conn.beginTransaction();
+      // Find all users from the property
+      const allPropertyUsers =
+        await this.userTransactionManagerPort.findAllPropertyUsers(
+          propertyId,
+          conn
+        );
+
+      console.log("all Property users: ", allPropertyUsers);
+
+      if (!allPropertyUsers) {
+        throw new Error(
+          "An unexpected error occurred trying to delete you account."
+        );
+      }
+
+      // Delete all users and it access control
+      for (const user of allPropertyUsers) {
+        console.log(user);
+        await this.userTransactionManagerPort.deleteUser(user.user_id, conn);
+      }
+
+      // Delete the property itself
+      const result = await this.userTransactionManagerPort.deleteProperty(
+        propertyId,
+        conn
+      );
+
+      await conn.commit();
+      return result;
+    } catch (e) {
+      await conn.rollback();
+    } finally {
+      await conn.release();
+    }
+  }
 }

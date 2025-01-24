@@ -2,6 +2,8 @@ export class UserTransactionManagerPort {
   constructor(
     userService,
     propertyService,
+    userRepository,
+    propertyRepository,
     accessControlService,
     tokenService,
     emailService
@@ -11,6 +13,8 @@ export class UserTransactionManagerPort {
     this.accessControlService = accessControlService;
     this.tokenService = tokenService;
     this.emailService = emailService;
+    this.userRepository = userRepository;
+    this.propertyRepository = propertyRepository;
   }
 
   // User methods
@@ -22,13 +26,23 @@ export class UserTransactionManagerPort {
     return this.userService.updateUserProfile(userData, connection);
   }
 
+  deleteUser(userId, conn) {
+    return this.userRepository.deleteUser(userId, conn);
+  }
+
   // Property methods
   createProperty(propertyData, connection) {
     return this.propertyService.createProperty(propertyData, connection);
   }
 
   findAllPropertyUsers(propertyId, conn) {
-    return this.propertyService.findAllPropertyUsers(propertyId, conn);
+    // Creo que aca se puede hacer un bypass y ir directo al repository.
+    console.log(`Searching all users for property ${propertyId}...`);
+    return this.propertyRepository.findAllPropertyUsers(propertyId, conn);
+  }
+
+  deleteProperty(propertyId, conn) {
+    return this.propertyRepository.deleteProperty(propertyId, conn);
   }
 
   // AccessControl methods
