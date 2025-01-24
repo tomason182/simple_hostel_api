@@ -17,7 +17,7 @@ export class MySQLAccessControlRepository {
     }
   }
 
-  async find(userId, connection) {
+  async find(userId, connection = null) {
     try {
       const query = "SELECT * FROM access_control WHERE user_id = ?";
       const params = [userId];
@@ -25,6 +25,25 @@ export class MySQLAccessControlRepository {
       return result[0];
     } catch (e) {
       throw e;
+    }
+  }
+
+  async findWithProperty(propertyId, userId, connection = null) {
+    try {
+      const query =
+        "SELECT * FROM access_control WHERE property_id = ? AND user_id = ? LIMIT 1";
+      const params = [propertyId, userId];
+      console.log("params: ", params);
+
+      const [result] = await (connection || this.pool).execute(query, params);
+
+      console.log("accessControl Result: ", result);
+
+      return result[0] || null;
+    } catch (e) {
+      throw new Error(
+        `Unable to get user accessControl info. Error: ${e.message}`
+      );
     }
   }
 

@@ -110,10 +110,20 @@ export class UserCompositeService {
     }
   }
 
-  async editUserProfile(userData) {
+  async editUserProfile(propertyId, userData) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
+
+      const validateUser = await this.userTransactionManagerPort.validateUser(
+        propertyId,
+        userData.id,
+        conn
+      );
+
+      if (validateUser === null) {
+        throw new Error("User not found");
+      }
 
       const updatedUser =
         await this.userTransactionManagerPort.updateUserProfile(userData, conn);

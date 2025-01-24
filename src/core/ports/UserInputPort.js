@@ -18,6 +18,10 @@ export class UserInputPort {
     );
   }
 
+  editUserProfile(propertyId, userData) {
+    return this.userCompositeService.editUserProfile(propertyId, userData);
+  }
+
   // User services
   validateEmail(token) {
     return this.userService.validateEmail(token);
@@ -39,8 +43,8 @@ export class UserInputPort {
     return this.userService.updateUserProfile(userData);
   }
 
-  editUserProfile(userData) {
-    return this.userCompositeService.editUserProfile(userData);
+  deleteUserProfile(id) {
+    return this.userService.deleteUser(id);
   }
 
   // Token service

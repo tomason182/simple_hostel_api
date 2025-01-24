@@ -1,8 +1,14 @@
 export class UserOutputPort {
-  constructor(userRepository, tokenService, emailService) {
-    (this.userRepository = userRepository),
-      (this.tokenService = tokenService),
-      (this.emailService = emailService);
+  constructor(
+    userRepository,
+    accessControlService,
+    tokenService,
+    emailService
+  ) {
+    this.userRepository = userRepository;
+    this.accessControlService = accessControlService;
+    this.tokenService = tokenService;
+    this.emailService = emailService;
   }
 
   // User repository methods
@@ -31,6 +37,11 @@ export class UserOutputPort {
 
   updateUser(userData, connection) {
     return this.userRepository.updateUser(userData, connection);
+  }
+
+  // Access control service
+  findUserAccessControl(userId) {
+    return this.accessControlService.find(userId);
   }
 
   // Security methods

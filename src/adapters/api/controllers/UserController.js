@@ -193,7 +193,7 @@ export class UserController {
 
       const decoded = this.userInputPort.verifyToken(signedCookie);
 
-      return res.status(200).json({ userId: decoded.sub });
+      return res.status(200).json({ userInfo: decoded.sub });
     } catch (e) {
       next(e);
     }
@@ -220,7 +220,8 @@ export class UserController {
   // @access  Private
   getUserProfile = async (req, res, next) => {
     try {
-      const userId = req.user;
+      console.log(req.user);
+      const userId = req.user._id;
       const userProfile = await this.userInputPort.getUserProfile(userId);
 
       return res.status(200).json(userProfile);
@@ -239,7 +240,7 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const userId = req.user;
+      const userId = req.user._id;
       let userData = matchedData(req);
       userData = {
         ...userData,
@@ -264,9 +265,14 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
+      const propertyId = req.user.propertyId;
+      console.log("propertyId:", propertyId);
       const userData = matchedData(req);
 
-      const result = await this.userInputPort.editUserProfile(userData);
+      const result = await this.userInputPort.editUserProfile(
+        propertyId,
+        userData
+      );
 
       return res.status(200).json(result);
     } catch (e) {
@@ -284,10 +290,12 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
+      const propertyId = req.user.propertyId;
       const data = matchedData(req);
-      console.log(data);
 
-      return res.status(200).json("ok");
+      const result = await this.userInputPort.deleteUserProfile(data.id);
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

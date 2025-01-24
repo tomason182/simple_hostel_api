@@ -40,6 +40,14 @@ export class UserTransactionManagerPort {
     return this.accessControlService.find(userId, connection);
   }
 
+  validateUser(propertyId, userId, connection) {
+    return this.accessControlService.findWithProperty(
+      propertyId,
+      userId,
+      connection
+    );
+  }
+
   updateUserAccessControl(userData, connection) {
     return this.accessControlService.update(userData, connection);
   }
