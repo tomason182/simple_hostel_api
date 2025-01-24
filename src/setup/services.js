@@ -54,6 +54,8 @@ export default function initializeServices() {
   const userTransactionManagerPort = new UserTransactionManagerPort(
     userService,
     propertyService,
+    userRepository,
+    propertyRepository,
     accessControlService,
     tokenService,
     emailService
