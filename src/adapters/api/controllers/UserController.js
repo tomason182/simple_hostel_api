@@ -292,14 +292,16 @@ export class UserController {
       const propertyId = req.user.propertyId;
       const data = matchedData(req);
 
-      if (req.user._id === data.id) {
-        req.status(403);
-        throw new Error("To delete your account go to settings.");
+      const userId = parseInt(data.id);
+
+      if (req.user._id === userId) {
+        res.status(403);
+        throw new Error("To delete your own account go to settings.");
       }
 
       const result = await this.userInputPort.deleteUserProfile(
         propertyId,
-        data.id
+        userId
       );
 
       return res.status(200).json(result);
