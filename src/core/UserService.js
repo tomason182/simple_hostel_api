@@ -118,7 +118,18 @@ export class UserService {
         );
       }
 
-      const token = this.userOutputPort.generateToken(userData.id, "8h");
+      // Get user access control
+      const accessControl = await this.userOutputPort.findUserAccessControl(
+        userData.id
+      );
+
+      const userAccessData = {
+        _id: accessControl.user_id,
+        propertyId: accessControl.property_id,
+        role: accessControl.role,
+      };
+
+      const token = this.userOutputPort.generateToken(userAccessData, "8h");
       return {
         username: userData.username,
         firstName: userData.first_name,
@@ -162,6 +173,22 @@ export class UserService {
       );
 
       return updatedUser;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Delete user
+  async deleteUser(propertyId, userId) {
+    try {
+      // Check if the user id belongs to the property
+      const userBelong = await this.userOutputPort.findUserAccessControl(
+        userId,
+        propertyId
+      );
+      const deletedUser = await this.userOutputPort.deleteUser(id);
+
+      return deletedUser;
     } catch (e) {
       throw e;
     }
