@@ -122,8 +122,7 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const mainUserId = req.user;
-      console.log("mainUserID: ", mainUserId);
+      const propertyId = req.user.propertyId;
 
       const { username, password, firstName, lastName, role } =
         matchedData(req);
@@ -141,7 +140,7 @@ export class UserController {
       }
 
       const result = await this.userInputPort.addUserToProperty(
-        mainUserId,
+        propertyId,
         userData
       );
 
@@ -293,7 +292,15 @@ export class UserController {
       const propertyId = req.user.propertyId;
       const data = matchedData(req);
 
-      const result = await this.userInputPort.deleteUserProfile(data.id);
+      if (req.user._id === data.id) {
+        req.status(403);
+        throw new Error("To delete your account go to settings.");
+      }
+
+      const result = await this.userInputPort.deleteUserProfile(
+        propertyId,
+        data.id
+      );
 
       return res.status(200).json(result);
     } catch (e) {

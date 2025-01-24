@@ -39,9 +39,17 @@ export class UserOutputPort {
     return this.userRepository.updateUser(userData, connection);
   }
 
+  deleteUser(userId) {
+    return this.userRepository.deleteUser(userId);
+  }
+
   // Access control service
   findUserAccessControl(userId) {
     return this.accessControlService.find(userId);
+  }
+
+  validateUser(propertyId, userId) {
+    return this.accessControlService.findWithProperty(propertyId, userId);
   }
 
   // Security methods

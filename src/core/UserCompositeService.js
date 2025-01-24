@@ -49,31 +49,20 @@ export class UserCompositeService {
     }
   }
 
-  async addUserToProperty(mainUserId, userData) {
+  async addUserToProperty(propertyId, userData) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
-
-      // Get the access control for the user.
-      const accessControl =
-        await this.userTransactionManagerPort.findUserAccessControl(
-          mainUserId,
-          conn
-        );
-
-      console.log("Access control result: ", accessControl);
-
-      if (!accessControl) {
-        throw new Error("Unexpected error occurred");
-      }
-
-      const propertyId = accessControl.property_id;
 
       const allPropertyUsers =
         await this.userTransactionManagerPort.findAllPropertyUsers(
           propertyId,
           conn
         );
+
+      if (allPropertyUsers === null) {
+        throw new Error("Unable to find property ID");
+      }
 
       if (allPropertyUsers.length > 4) {
         throw new Error(

@@ -57,7 +57,7 @@ export class MySQLPropertyRepository {
       const params = [propertyId];
 
       const [result] = await (connection || this.pool).execute(query, params);
-      return result;
+      return result || null;
     } catch (e) {
       throw e;
     }

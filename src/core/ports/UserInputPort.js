@@ -7,8 +7,8 @@ export class UserInputPort {
   }
 
   // Composite services
-  addUserToProperty(mainUserId, userData) {
-    return this.userCompositeService.addUserToProperty(mainUserId, userData);
+  addUserToProperty(propertyId, userData) {
+    return this.userCompositeService.addUserToProperty(propertyId, userData);
   }
 
   createUserWithProperty(userData, propertyData) {
@@ -43,8 +43,8 @@ export class UserInputPort {
     return this.userService.updateUserProfile(userData);
   }
 
-  deleteUserProfile(id) {
-    return this.userService.deleteUser(id);
+  deleteUserProfile(propertyId, userId) {
+    return this.userService.deleteUser(propertyId, userId);
   }
 
   // Token service
