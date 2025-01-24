@@ -39,6 +39,10 @@ export class UserOutputPort {
     return this.userRepository.updateUser(userData, connection);
   }
 
+  updatePassword(userId, newPasswordHash) {
+    return this.userRepository.updatePassword(userId, newPasswordHash);
+  }
+
   deleteUser(userId, conn = null) {
     return this.userRepository.deleteUser(userId, conn);
   }

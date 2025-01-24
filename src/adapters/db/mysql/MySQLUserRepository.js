@@ -106,6 +106,23 @@ export class MySQLUserRepository {
     }
   }
 
+  async updatePassword(userId, passwordHash) {
+    try {
+      const query = "UPDATE users SET password_hash = ? WHERE id = ?";
+      const params = [passwordHash, userId];
+
+      const [result] = await this.pool.execute(query, params);
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An Error occurred when trying to update password: Error: ${e.message}`
+      );
+    }
+  }
+
   async deleteUser(userId, conn = null) {
     try {
       const query = "DELETE from users WHERE id = ?";

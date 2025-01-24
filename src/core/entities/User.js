@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 
 export class User {
-  #passwordHash;
   constructor({
     username,
     firstName,
@@ -15,7 +14,7 @@ export class User {
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.#passwordHash = passwordHash;
+    this.passwordHash = passwordHash;
     this.isValidEmail = isValidEmail;
     this.lastResendEmail = lastResendEmail;
     this.createdAt = createdAt;

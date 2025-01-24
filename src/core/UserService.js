@@ -106,7 +106,7 @@ export class UserService {
         );
       }
 
-      const validPassword = new User({
+      const validPassword = await new User({
         username: userData.username,
         firstName: userData.firstName,
         passwordHash: userData.password_hash,
@@ -194,6 +194,54 @@ export class UserService {
       const deletedUser = await this.userOutputPort.deleteUser(userId);
 
       return deletedUser;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async updateUserPassword(
+    userId,
+    oldPassword,
+    newPassword,
+    repeatNewPassword
+  ) {
+    try {
+      const data = await this.userOutputPort.findUserById(userId);
+
+      console.log("oldPass: ", oldPassword);
+      console.log("newPass: ", newPassword);
+
+      if (data === null) {
+        throw new Error("User not found");
+      }
+
+      const user = new User({
+        username: data.username,
+        firstName: data.first_name,
+        lastName: data.lastName,
+        passwordHash: data.password_hash,
+      });
+
+      const checkPass = user.comparePasswords(oldPassword);
+
+      if (checkPass === false) {
+        throw new Error("Invalid password");
+      }
+
+      if (newPassword !== repeatNewPassword) {
+        throw new Error("Password does not match");
+      }
+
+      await user.setPasswordHash(newPassword);
+
+      const passwordHash = user.getPasswordHash();
+
+      const result = await this.userOutputPort.updatePassword(
+        userId,
+        passwordHash
+      );
+
+      return result;
     } catch (e) {
       throw e;
     }

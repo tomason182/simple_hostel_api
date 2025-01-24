@@ -51,6 +51,15 @@ export class UserInputPort {
     return this.userService.deleteUser(propertyId, userId);
   }
 
+  updateUserPassword(userId, password, newPassword, repeatNewPassword) {
+    return this.userService.updateUserPassword(
+      userId,
+      password,
+      newPassword,
+      repeatNewPassword
+    );
+  }
+
   // Token service
   verifyToken(token) {
     return this.tokenService.verifyToken(token);

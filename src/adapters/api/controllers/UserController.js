@@ -336,6 +336,22 @@ export class UserController {
   // @access  Private
   updateUserPassword = async (req, res, next) => {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+      const { currentPassword, newPassword, repeatNewPassword } =
+        matchedData(req);
+
+      const userId = req.user._id;
+
+      const result = await this.userInputPort.updateUserPassword(
+        userId,
+        currentPassword,
+        newPassword,
+        repeatNewPassword
+      );
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }
