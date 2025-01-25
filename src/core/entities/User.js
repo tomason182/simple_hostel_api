@@ -3,22 +3,25 @@ import bcrypt from "bcrypt";
 export class User {
   #passwordHash;
   constructor({
-    id = undefined,
+    id = null,
     username,
     firstName,
     lastName = null,
     passwordHash = null,
     isValidEmail = false,
     lastResendEmail = null,
+    role = null,
     createdAt = null,
     updatedAt = null,
   }) {
-    (this.id = id), (this.username = username);
+    this.id = id;
+    this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
     this.#passwordHash = passwordHash;
     this.isValidEmail = isValidEmail;
     this.lastResendEmail = lastResendEmail;
+    this.role = role;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -99,5 +102,14 @@ export class User {
   // Getter for valid email
   getIsValidEmail() {
     return this.isValidEmail;
+  }
+
+  // Getter and Setter for role
+  getRole() {
+    return this.role;
+  }
+
+  setRole(role) {
+    this.role = role;
   }
 }

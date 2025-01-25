@@ -47,10 +47,10 @@ export class MySQLAccessControlRepository {
     }
   }
 
-  async update(userData, connection) {
+  async update(user, connection) {
     try {
       const query = "UPDATE access_control SET role = ? WHERE user_id = ?";
-      const params = [userData.role, userData.id];
+      const params = [user.getRole(), user.getId()];
 
       const [result] = await (connection || this.pool).execute(query, params);
 

@@ -147,34 +147,15 @@ export class UserService {
     try {
       const userData = await this.userOutputPort.findUserById(userId);
 
-      const user = new User({
-        username: userData.username,
-        firstName: userData.first_name,
-        lastName: userData.last_name,
-        passwordHash: userData.password_hash,
-        isValidEmail: userData.is_valid_email,
-        lastResendEmail: userData.last_resend_email,
-        createdAt: userData.created_at,
-        updatedAt: userData.updated_at,
-      });
+      if (!userData) {
+        throw new Error("User not found");
+      }
+
+      const user = new User(userData);
 
       const userProfile = user.getUserProfile();
 
       return userProfile;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  // Update user profile
-  async updateUserProfile(userData, connection = null) {
-    try {
-      const updatedUser = await this.userOutputPort.updateUser(
-        userData,
-        connection
-      );
-
-      return updatedUser;
     } catch (e) {
       throw e;
     }

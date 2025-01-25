@@ -1,4 +1,5 @@
 import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
+import { User } from "./entities/User.js";
 
 export class UserCompositeService {
   constructor(mysqlPool, userTransactionManagerPort) {
@@ -108,9 +109,11 @@ export class UserCompositeService {
     try {
       await conn.beginTransaction();
 
+      const user = new User(userData);
+
       const validateUser = await this.userTransactionManagerPort.validateUser(
         propertyId,
-        userData.id,
+        user.getId(),
         conn
       );
 
@@ -119,10 +122,10 @@ export class UserCompositeService {
       }
 
       const updatedUser =
-        await this.userTransactionManagerPort.updateUserProfile(userData, conn);
+        await this.userTransactionManagerPort.updateUserProfile(user, conn);
       const updatedAccessControl =
         await this.userTransactionManagerPort.updateUserAccessControl(
-          userData,
+          user,
           conn
         );
 

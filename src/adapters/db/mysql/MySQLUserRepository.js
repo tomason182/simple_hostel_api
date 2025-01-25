@@ -83,15 +83,11 @@ export class MySQLUserRepository {
     }
   }
 
-  async updateUser(userData, connection) {
+  async updateUser(user, connection) {
     try {
       const query =
         "UPDATE users SET first_name = ?, last_name = ? WHERE id = ?";
-      const params = [
-        userData.firstName,
-        userData.lastName || null,
-        userData.id,
-      ];
+      const params = [user.getFirstName(), user.getLastName(), user.getId()];
 
       const [result] = await (connection || this.pool).execute(query, params);
 

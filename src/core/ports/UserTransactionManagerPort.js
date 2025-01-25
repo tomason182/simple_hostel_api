@@ -22,8 +22,8 @@ export class UserTransactionManagerPort {
     return this.userService.createUser(userData, connection);
   }
 
-  updateUserProfile(userData, connection) {
-    return this.userService.updateUserProfile(userData, connection);
+  updateUserProfile(userData, connection = null) {
+    return this.userRepository.updateUser(userData, connection);
   }
 
   deleteUser(userId, conn) {
@@ -62,7 +62,7 @@ export class UserTransactionManagerPort {
     );
   }
 
-  updateUserAccessControl(userData, connection) {
+  updateUserAccessControl(userData, connection = null) {
     return this.accessControlService.update(userData, connection);
   }
 
