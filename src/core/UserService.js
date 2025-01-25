@@ -110,13 +110,11 @@ export class UserService {
         );
       }
 
-      const validPassword = await new User({
-        username: userData.username,
-        firstName: userData.firstName,
-        passwordHash: userData.password_hash,
-      }).comparePasswords(password);
+      const user = new User(userData);
 
-      if (!validPassword) {
+      const isValidPassword = await user.comparePasswords(password);
+
+      if (!isValidPassword) {
         throw new Error(
           "We couldn't sign you in. Please check your username, password or verify your email"
         );
@@ -124,7 +122,7 @@ export class UserService {
 
       // Get user access control
       const accessControl = await this.userOutputPort.findUserAccessControl(
-        userData.id
+        user.getId()
       );
 
       const userAccessData = {
