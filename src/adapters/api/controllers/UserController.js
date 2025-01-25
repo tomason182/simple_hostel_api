@@ -122,16 +122,16 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const propertyId = req.user.propertyId;
+      const property_id = req.user.property_id;
 
-      const { username, password, firstName, lastName, role } =
+      const { username, password, first_name, last_name, role } =
         matchedData(req);
 
       const userData = {
         username,
         password,
-        firstName,
-        lastName: lastName || null,
+        first_name,
+        last_name: last_name || null,
         role,
       };
 
@@ -140,7 +140,7 @@ export class UserController {
       }
 
       const result = await this.userInputPort.addUserToProperty(
-        propertyId,
+        property_id,
         userData
       );
 
@@ -219,7 +219,6 @@ export class UserController {
   // @access  Private
   getUserProfile = async (req, res, next) => {
     try {
-      console.log(req.user);
       const userId = req.user._id;
       const userProfile = await this.userInputPort.getUserProfile(userId);
 

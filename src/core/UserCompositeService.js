@@ -83,11 +83,13 @@ export class UserCompositeService {
         userData,
         conn
       );
+
+      user.setRole(userData.role);
       const accessControlID =
         await this.userTransactionManagerPort.saveAccessControl(
-          user.id,
+          user.getId(),
           propertyId,
-          userData.role,
+          user.getRole(),
           conn
         );
       const token = this.userTransactionManagerPort.generateToken(user.id, 900); // Expires in 900 seg || 15 min
@@ -95,10 +97,10 @@ export class UserCompositeService {
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
 
-      const to = userData.username;
+      const to = user.getUsername();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Confirm your email for SimpleHostel";
-      const body = confirmationMailBody(userData, confirmationLink);
+      const body = confirmationMailBody(user.getFirstName(), confirmationLink);
 
       await this.userTransactionManagerPort.sendEmail(to, subject, body, from);
 

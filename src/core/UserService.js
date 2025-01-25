@@ -126,14 +126,14 @@ export class UserService {
 
       const userAccessData = {
         _id: accessControl.user_id,
-        propertyId: accessControl.property_id,
+        property_id: accessControl.property_id,
         role: accessControl.role,
       };
 
       const token = this.userOutputPort.generateToken(userAccessData, "8h");
       return {
         username: userData.username,
-        firstName: userData.first_name,
+        first_name: userData.first_name,
         token,
       };
     } catch (e) {
