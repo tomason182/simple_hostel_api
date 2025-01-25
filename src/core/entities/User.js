@@ -26,9 +26,13 @@ export class User {
     this.updatedAt = updatedAt;
   }
 
-  // Getter for ID
+  // Getter & Setter for ID
   getId() {
     return this.id;
+  }
+
+  setId(id) {
+    this.id = id;
   }
 
   // Getter for username
@@ -53,7 +57,7 @@ export class User {
   // Setter for hashed password
   async setPasswordHash(password, saltRounds = 10) {
     try {
-      this.passwordHash = await bcrypt.hash(password, saltRounds);
+      this.#passwordHash = await bcrypt.hash(password, saltRounds);
     } catch (e) {
       throw new Error("Error hashing the password");
     }

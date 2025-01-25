@@ -16,27 +16,35 @@ export class UserCompositeService {
         userData,
         conn
       );
+
       const property = await this.userTransactionManagerPort.createProperty(
         PropertyData,
         conn
       );
-      const role = "admin";
+
+      if (user.getRole() === null) {
+        user.setRole("admin");
+      }
+
       const accessControlID =
         await this.userTransactionManagerPort.saveAccessControl(
-          user.id,
+          user.getId(),
           property.id,
-          role,
+          user.getRole(),
           conn
         );
-      const token = this.userTransactionManagerPort.generateToken(user.id, 900);
+      const token = this.userTransactionManagerPort.generateToken(
+        user.getId(),
+        900
+      );
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
 
-      const to = userData.username;
+      const to = user.getUsername();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Confirm your email for SimpleHostel";
-      const body = confirmationMailBody(userData, confirmationLink);
+      const body = confirmationMailBody(user.getFirstName(), confirmationLink);
 
       await this.userTransactionManagerPort.sendEmail(to, subject, body, from);
 

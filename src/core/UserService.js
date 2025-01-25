@@ -33,7 +33,7 @@ export class UserService {
 
       const result = await this.userOutputPort.save(user, connection);
 
-      return result; // {id: userId, ...userData }
+      return result; // {id: userId }
     } catch (e) {
       throw e;
     }
@@ -84,7 +84,7 @@ export class UserService {
       const to = user.getUsername();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Confirm your email for SimpleHostel";
-      const body = confirmationMailBody(user, confirmationLink);
+      const body = confirmationMailBody(user.getFirstName(), confirmationLink);
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
@@ -226,32 +226,26 @@ export class UserService {
         );
       }
 
-      const waitingPeriod = 5 * 60 * 1000; // 5min * 60 seg/min * 1000 ms/seg
+      const user = new User(userExist);
 
-      if (Date.now() - userExist.last_resend_email < waitingPeriod) {
+      const waitingPeriod = user.setWaitingPeriod();
+
+      if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
         throw new Error("Please wait 5 minutes before requesting a new email");
       }
 
-      const lastResendEmail = Date.now();
+      user.setLastResendEmail();
 
-      await this.userOutputPort.updateLastResendEmail(
-        userExist.id,
-        lastResendEmail
-      );
+      await this.userOutputPort.updateLastResendEmail(user);
 
-      const userData = {
-        username: userExist.username,
-        firstName: userExist.first_name,
-      };
-
-      const token = this.userOutputPort.generateToken(userExist.id, 900);
+      const token = this.userOutputPort.generateToken(user.getId(), 900);
       const confirmationLink =
         process.env.API_URL + "accounts/reset-password/new/" + token;
-      const to = userData.username;
+      const to = user.getUsername();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Reset your password";
 
-      const body = resetPasswordBody(userData, confirmationLink);
+      const body = resetPasswordBody(user.getFirstName(), confirmationLink);
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
