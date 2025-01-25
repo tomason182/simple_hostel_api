@@ -21,11 +21,7 @@ export class UserService {
         throw new Error("User already exist");
       }
 
-      const user = new User({
-        username: userData.username,
-        firstName: userData.firstName,
-        lastName: userData.lastName || null,
-      });
+      const user = new User(userData);
 
       await user.setPasswordHash(userData.password);
 

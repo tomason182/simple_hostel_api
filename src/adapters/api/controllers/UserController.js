@@ -12,7 +12,7 @@ export class UserController {
   userRegister = async (req, res, next) => {
     try {
       const errors = validationResult(req);
-      if (!errors.isEmpty) {
+      if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
 
@@ -27,8 +27,8 @@ export class UserController {
       const {
         username,
         password,
-        firstName,
-        propertyName,
+        first_name,
+        property_name,
         acceptTerms,
         captchaToken,
       } = matchedData(req);
@@ -50,11 +50,11 @@ export class UserController {
       const userData = {
         username,
         password,
-        firstName,
+        first_name,
       };
 
       const propertyData = {
-        propertyName,
+        property_name,
         email: username,
       };
 

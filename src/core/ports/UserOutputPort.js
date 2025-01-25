@@ -24,7 +24,7 @@ export class UserOutputPort {
     return this.userRepository.validateUserEmail(userId);
   }
 
-  save(user, connection) {
+  save(user, connection = null) {
     return this.userRepository.save(user, connection);
   }
 

@@ -21,13 +21,15 @@ export function createUserRoutes(services) {
   router.post(
     "/register",
     checkSchema(userRegistrationSchema),
-    body("propertyName")
+    body("property_name")
       .trim()
       .escape()
       .isLength({ min: 1, max: 255 })
       .withMessage("Property name maximum length is 255 characters"),
-    body("acceptTerms").isBoolean().withMessage("Accept terms must be boolean"),
-    body("captchaToken").trim().escape(),
+    body("accept_terms")
+      .isBoolean()
+      .withMessage("Accept terms must be boolean"),
+    body("captcha_token").trim().escape(),
     userController.userRegister
   );
 

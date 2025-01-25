@@ -3,35 +3,37 @@ export class MySQLPropertyRepository {
     this.pool = mysqlPool;
   }
 
-  async save(propertyData, connection) {
+  async save(property, connection) {
     try {
       // Insert property name in property table
       const propertyQuery = "INSERT INTO properties (property_name) VALUES(?)";
-      const propertyParams = [propertyData.propertyName];
+      const propertyParams = [property.getPropertyName()];
       const [result] = await connection.execute(propertyQuery, propertyParams);
 
-      console.log("Property id: ", result.insertId);
+      property.setId(result.insertId);
 
       // Insert property contact info in contact_info table
       const contactInfoQuery =
         "INSERT INTO contacts_info (property_id, phone_number, email) VALUES(?,?,?)";
       const contactInfoParams = [
-        result.insertId,
-        propertyData.contactInfo.phoneNumber,
-        propertyData.contactInfo.email,
+        property.getId(),
+        property.getPhoneNumber(),
+        property.getEmail(),
       ];
+
       await connection.execute(contactInfoQuery, contactInfoParams);
 
       // Insert property address in addresses table
       const addressQuery =
         "INSERT INTO addresses (property_id, street, city, postal_code, country_code) VALUES(?,?,?,?,?)";
       const addressParams = [
-        result.insertId,
-        propertyData.address.street,
-        propertyData.address.city,
-        propertyData.address.postalCode,
-        propertyData.address.countryCode,
+        property.getId(),
+        property.getStreet(),
+        property.getCity(),
+        property.getPostalCode(),
+        property.getCountryCode(),
       ];
+
       await connection.execute(addressQuery, addressParams);
 
       // Insert property currencies in currencies table
@@ -39,15 +41,17 @@ export class MySQLPropertyRepository {
         "INSERT INTO currencies (property_id, base_currency, payment_currency) VALUES(?,?,?)";
       const currenciesParams = [
         result.insertId,
-        propertyData.currencies.baseCurrency,
-        propertyData.currencies.paymentCurrency,
+        property.getBaseCurrency(),
+        property.getPaymentCurrency(),
       ];
+
       await connection.execute(currenciesQuery, currenciesParams);
 
-      return { id: result.insertId, ...propertyData };
+      return property;
     } catch (e) {
-      console.error("Error saving property:", e);
-      throw e;
+      throw new Error(
+        `An Error occurred trying to save property: ${e.message}`
+      );
     }
   }
 
@@ -59,7 +63,9 @@ export class MySQLPropertyRepository {
       const [result] = await (connection || this.pool).execute(query, params);
       return result || null;
     } catch (e) {
-      throw new Error`An error occurred trying to get all properties users`();
+      throw new Error(
+        `An error occurred trying to get all properties users. Error: ${e.message}`
+      );
     }
   }
 

@@ -63,11 +63,67 @@ export class Property {
     return this.id;
   }
 
+  // Getter and setter Property name
+  setPropertyName(name) {
+    this.property_name = name;
+  }
+
+  getPropertyName() {
+    return this.property_name;
+  }
+
+  // Getter and Setter phone number
+  setPhoneNumber(phone_number) {
+    this.contact_info.phone_number = phone_number;
+  }
+
+  getPhoneNumber() {
+    return this.contact_info.phone_number;
+  }
+
+  // Getter and Setter email
+  setEmail(email) {
+    this.contact_info.email = email;
+  }
+
+  getEmail() {
+    return this.contact_info.email;
+  }
+
+  // Getter and setter for street
+  getStreet() {
+    return this.address.street;
+  }
+
+  // Getter and Setter for city
+  getCity() {
+    return this.address.city;
+  }
+
+  // Getter and Setter for country code
+  getCountryCode() {
+    return this.address.country_code;
+  }
+
+  // Getter and Setter for postal code
+  getPostalCode() {
+    return this.address.postal_code;
+  }
+
   // Setter for currencies
-  setCurrencies(base_currency = null, payment_currency = null) {
-    this.currencies = {
-      base_currency,
-      payment_currency,
-    };
+  setBaseCurrency(currency) {
+    this.currencies.base_currency = currency;
+  }
+
+  setPaymentCurrency(currency) {
+    this.currencies.payment_currency = currency;
+  }
+
+  getBaseCurrency() {
+    return this.currencies.base_currency;
+  }
+
+  getPaymentCurrency() {
+    return this.currencies.payment_currency;
   }
 }

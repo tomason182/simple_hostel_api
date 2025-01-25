@@ -7,15 +7,12 @@ export class PropertyService {
 
   async createProperty(propertyData, connection) {
     try {
-      const property = new Property({
-        propertyName: propertyData.propertyName,
-        email: propertyData.email,
-      });
+      const property = new Property(propertyData);
 
       const result = await this.propertyOutputPort.save(property, connection);
       return result;
     } catch (e) {
-      throw `An error occurred when trying to create a property: ${e.message}`;
+      throw e;
     }
   }
 }

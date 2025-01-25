@@ -29,7 +29,7 @@ export class UserCompositeService {
       const accessControlID =
         await this.userTransactionManagerPort.saveAccessControl(
           user.getId(),
-          property.id,
+          property.getId(),
           user.getRole(),
           conn
         );

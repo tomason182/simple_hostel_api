@@ -41,7 +41,9 @@ export class User {
   }
 
   // Getter for first name
-  getFirstName() {}
+  getFirstName() {
+    return this.first_name;
+  }
 
   getLastName() {
     return this.last_name;
