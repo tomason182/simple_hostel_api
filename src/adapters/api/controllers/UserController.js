@@ -370,7 +370,7 @@ export class UserController {
 
       const result = await this.userInputPort.resetUserPassword(username);
 
-      return res.status(200).json({ msg: "email sent" });
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

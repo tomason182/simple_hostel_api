@@ -120,7 +120,7 @@ export function createUserRoutes(services) {
   router.post(
     "/reset-password/init-change-pass",
     checkSchema(usernameSchema),
-    userController.resetUserPassword()
+    userController.resetUserPassword
   );
 
   return router;

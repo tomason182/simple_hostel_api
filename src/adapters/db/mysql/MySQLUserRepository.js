@@ -3,17 +3,17 @@ export class MySQLUserRepository {
     this.pool = mysqlPool;
   }
 
-  async save(userData, connection) {
+  async save(user, connection) {
     try {
       const query =
         "INSERT INTO users (username, first_name, last_name, password_hash, is_valid_email, last_resend_email) VALUES(?,?,?,?,?,?)";
       const params = [
-        userData.username,
-        userData.firstName,
-        userData.lastName,
-        userData.passwordHash,
-        userData.isValidEmail,
-        userData.lastResendEmail,
+        user.getUsername(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getPasswordHash(),
+        user.getIsValidEmail(),
+        user.getLastResendEmail(),
       ];
 
       const [result] = await (connection || this.pool).execute(query, params);
@@ -66,10 +66,10 @@ export class MySQLUserRepository {
     }
   }
 
-  async updateLastResendEmail(userId, lastResendEmail) {
+  async updateLastResendEmail(user) {
     try {
       const query = "UPDATE users SET last_resend_email = ? WHERE id = ?";
-      const params = [lastResendEmail, userId];
+      const params = [user.getLastResendEmail(), user.getId()];
 
       const [result] = await this.pool.execute(query, params);
       return {

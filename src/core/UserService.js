@@ -29,7 +29,7 @@ export class UserService {
 
       await user.setPasswordHash(userData.password);
 
-      user.setEmailResend();
+      user.setLastResendEmail();
 
       const result = await this.userOutputPort.save(user, connection);
 
@@ -52,42 +52,43 @@ export class UserService {
 
   async resendEmail(email) {
     try {
-      const user = await this.userOutputPort.findUserByUsername(email);
-      if (user === null) {
+      const userExist = await this.userOutputPort.findUserByUsername(email);
+      if (userExist === null) {
         throw new Error("User not found");
       }
 
-      if (user.is_valid_email === 1) {
-        throw new Error("Email already validated");
+      if (userExist.is_valid_email === 1) {
+        throw new Error("Email is already validated");
       }
 
-      const waitingPeriod = 5 * 60 * 1000; // 5min * 60 seg/min * 1000 ms/seg
+      const user = new User(userExist);
 
-      if (Date.now() - user.last_resend_email < waitingPeriod) {
-        throw new Error("Please wait 5 minutes before requesting a new email");
+      const waitingPeriod = user.setWaitingPeriod();
+
+      if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
+        throw new Error(
+          `Please wait ${
+            waitingPeriod / 60 / 100
+          } minutes before requesting a new email`
+        );
       }
 
-      const lastResendEmail = Date.now();
+      user.setLastResendEmail();
 
-      await this.userOutputPort.updateLastResendEmail(user.id, lastResendEmail);
+      await this.userOutputPort.updateLastResendEmail(user);
 
-      const token = this.userOutputPort.generateToken(user.id, 900);
-
-      const userData = {
-        username: user.username,
-        firstName: user.first_name,
-      };
+      const token = this.userOutputPort.generateToken(user.getId(), 900);
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
-      const to = userData.username;
+      const to = user.getUsername();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Confirm your email for SimpleHostel";
-      const body = confirmationMailBody(userData, confirmationLink);
+      const body = confirmationMailBody(user, confirmationLink);
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
-      return userData;
+      return { msg: `Email sent successfully to ${user.getUsername()}` };
     } catch (e) {
       throw e;
     }
@@ -252,7 +253,7 @@ export class UserService {
 
   async resetUserPassword(email) {
     try {
-      const userExist = this.userOutputPort.findUserByUsername(email);
+      const userExist = await this.userOutputPort.findUserByUsername(email);
       if (userExist === null) {
         throw new Error(
           "We couldn't find a matching account for the email address you entered. Please check the email address and try again."
@@ -288,7 +289,7 @@ export class UserService {
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
-      return true;
+      return { msg: "email sent" };
     } catch (e) {
       throw e;
     }

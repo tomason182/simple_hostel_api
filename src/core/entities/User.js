@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
 
 export class User {
+  #passwordHash;
   constructor({
+    id = undefined,
     username,
     firstName,
     lastName = null,
@@ -11,30 +13,38 @@ export class User {
     createdAt = null,
     updatedAt = null,
   }) {
-    this.username = username;
+    (this.id = id), (this.username = username);
     this.firstName = firstName;
     this.lastName = lastName;
-    this.passwordHash = passwordHash;
+    this.#passwordHash = passwordHash;
     this.isValidEmail = isValidEmail;
     this.lastResendEmail = lastResendEmail;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
 
-  // Getter for hashed password
-  getPasswordHash() {
-    return this.passwordHash;
+  // Getter for ID
+  getId() {
+    return this.id;
   }
 
-  // GetUserProfile
-  getUserProfile() {
-    return {
-      username: this.username,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
+  // Getter for username
+  getUsername() {
+    return this.username;
+  }
+
+  // Getter for first name
+  getFirstName() {
+    return this.firstName;
+  }
+
+  getLastName() {
+    return this.lastName;
+  }
+
+  // Getter for hashed password
+  getPasswordHash() {
+    return this.#passwordHash;
   }
 
   // Setter for hashed password
@@ -56,27 +66,38 @@ export class User {
     }
   }
 
-  // Setter for role
-  setRole(role) {
-    this.role = role;
-  }
-
-  // Getter for role
-  getRole() {
-    return this.role;
+  // GetUserProfile
+  getUserProfile() {
+    return {
+      username: this.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
   }
 
   // Set last resend email
-  setEmailResend() {
+  setLastResendEmail() {
     this.lastResendEmail = Date.now();
   }
 
-  getEmailResend() {
+  getLastResendEmail() {
     return this.lastResendEmail;
+  }
+
+  // Set waiting period for resend email
+  setWaitingPeriod(timeInSec = 5) {
+    return timeInSec * 60 * 1000;
   }
 
   // Setter for valid email
   setValidEmail(isValid) {
     this.isValidEmail = isValid;
+  }
+
+  // Getter for valid email
+  getIsValidEmail() {
+    return this.isValidEmail;
   }
 }

@@ -28,11 +28,8 @@ export class UserOutputPort {
     return this.userRepository.save(user, connection);
   }
 
-  updateLastResendEmail(userId, lastResendEmailTime) {
-    return this.userRepository.updateLastResendEmail(
-      userId,
-      lastResendEmailTime
-    );
+  updateLastResendEmail(user) {
+    return this.userRepository.updateLastResendEmail(user);
   }
 
   updateUser(userData, connection) {
