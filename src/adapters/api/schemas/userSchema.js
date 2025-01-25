@@ -30,7 +30,7 @@ export const userRegistrationSchema = {
     errorMessage:
       "Password must contain at lease 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols",
   },
-  firstName: {
+  first_name: {
     in: ["body"],
     trim: true,
     notEmpty: {
@@ -47,7 +47,7 @@ export const userRegistrationSchema = {
         "First name is required and maximum length is 70 characters",
     },
   },
-  lastName: {
+  last_name: {
     in: ["body"],
     optional: true,
     trim: true,
@@ -96,7 +96,7 @@ export const userLoginSchema = {
 };
 
 export const userUpdateSchema = {
-  firstName: {
+  first_name: {
     in: ["body"],
     notEmpty: {
       bail: true,
@@ -105,7 +105,7 @@ export const userUpdateSchema = {
     trim: true,
     escape: true,
   },
-  lastName: {
+  last_name: {
     in: ["body"],
     optional: true,
     trim: true,
@@ -124,7 +124,7 @@ export const userUpdateSchema = {
 };
 
 export const userChangePassSchema = {
-  currentPassword: {
+  current_password: {
     in: ["body"],
     isStrongPassword: {
       options: {
@@ -146,7 +146,7 @@ export const userChangePassSchema = {
     errorMessage:
       "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
   },
-  newPassword: {
+  new_password: {
     in: ["body"],
     isStrongPassword: {
       options: {
@@ -168,7 +168,7 @@ export const userChangePassSchema = {
     errorMessage:
       "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
   },
-  repeatNewPassword: {
+  repeat_new_password: {
     in: ["body"],
     isStrongPassword: {
       options: {
