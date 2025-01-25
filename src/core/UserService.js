@@ -191,21 +191,13 @@ export class UserService {
     try {
       const data = await this.userOutputPort.findUserById(userId);
 
-      console.log("oldPass: ", oldPassword);
-      console.log("newPass: ", newPassword);
-
       if (data === null) {
         throw new Error("User not found");
       }
 
-      const user = new User({
-        username: data.username,
-        firstName: data.first_name,
-        lastName: data.lastName,
-        passwordHash: data.password_hash,
-      });
+      const user = new User(data);
 
-      const checkPass = user.comparePasswords(oldPassword);
+      const checkPass = await user.comparePasswords(oldPassword);
 
       if (checkPass === false) {
         throw new Error("Invalid password");
@@ -217,12 +209,7 @@ export class UserService {
 
       await user.setPasswordHash(newPassword);
 
-      const passwordHash = user.getPasswordHash();
-
-      const result = await this.userOutputPort.updatePassword(
-        userId,
-        passwordHash
-      );
+      const result = await this.userOutputPort.updatePassword(user);
 
       return result;
     } catch (e) {

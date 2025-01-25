@@ -102,10 +102,10 @@ export class MySQLUserRepository {
     }
   }
 
-  async updatePassword(userId, passwordHash) {
+  async updatePassword(user) {
     try {
       const query = "UPDATE users SET password_hash = ? WHERE id = ?";
-      const params = [passwordHash, userId];
+      const params = [user.getPasswordHash(), user.getId()];
 
       const [result] = await this.pool.execute(query, params);
       return {
