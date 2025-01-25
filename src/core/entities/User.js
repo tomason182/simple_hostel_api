@@ -1,29 +1,29 @@
 import bcrypt from "bcrypt";
 
 export class User {
-  #passwordHash;
+  #password_hash;
   constructor({
     id = null,
     username,
-    firstName,
-    lastName = null,
-    passwordHash = null,
-    isValidEmail = false,
-    lastResendEmail = null,
+    first_name,
+    last_name = null,
+    password_hash = null,
+    is_valid_email = false,
+    last_resend_email = null,
     role = null,
-    createdAt = null,
-    updatedAt = null,
+    created_at = null,
+    updated_at = null,
   }) {
     this.id = id;
     this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.#passwordHash = passwordHash;
-    this.isValidEmail = isValidEmail;
-    this.lastResendEmail = lastResendEmail;
+    this.first_name = first_name;
+    this.last_name = last_name;
+    this.#password_hash = password_hash;
+    this.is_valid_email = is_valid_email;
+    this.last_resend_email = last_resend_email;
     this.role = role;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+    this.created_at = created_at;
+    this.updated_at = updated_at;
   }
 
   // Getter & Setter for ID
@@ -41,23 +41,21 @@ export class User {
   }
 
   // Getter for first name
-  getFirstName() {
-    return this.firstName;
-  }
+  getFirstName() {}
 
   getLastName() {
-    return this.lastName;
+    return this.last_name;
   }
 
   // Getter for hashed password
   getPasswordHash() {
-    return this.#passwordHash;
+    return this.#password_hash;
   }
 
   // Setter for hashed password
-  async setPasswordHash(password, saltRounds = 10) {
+  async setPasswordHash(password, salt_rounds = 10) {
     try {
-      this.#passwordHash = await bcrypt.hash(password, saltRounds);
+      this.#password_hash = await bcrypt.hash(password, salt_rounds);
     } catch (e) {
       throw new Error("Error hashing the password");
     }
@@ -66,7 +64,7 @@ export class User {
   // Method for compare passwords
   async comparePasswords(password) {
     try {
-      const result = await bcrypt.compare(password, this.passwordHash);
+      const result = await bcrypt.compare(password, this.#password_hash);
       return result;
     } catch (e) {
       return false;
@@ -77,20 +75,20 @@ export class User {
   getUserProfile() {
     return {
       username: this.username,
-      firstName: this.firstName,
-      lastName: this.lastName,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
+      first_name: this.first_name,
+      last_name: this.last_name,
+      created_at: this.created_at,
+      updated_at: this.updated_at,
     };
   }
 
   // Set last resend email
   setLastResendEmail() {
-    this.lastResendEmail = Date.now();
+    this.last_resend_email = Date.now();
   }
 
   getLastResendEmail() {
-    return this.lastResendEmail;
+    return this.last_resend_email;
   }
 
   // Set waiting period for resend email
@@ -99,13 +97,13 @@ export class User {
   }
 
   // Setter for valid email
-  setValidEmail(isValid) {
-    this.isValidEmail = isValid;
+  setValidEmail(is_valid) {
+    this.is_valid_email = is_valid;
   }
 
   // Getter for valid email
   getIsValidEmail() {
-    return this.isValidEmail;
+    return this.is_valid_email;
   }
 
   // Getter and Setter for role
