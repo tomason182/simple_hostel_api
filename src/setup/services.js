@@ -22,7 +22,6 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 
 // Import controllers
 import { UserController } from "../adapters/api/controllers/UserController.js";
-import { access } from "fs";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();

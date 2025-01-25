@@ -60,11 +60,14 @@ export class UserService {
       const user = new User(userExist);
 
       const waitingPeriod = user.setWaitingPeriod();
+      console.log("Waiting period: ", waitingPeriod);
+
+      console.log("Diff: ", Date.now() - user.getLastResendEmail());
 
       if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
         throw new Error(
           `Please wait ${
-            waitingPeriod / 60 / 100
+            waitingPeriod / 60 / 1000
           } minutes before requesting a new email`
         );
       }

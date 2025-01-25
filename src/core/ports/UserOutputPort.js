@@ -64,6 +64,6 @@ export class UserOutputPort {
 
   // Email sender methods
   sendEmail(to, subject, body, from) {
-    return this.emailService(to, subject, body, from);
+    return this.emailService.sendEmail(to, subject, body, from);
   }
 }
