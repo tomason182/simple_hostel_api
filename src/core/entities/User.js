@@ -45,8 +45,17 @@ export class User {
     return this.first_name;
   }
 
+  setFirstName(name) {
+    this.first_name = name;
+  }
+
+  // Getter and setter for last name.
   getLastName() {
     return this.last_name;
+  }
+
+  setLastName(name) {
+    this.last_name = name;
   }
 
   // Getter for hashed password

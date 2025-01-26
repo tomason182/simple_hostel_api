@@ -32,7 +32,7 @@ export class UserOutputPort {
     return this.userRepository.updateLastResendEmail(user);
   }
 
-  updateUser(userData, connection) {
+  updateUser(userData, connection = null) {
     return this.userRepository.updateUser(userData, connection);
   }
 

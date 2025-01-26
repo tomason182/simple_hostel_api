@@ -181,6 +181,23 @@ export class UserService {
     }
   }
 
+  async updateUserProfile(userData) {
+    try {
+      const userExits = await this.userOutputPort.findUserById(userData._id);
+      if (userExits === null) {
+        throw Error("User not found");
+      }
+      const user = new User(userExits);
+
+      user.setFirstName(userData.first_name);
+      user.setLastName(userData.last_name);
+
+      const result = await this.userOutputPort.updateUser(user);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async updateUserPassword(
     userId,
     oldPassword,
