@@ -42,7 +42,8 @@ export class MySQLUserRepository {
 
   async findUserById(userId) {
     try {
-      const query = "SELECT * FROM users WHERE id = ? LIMIT 1";
+      const query =
+        "SELECT * FROM users JOIN access_control ON users.id=access_control.user_id WHERE users.id = ? LIMIT 1";
       const params = [userId];
 
       const [result] = await this.pool.execute(query, params);
@@ -94,10 +95,7 @@ export class MySQLUserRepository {
 
       const [result] = await (connection || this.pool).execute(query, params);
 
-      return {
-        affectedRows: result.affectedRows,
-        changedRows: result.changedRows,
-      };
+      return user;
     } catch (e) {
       throw new Error(
         `An error occurred when trying to update the user: ${e.message}`
