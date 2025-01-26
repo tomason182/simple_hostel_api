@@ -64,6 +64,14 @@ export class UserInputPort {
     return this.userService.resetUserPassword(email);
   }
 
+  resetUserPasswordLastStep(token, newPass, repeatNewPass) {
+    return this.userService.resetUserPasswordLastStep(
+      token,
+      newPass,
+      repeatNewPass
+    );
+  }
+
   // Token service
   verifyToken(token) {
     return this.tokenService.verifyToken(token);

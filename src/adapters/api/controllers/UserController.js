@@ -375,6 +375,31 @@ export class UserController {
     }
   };
 
+  // @desc    Reset password last step
+  // @route   PUT /api/v1/users/reset-password/finish-pass-change/:token
+  // @access  Private
+  resetUserPasswordLastStep = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const data = matchedData(req);
+      console.log(data);
+
+      const result = await this.userInputPort.resetUserPasswordLastStep(
+        data.token,
+        data.newPassword,
+        data.repeatNewPassword
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   // @desc Get all property users
   // @route GET /api/v1/users/all
   // @access Private

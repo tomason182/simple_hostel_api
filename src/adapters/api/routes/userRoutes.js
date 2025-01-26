@@ -8,6 +8,7 @@ import {
   userUpdateSchema,
   userChangePassSchema,
   usernameSchema,
+  userResetPassSchema,
 } from "../schemas/userSchema.js";
 
 export function createUserRoutes(services) {
@@ -123,6 +124,13 @@ export function createUserRoutes(services) {
     "/reset-password/init-change-pass",
     checkSchema(usernameSchema),
     userController.resetUserPassword
+  );
+
+  router.put(
+    "/reset-password/finish-change-pass/:token",
+    param("token").isJWT().withMessage("Invalid JWT token"),
+    checkSchema(userResetPassSchema),
+    userController.resetUserPasswordLastStep
   );
 
   return router;

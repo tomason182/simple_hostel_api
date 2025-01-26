@@ -179,7 +179,6 @@ export class UserCompositeService {
 
       // Delete all users and it access control
       for (const user of allPropertyUsers) {
-        console.log(user);
         await this.userTransactionManagerPort.deleteUser(user.user_id, conn);
       }
 

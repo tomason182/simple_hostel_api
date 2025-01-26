@@ -273,4 +273,30 @@ export class UserService {
       throw e;
     }
   }
+
+  async resetUserPasswordLastStep(token, newPass, repeatNewPass) {
+    try {
+      if (newPass !== repeatNewPass) {
+        throw Error("Passwords do not match");
+      }
+
+      const decode = this.userOutputPort.verifyToken(token);
+      const userId = decode.sub;
+
+      const userExist = await this.userOutputPort.findUserById(userId);
+
+      if (userExist === null) {
+        throw Error("We couldn't find the user");
+      }
+
+      const user = new User(userExist);
+      await user.setPasswordHash(newPass);
+
+      const result = this.userOutputPort.updatePassword(user);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
