@@ -65,7 +65,7 @@ export function createUserRoutes(services) {
 
   // Validate a user
   // Esta ruta creo que esta al pedo. Se valida con el authmiddelware.
-  router.get("/validate", userController.validateUser);
+  //router.get("/validate", userController.validateUser);
 
   // logout a user
   router.get("/logout", userController.logoutUser);
