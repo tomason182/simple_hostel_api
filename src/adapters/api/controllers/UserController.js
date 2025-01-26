@@ -27,8 +27,8 @@ export class UserController {
       const {
         username,
         password,
-        first_name,
-        property_name,
+        firstName,
+        propertyName,
         acceptTerms,
         captchaToken,
       } = matchedData(req);
@@ -50,11 +50,11 @@ export class UserController {
       const userData = {
         username,
         password,
-        first_name,
+        first_name: firstName,
       };
 
       const propertyData = {
-        property_name,
+        property_name: propertyName,
         email: username,
       };
 
@@ -124,14 +124,14 @@ export class UserController {
 
       const property_id = req.user.property_id;
 
-      const { username, password, first_name, last_name, role } =
+      const { username, password, firstName, lastName, role } =
         matchedData(req);
 
       const userData = {
         username,
         password,
-        first_name,
-        last_name: last_name || null,
+        first_name: firstName,
+        last_name: lastName || null,
         role,
       };
 
@@ -239,9 +239,11 @@ export class UserController {
       }
 
       const userId = req.user._id;
-      let userData = matchedData(req);
+      const { firstName, lastName, role } = matchedData(req);
       userData = {
-        ...userData,
+        first_name: firstName,
+        last_name: lastName || null,
+        role,
         id: userId,
       };
 
@@ -265,7 +267,14 @@ export class UserController {
 
       const propertyId = req.user.property_id;
       console.log("propertyId:", propertyId);
-      const userData = matchedData(req);
+      const { firstName, lastName, role, id } = matchedData(req);
+
+      const userData = {
+        id,
+        first_name: firstName,
+        last_name: lastName || null,
+        role,
+      };
 
       const result = await this.userInputPort.editUserProfile(
         propertyId,
