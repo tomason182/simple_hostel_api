@@ -164,10 +164,12 @@ export class UserService {
   async deleteUser(propertyId, userId) {
     try {
       // Check if the user id belongs to the property
-      const userExist = await this.userOutputPort.validateUser(
-        propertyId,
-        userId
+      const userExist = await this.userOutputPort.findUserByIdAndPropertyId(
+        userId,
+        propertyId
       );
+
+      console.log("User: ", userExist);
 
       if (userExist === null) {
         throw new Error("User not found");

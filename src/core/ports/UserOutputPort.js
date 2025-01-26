@@ -20,6 +20,15 @@ export class UserOutputPort {
     return this.userRepository.findUserById(userId);
   }
 
+  findUserByIdAndPropertyId(userId, propertyId, conn = null) {
+    return this.userRepository.findUserByIdAndPropertyId(
+      userId,
+      propertyId,
+      conn
+    );
+  }
+
+  // Borrar
   validateUserEmail(userId) {
     return this.userRepository.validateUserEmail(userId);
   }

@@ -263,7 +263,7 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const propertyId = req.user.propertyId;
+      const propertyId = req.user.property_id;
       console.log("propertyId:", propertyId);
       const userData = matchedData(req);
 
@@ -288,7 +288,7 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const propertyId = req.user.propertyId;
+      const propertyId = req.user.property_id;
       const data = matchedData(req);
 
       const userId = parseInt(data.id);

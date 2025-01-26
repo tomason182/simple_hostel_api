@@ -43,7 +43,7 @@ export class MySQLUserRepository {
   async findUserById(userId) {
     try {
       const query =
-        "SELECT * FROM users JOIN access_control ON users.id=access_control.user_id WHERE users.id = ? LIMIT 1";
+        "SELECT users.id, users.username, users.first_name, users.last_name, access_control.role FROM users JOIN access_control ON users.id=access_control.user_id WHERE users.id = ? LIMIT 1";
       const params = [userId];
 
       const [result] = await this.pool.execute(query, params);
@@ -51,6 +51,21 @@ export class MySQLUserRepository {
     } catch (e) {
       throw new Error(
         `An error occurred when trying to find user by IS: ${e.message}`
+      );
+    }
+  }
+
+  async findUserByIdAndPropertyId(userId, propertyId, conn) {
+    try {
+      const query =
+        "SELECT users.id, users.username ,users.first_name, users.last_name, access_control.role FROM users JOIN access_control ON users.id=access_control.user_id WHERE access_control.user_id = ? AND access_control.property_id = ? LIMIT 1";
+      const params = [userId, propertyId];
+
+      const [result] = await (conn || this.pool).execute(query, params);
+      return result[0] || null;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to find user by ID and property ID. Error: ${e.message}`
       );
     }
   }
@@ -95,7 +110,10 @@ export class MySQLUserRepository {
 
       const [result] = await (connection || this.pool).execute(query, params);
 
-      return user;
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
     } catch (e) {
       throw new Error(
         `An error occurred when trying to update the user: ${e.message}`

@@ -119,17 +119,23 @@ export class UserCompositeService {
     try {
       await conn.beginTransaction();
 
-      const user = new User(userData);
+      const userExist =
+        await this.userTransactionManagerPort.findUserByIdAndPropertyId(
+          userData.id,
+          propertyId,
+          conn
+        );
 
-      const validateUser = await this.userTransactionManagerPort.validateUser(
-        propertyId,
-        user.getId(),
-        conn
-      );
-
-      if (validateUser === null) {
+      if (userExist === null) {
         throw new Error("User not found");
       }
+
+      console.log("user exits: ", userExist);
+
+      const user = new User(userExist);
+      user.setFirstName(userData.first_name);
+      user.setLastName(userData.last_name);
+      user.setRole(userData.role);
 
       const updatedUser =
         await this.userTransactionManagerPort.updateUserProfile(user, conn);

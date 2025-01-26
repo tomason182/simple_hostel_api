@@ -27,7 +27,7 @@ export class MySQLAccessControlRepository {
       throw e;
     }
   }
-
+  // borrar
   async findWithProperty(propertyId, userId, connection = null) {
     try {
       const query =

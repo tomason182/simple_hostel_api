@@ -35,6 +35,14 @@ export class UserTransactionManagerPort {
     return this.propertyService.createProperty(propertyData, connection);
   }
 
+  findUserByIdAndPropertyId(userId, propertyId, conn = null) {
+    return this.userRepository.findUserByIdAndPropertyId(
+      userId,
+      propertyId,
+      conn
+    );
+  }
+
   findAllPropertyUsers(propertyId, conn) {
     // Creo que aca se puede hacer un bypass y ir directo al repository.
     console.log(`Searching all users for property ${propertyId}...`);
@@ -54,6 +62,7 @@ export class UserTransactionManagerPort {
     return this.accessControlService.find(userId, connection);
   }
 
+  // Borrar.
   validateUser(propertyId, userId, connection) {
     return this.accessControlService.findWithProperty(
       propertyId,
