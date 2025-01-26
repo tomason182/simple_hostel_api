@@ -314,7 +314,7 @@ export class UserController {
   // @access  Private
   deleteUserAccount = async (req, res, next) => {
     try {
-      const propertyId = req.user.propertyId;
+      const propertyId = req.user.property_id;
       const userRole = req.user.role;
 
       if (userRole !== "admin") {
