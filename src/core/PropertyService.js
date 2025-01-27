@@ -55,11 +55,10 @@ export class PropertyService {
       property.setCountryCode(propertyDetails.country_code);
       property.setEmail(propertyDetails.email);
       property.setPhoneNumber(propertyDetails.phone_number);
-      property.setPaymentCurrency(propertyDetails.payment_currency);
+      property.setBaseCurrency(propertyDetails.base_currency);
 
       const result = await this.propertyOutputPort.updatePropertyDetails(
-        propertyId,
-        propertyDetails,
+        property,
         conn
       );
 

@@ -78,12 +78,12 @@ export class MySQLPropertyRepository {
     }
   }
 
-  async updateProperty(propertyData, conn) {
+  async updatePropertyDetails(property, conn) {
     try {
       const nameQuery = "UPDATE properties SET property_name = ? WHERE id = ?";
-      const nameParams = [propertyData.getPropertyName(), propertyData.getId()];
+      const nameParams = [property.getPropertyName(), property.getId()];
 
-      await (conn || this.pool).execute(nameQuery, nameParams);
+      const [result] = await (conn || this.pool).execute(nameQuery, nameParams);
 
       // Update property contact info in contact_info table.
       const contactInfoQuery =
@@ -107,7 +107,7 @@ export class MySQLPropertyRepository {
         property.getId(),
       ];
 
-      await connection.execute(addressQuery, addressParams);
+      await conn.execute(addressQuery, addressParams);
 
       // Insert property currencies in currencies table
       const currenciesQuery =
@@ -118,9 +118,12 @@ export class MySQLPropertyRepository {
         property.getId(),
       ];
 
-      await connection.execute(currenciesQuery, currenciesParams);
+      await conn.execute(currenciesQuery, currenciesParams);
 
-      return property;
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
     } catch (e) {
       throw new Error(
         `An error occurred trying to update property details. Error: ${e.message}`

@@ -48,7 +48,7 @@ export default function initializeServices() {
   const propertyOutputPort = new PropertyOutputPort(propertyRepository);
 
   // Initialize the core services
-  const propertyService = new PropertyService(propertyOutputPort);
+  const propertyService = new PropertyService(propertyOutputPort, mysqlPool);
   const userService = new UserService(userOutputPort);
 
   // Initialize transaction manager ports
