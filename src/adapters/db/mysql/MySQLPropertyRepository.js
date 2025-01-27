@@ -55,6 +55,15 @@ export class MySQLPropertyRepository {
     }
   }
 
+  async findPropertyDetails(id) {
+    const query =
+      "SELECT properties.id as id, properties.property_name, properties.created_at, properties.updated_at, contacts_info.phone_number, contacts_info.email, addresses.street, addresses.city, addresses.postal_code, addresses.country_code, currencies.base_currency, currencies.payment_currency FROM properties JOIN contacts_info ON contacts_info.property_id = properties.id JOIN addresses ON addresses.property_id = properties.id JOIN currencies ON currencies.property_id = properties.id WHERE properties.id = ? LIMIT 1";
+    const params = [id];
+    const [result] = await this.pool.execute(query, params);
+
+    return result[0] || null;
+  }
+
   async findAllPropertyUsers(propertyId, connection = null) {
     try {
       const query = "SELECT * FROM access_control WHERE property_id = ?";

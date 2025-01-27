@@ -1,5 +1,5 @@
 export const propertySchema = {
-  property_name: {
+  propertyName: {
     in: ["body"],
     trim: true,
     escape: true,
@@ -37,7 +37,7 @@ export const propertySchema = {
       errorMonitor: "City name maximum length is 100 characters",
     },
   },
-  postal_code: {
+  postalCode: {
     in: ["body"],
     optional: true,
     isPostalCode: {
@@ -45,14 +45,14 @@ export const propertySchema = {
       errorMessage: "Invalid postal code",
     },
   },
-  country_code: {
+  countryCode: {
     in: ["body"],
     optional: true,
     isISO31661Alpha2: {
       errorMessage: "Invalid country code",
     },
   },
-  phone_number: {
+  phoneNumber: {
     in: ["body"],
     optional: true,
     isMobilePhone: {
@@ -71,7 +71,7 @@ export const propertySchema = {
 };
 
 export const propertyPoliciesSchema = {
-  payment_method: {
+  paymentMethod: {
     in: ["body"],
     custom: {
       options: values => {
@@ -97,7 +97,7 @@ export const propertyPoliciesSchema = {
     },
     errorMessage: "Invalid payment methods. Please review your inputs.",
   },
-  check_in: {
+  checkIn: {
     in: ["body"],
     isObject: {
       bail: true,

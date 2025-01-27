@@ -15,4 +15,24 @@ export class PropertyService {
       throw e;
     }
   }
+
+  async getPropertyDetails(id) {
+    try {
+      const propertyExist = await this.propertyOutputPort.findPropertyDetails(
+        id
+      );
+
+      if (propertyExist === null) {
+        throw Error("Property not found");
+      }
+
+      console.log(propertyExist);
+
+      const property = new Property(propertyExist);
+
+      return property;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

@@ -6,4 +6,8 @@ export class PropertyOutputPort {
   save(propertyData, connection) {
     return this.propertyRepository.save(propertyData, connection);
   }
+
+  findPropertyDetails(id) {
+    return this.propertyRepository.findPropertyDetails(id);
+  }
 }

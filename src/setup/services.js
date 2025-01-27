@@ -22,6 +22,8 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 
 // Import controllers
 import { UserController } from "../adapters/api/controllers/UserController.js";
+import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
+import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -74,9 +76,13 @@ export default function initializeServices() {
     tokenService
   );
 
+  const propertyInputPort = new PropertyInputPort(propertyService);
+
   const userController = new UserController(userInputPort);
+  const propertyController = new PropertyController(propertyInputPort);
 
   return {
     userController,
+    propertyController,
   };
 }

@@ -10,6 +10,8 @@ export class Property {
     email = null,
     base_currency = null,
     payment_currency = null,
+    created_at = null,
+    updated_at = null,
   }) {
     this.id = id;
     this.property_name = property_name;
@@ -50,8 +52,8 @@ export class Property {
       description: null,
     };
 
-    this.create_at = null;
-    this.update_at = null;
+    this.created_at = created_at;
+    this.updated_at = updated_at;
   }
 
   // Setter and Getter for ID
