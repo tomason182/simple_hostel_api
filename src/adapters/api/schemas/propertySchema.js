@@ -1,3 +1,5 @@
+import { errorMonitor } from "nodemailer/lib/xoauth2";
+
 export const propertySchema = {
   propertyName: {
     in: ["body"],
@@ -71,6 +73,17 @@ export const propertySchema = {
       errorMessage: "Invalid email address",
     },
     normalizeEmail: true,
+  },
+  baseCurrency: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "Currency must not be empty",
+    },
+    isIso4217: {
+      bail: true,
+      errorMessage: "Currency must be ISO 4217",
+    },
   },
 };
 
