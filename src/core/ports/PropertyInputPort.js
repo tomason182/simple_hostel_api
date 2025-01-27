@@ -7,4 +7,7 @@ export class PropertyInputPort {
   getPropertyDetails(id) {
     return this.propertyService.getPropertyDetails(id);
   }
+  updatePropertyDetails(propertyId, propertyData) {
+    return this.propertyService.updatePropertyDetails(propertyId, propertyData);
+  }
 }

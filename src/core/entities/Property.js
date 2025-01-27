@@ -97,9 +97,17 @@ export class Property {
     return this.address.street;
   }
 
+  setStreet(street) {
+    this.address.street = street;
+  }
+
   // Getter and Setter for city
   getCity() {
     return this.address.city;
+  }
+
+  setCity(city) {
+    this.address.city = city;
   }
 
   // Getter and Setter for country code
@@ -107,9 +115,17 @@ export class Property {
     return this.address.country_code;
   }
 
+  setCountryCode(country_code) {
+    this.address.country_code = country_code;
+  }
+
   // Getter and Setter for postal code
   getPostalCode() {
     return this.address.postal_code;
+  }
+
+  setPostalCode(postal_code) {
+    this.address.postal_code = postal_code;
   }
 
   // Setter for currencies

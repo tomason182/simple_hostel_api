@@ -7,7 +7,11 @@ export class PropertyOutputPort {
     return this.propertyRepository.save(propertyData, connection);
   }
 
-  findPropertyDetails(id) {
-    return this.propertyRepository.findPropertyDetails(id);
+  findPropertyDetails(id, conn = null) {
+    return this.propertyRepository.findPropertyDetails(id, conn);
+  }
+
+  updatePropertyDetails(propertyDetails, conn = null) {
+    return this.propertyRepository.updatePropertyDetails(propertyDetails, conn);
   }
 }

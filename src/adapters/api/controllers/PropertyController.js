@@ -35,6 +35,24 @@ export class PropertyController {
         return res.status(400).json(errors.array());
       }
 
+      const data = matchedData(req);
+      const propertyId = req.user.property_id;
+
+      const propertyData = {
+        property_name: data.propertyName,
+        street: data.street || null,
+        city: data.city || null,
+        postal_code: data.postalCode || null,
+        country_code: data.country_code || null,
+        phone_number: data.phoneNumber || null,
+        email: data.email,
+      };
+
+      const result = await this.propertyInputPort.updatePropertyDetails(
+        propertyId,
+        propertyData
+      );
+
       return res.status(200).json({ msg: "ok" });
     } catch (e) {
       next(e);
