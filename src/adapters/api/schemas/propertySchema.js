@@ -62,8 +62,12 @@ export const propertySchema = {
   },
   email: {
     in: ["body"],
-    options: true,
+    notEmpty: {
+      bail: true,
+      errorMessage: "Email must not be empty",
+    },
     isEmail: {
+      bail: true,
       errorMessage: "Invalid email address",
     },
     normalizeEmail: true,
