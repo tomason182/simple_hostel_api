@@ -42,7 +42,7 @@ export class Property {
       },
       cancellation_policy: {
         allow_cancellation: false,
-        days: 0,
+        policies: [],
       },
       allow_pets: false,
       minors_policy: {
