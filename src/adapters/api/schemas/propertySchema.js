@@ -78,7 +78,7 @@ export const propertySchema = {
       bail: true,
       errorMessage: "Currency must not be empty",
     },
-    isIso4217: {
+    isISO4217: {
       bail: true,
       errorMessage: "Currency must be ISO 4217",
     },

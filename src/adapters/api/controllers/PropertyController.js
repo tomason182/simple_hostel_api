@@ -46,6 +46,7 @@ export class PropertyController {
         country_code: data.country_code || null,
         phone_number: data.phoneNumber || null,
         email: data.email,
+        base_currency: data.baseCurrency,
       };
 
       const result = await this.propertyInputPort.updatePropertyDetails(
@@ -53,7 +54,7 @@ export class PropertyController {
         propertyData
       );
 
-      return res.status(200).json({ msg: "ok" });
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }
