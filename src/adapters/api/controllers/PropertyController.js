@@ -26,7 +26,7 @@ export class PropertyController {
   };
 
   // @desc    Update a property details
-  // @route   PUT /api/v1/properties/
+  // @route   PUT /api/v1/properties/update
   // @access  Private
   updatePropertyDetails = async (req, res, next) => {
     try {

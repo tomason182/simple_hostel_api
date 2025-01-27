@@ -1,5 +1,3 @@
-import { errorMonitor } from "nodemailer/lib/xoauth2";
-
 export const propertySchema = {
   propertyName: {
     in: ["body"],

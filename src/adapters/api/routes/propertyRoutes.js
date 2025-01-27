@@ -18,7 +18,7 @@ export function createPropertyRoutes(services) {
   );
 
   // Update property details
-  router.post(
+  router.put(
     "/update",
     authMiddleware(tokenService),
     checkSchema(propertySchema),
