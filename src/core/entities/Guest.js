@@ -10,8 +10,6 @@ export class Guest {
     city,
     country_code,
     postal_code = null,
-    created_by,
-    updated_by = null,
     created_at = null,
     updated_at = null,
   }) {
@@ -29,8 +27,6 @@ export class Guest {
       country_code,
       postal_code,
     };
-    this.created_by = created_by;
-    this.updated_by = updated_by;
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
@@ -123,23 +119,5 @@ export class Guest {
 
   setCountryCode(postalCode) {
     this.address.postal_code = postalCode;
-  }
-
-  // Getter and Setter for created by
-  getCreatedBy() {
-    return this.created_by;
-  }
-
-  setCreatedBy(createdBy) {
-    this.created_by = createdBy;
-  }
-
-  // Getter and Setter for updated by
-  getUpdatedBy() {
-    return this.updated_by;
-  }
-
-  setUpdatedBy(updatedBy) {
-    this.updated_by = updatedBy;
   }
 }
