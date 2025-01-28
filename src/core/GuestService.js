@@ -1,6 +1,6 @@
 import { Guest } from "./entities/Guest";
 
-export class guestService {
+export class GuestService {
   constructor(guestOutputPort) {
     this.guestOutputPort = guestOutputPort;
   }
