@@ -99,13 +99,14 @@ CREATE TABLE IF NOT EXISTS guests (
   last_name VARCHAR(255) NOT NULL,
   id_number VARCHAR(25),
   email VARCHAR(255) NOT NULL,
-  phone_number INT,
+  phone_number VARCHAR(15),
   city VARCHAR(255),
   street VARCHAR(255),
   postal_code VARCHAR(10),
-  country_code VARCHAR(2)
-)
-
+  country_code VARCHAR(2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 
 -- Create room types table.
 
