@@ -15,7 +15,7 @@ export class GuestService {
         conn
       );
 
-      if (guestExist === null) {
+      if (guestExist !== null) {
         throw new Error(`Guest with email ${guest.getEmail()} already exist`);
       }
 
