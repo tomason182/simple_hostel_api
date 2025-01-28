@@ -19,11 +19,25 @@ export class GuestController {
       const userId = req.user._id;
       const data = matchedData(req);
 
-      console.log("propertyId: ", propertyId);
-      console.log("userid: ", userId);
-      console.log("data: ", data);
+      const guestData = {
+        first_name: guestData.firstName,
+        last_name: guestData.lastName,
+        id_number: guestData.idNumber || null,
+        email: guestData.email,
+        phone_number: guestData.phoneNumber || null,
+        city: guestData.city || null,
+        street: guestData.street || null,
+        postal_code: guestData.postalCode || null,
+        country_code: guestData.countryCode || null,
+      };
 
-      return res.status(200).json({ msg: "ok" });
+      const result = await this.guestInputPort.createGuest(
+        propertyId,
+        userId,
+        data
+      );
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }
