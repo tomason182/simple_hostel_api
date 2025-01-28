@@ -90,6 +90,23 @@ CREATE TABLE IF NOT EXISTS cancellation_policies (
   amount_refound DECIMAL(3,2),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
+
+-- Create guest table
+CREATE TABLE IF NOT EXISTS guests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  first_name VARCHAR(255) NOT NULL,
+  last_name VARCHAR(255) NOT NULL,
+  id_number VARCHAR(25),
+  email VARCHAR(255) NOT NULL,
+  phone_number INT,
+  city VARCHAR(255),
+  street VARCHAR(255),
+  postal_code VARCHAR(10),
+  country_code VARCHAR(2)
+)
+
+
 -- Create room types table.
 
 -- Create products table.
