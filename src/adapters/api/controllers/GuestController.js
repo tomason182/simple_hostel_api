@@ -16,25 +16,23 @@ export class GuestController {
       }
 
       const propertyId = req.user.property_id;
-      const userId = req.user._id;
       const data = matchedData(req);
 
       const guestData = {
-        first_name: guestData.firstName,
-        last_name: guestData.lastName,
-        id_number: guestData.idNumber || null,
-        email: guestData.email,
-        phone_number: guestData.phoneNumber || null,
-        city: guestData.city || null,
-        street: guestData.street || null,
-        postal_code: guestData.postalCode || null,
-        country_code: guestData.countryCode || null,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        id_number: data.idNumber || null,
+        email: data.email,
+        phone_number: data.phoneNumber || null,
+        city: data.city || null,
+        street: data.street || null,
+        postal_code: data.postalCode || null,
+        country_code: data.countryCode || null,
       };
 
       const result = await this.guestInputPort.createGuest(
         propertyId,
-        userId,
-        data
+        guestData
       );
 
       return res.status(200).json(result);
