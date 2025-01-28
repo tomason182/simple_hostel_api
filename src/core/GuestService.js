@@ -29,4 +29,24 @@ export class GuestService {
       throw e;
     }
   }
+
+  async updateGuest(guestData, propertyId) {
+    try {
+      const guest = new Guest(guestData);
+      const guestExist = await this.guestOutputPort.findGuestByEmail(
+        guest.getEmail(),
+        propertyId
+      );
+
+      if (guestExist === null) {
+        throw new Error("Guest exits");
+      }
+
+      const result = await this.guestOutputPort.updateGuest(guest);
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

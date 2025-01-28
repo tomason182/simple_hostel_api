@@ -3,7 +3,11 @@ export class GuestInputPort {
     this.guestService = guestService;
   }
 
-  createGuest(propertyId, userId, guestData) {
-    return this.guestService.createGuest(propertyId, userId, guestData);
+  createGuest(propertyId, guestData) {
+    return this.guestService.createGuest(propertyId, guestData);
+  }
+
+  updateGuest(guestData, propertyId) {
+    return this.guestService.updateGuest(guestData, propertyId);
   }
 }

@@ -19,6 +19,20 @@ export class MySQLGuestRepository {
     }
   }
 
+  async findGuestById(id, propertyId, conn = null) {
+    try {
+      const query = "SELECT * FROM guest WHERE id = ? AND property_id = ?";
+      const params = [id, propertyId];
+
+      const [result] = await (conn || this.pool).execute(query, params);
+      return result[0] || null;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to find guest by id: Error: ${e.message}`
+      );
+    }
+  }
+
   async saveGuest(guest, propertyId, conn) {
     try {
       const query =
@@ -43,6 +57,36 @@ export class MySQLGuestRepository {
     } catch (e) {
       throw Error(
         `An error occurred trying to insert a new guest: Error: ${e.message}`
+      );
+    }
+  }
+
+  async updateUser(guest) {
+    try {
+      const query =
+        "UPDATE guest SET (first_name, last_name, id_number, email, phone_number, street, city, country_code, postal_code) VALUES (?,?,?,?,?,?,?,?,?) WHERE id = ?";
+      const params = [
+        guest.getFirstName(),
+        guest.getLastName(),
+        guest.getIdNumber(),
+        guest.getEmail(),
+        guest.getPhoneNumber(),
+        guest.getStreet(),
+        guest.getCity(),
+        guest.getCountryCode(),
+        guest.getPostalCode(),
+        guest.getId(),
+      ];
+
+      const [result] = this.pool.execute(query, params);
+
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update a guest: Error: ${e.message}`
       );
     }
   }

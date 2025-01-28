@@ -10,4 +10,8 @@ export class GuestOutputPort {
   saveGuest(guest, propertyId, conn = null) {
     return this.guestRepository.saveGuest(guest, propertyId, conn);
   }
+
+  updateGuest(guest) {
+    return this.guestRepository.updateGuest(guest);
+  }
 }
