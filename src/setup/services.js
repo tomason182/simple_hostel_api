@@ -38,7 +38,7 @@ export default function initializeServices() {
   const userRepository = new MySQLUserRepository(mysqlPool);
   const propertyRepository = new MySQLPropertyRepository(mysqlPool);
   const accessControlService = new MySQLAccessControlRepository(mysqlPool);
-  const guestRepository = new MySQLAccessControlRepository(mysqlPool);
+  const guestRepository = new MySQLGuestRepository(mysqlPool);
 
   // INITIALIZE EXTRA SERVICES.
   const emailService = createEmailNotification();
