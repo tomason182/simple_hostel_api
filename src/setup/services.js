@@ -13,6 +13,7 @@ import { UserCompositeService } from "../core/UserCompositeService.js";
 // Import ports
 import { UserInputPort } from "../core/ports/UserInputPort.js";
 import { UserOutputPort } from "../core/ports/UserOutputPort.js";
+import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
 import { PropertyOutputPort } from "../core/ports/PropertyOutputPort.js";
 import { UserTransactionManagerPort } from "../core/ports/UserTransactionManagerPort.js";
 
@@ -23,7 +24,7 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 // Import controllers
 import { UserController } from "../adapters/api/controllers/UserController.js";
 import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
-import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
+import { GuestController } from "../adapters/api/controllers/GuestController.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -80,9 +81,11 @@ export default function initializeServices() {
 
   const userController = new UserController(userInputPort);
   const propertyController = new PropertyController(propertyInputPort);
+  const guestController = new GuestController();
 
   return {
     userController,
     propertyController,
+    guestController,
   };
 }
