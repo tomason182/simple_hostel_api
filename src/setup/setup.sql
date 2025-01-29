@@ -106,7 +106,44 @@ CREATE TABLE IF NOT EXISTS guests (
   country_code VARCHAR(2),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
+
+-- Create reservations table.
+CREATE TABLE IF NOT EXISTS reservations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  guest_id INT NOT NULL,
+  property_id INT NOT NULL,
+  booking_source ENUM("booking.com", "hostelWorld.com", "direct", "website") NOT NULL,
+  currencies CHAR(3) NOT NULL,
+  reservation_status ENUM("confirmed", "provisional", "canceled", "no_show") NOT NULL,
+  payment_status ENUM("pending", "canceled", "refunded", "paid", "partial") NOT NULL,
+  check_in DATE NOT NULL,
+  check_out DATE NOT NULL,
+  special_request VARCHAR(500) DEFAULT NULL,
+  created_by INT NOT NULL,
+  updated_by INT DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+  FOREIGN KEY (guest_id) REFERENCES guests(id) ON DELETE CASCADE,
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
+)
+
+-- create reservation_rooms table
+CREATE TABLE IF NOT EXISTS reservation_rooms (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reservation_id INT NOT NULL,
+  room_type_id INT NOT NULL,
+  number_of_guests INT CHECK (number_of_guests > 0),
+  total_amount DECIMAL(10,2) CHECK (total_amount >= 0),
+
+  FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
+  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE
+)
 
 -- Create room types table.
 
