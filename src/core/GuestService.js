@@ -7,6 +7,15 @@ export class GuestService {
 
   async createGuest(propertyId, guestData, conn = null) {
     try {
+      // Check If property exist
+      const propertyExist = await this.guestOutputPort.findPropertyById(
+        propertyId
+      );
+
+      if (propertyExist === null) {
+        throw new Error(`Property with ID ${propertyId} does not exist`);
+      }
+
       const guest = new Guest(guestData);
       // Find if guest exists
       const guestExist = await this.guestOutputPort.findGuestByEmail(

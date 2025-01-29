@@ -41,6 +41,40 @@ export class GuestController {
     }
   };
 
+  // @desc    Create a new Guest from website
+  // @route   POST  /api/v1/guests/new
+  // @access  Public
+  createGuestFromWeb = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const data = matchedData(req);
+      const propertyId = data.id;
+      const guestData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        id_number: data.idNumber || null,
+        email: data.email,
+        phone_number: data.phoneNumber || null,
+        city: data.city || null,
+        street: data.street || null,
+        postal_code: data.postalCode || null,
+        country_code: data.countryCode || null,
+      };
+
+      const result = await this.guestInputPort.createGuest(
+        propertyId,
+        guestData
+      );
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   // @desc    Update an specific guest
   // @route   PUT /api/v1/guests/update/:id
   // @access  Private
@@ -97,4 +131,12 @@ export class GuestController {
       next(e);
     }
   };
+
+  // @desc    Get an specific Guest by query search
+  // @route   GET /api/v1/guests/find
+  // @access  Private
+
+  // @desc    Delete an specific guest
+  // @route   DELETE /api/v1/guests/:id
+  // @access  Private
 }

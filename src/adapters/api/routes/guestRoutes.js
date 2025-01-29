@@ -20,6 +20,16 @@ export function createGuestRoutes(services) {
     guestController.createGuest
   );
 
+  // @desc    Create a new Guest from website
+  // @route   POST /api/v1/guests/new
+  // @access  Publica
+  router.post(
+    "/new/:id",
+    checkSchema(guestSchema),
+    param("id").trim().isInt().withMessage("Invalid ID param"),
+    guestController.createGuestFromWeb
+  );
+
   // @desc    Update an specific guest
   // @route   PUT /api/v1/guests/update/:id
   // @access  Private
