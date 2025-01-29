@@ -105,32 +105,6 @@ export const reservationSchema = {
       errorMessage: "Check-out date mus be ISO8601 format",
     },
   },
-  numberOfGuests: {
-    in: ["body"],
-    exists: {
-      bail: true,
-      errorMessage: "Number of guests must be provided",
-    },
-    isInt: {
-      bail: true,
-      options: { min: 1, max: 100 },
-      errorMessage: "Number of guest must be integer",
-    },
-    toInt: true,
-  },
-  totalPrice: {
-    in: ["body"],
-    exists: {
-      bail: true,
-      errorMessage: "Total price must be provided",
-    },
-    isDecimal: {
-      bail: true,
-      options: { min: 1 },
-      errorMessage: "Total price must be a decimal number",
-    },
-    toFloat: true,
-  },
   currency: {
     in: ["body"],
     exists: {
