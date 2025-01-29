@@ -65,4 +65,23 @@ export class GuestService {
       throw e;
     }
   }
+
+  async findGuestById(guestId, propertyId) {
+    try {
+      const guestExist = await this.guestOutputPort.findGuestById(
+        guestId,
+        propertyId
+      );
+
+      if (guestExist === null) {
+        throw new Error(`Unable to find a guest with ID: ${guestId}`);
+      }
+
+      const guest = new Guest(guestExist);
+
+      return guest;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

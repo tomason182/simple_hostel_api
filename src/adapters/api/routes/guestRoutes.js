@@ -31,5 +31,15 @@ export function createGuestRoutes(services) {
     guestController.updateGuest
   );
 
+  // @desc    Get an specific guest by id
+  // @route   GET /api/v1/guests/:id
+  // @access  Private
+  router.get(
+    "/:id",
+    authMiddleware(tokenService),
+    param("id").trim().isInt("Invalid ID parameter"),
+    guestController.findGuestById
+  );
+
   return router;
 }

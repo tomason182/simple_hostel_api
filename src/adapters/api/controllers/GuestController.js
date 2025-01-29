@@ -77,4 +77,24 @@ export class GuestController {
       next(e);
     }
   };
+
+  // @desc    Get an specific guest by id
+  // @route   GET /api/v1/guests/:id
+  // @access  Private
+  findGuestById = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { id } = matchedData(req);
+      const result = await this.guestInputPort.findGuestById(id, propertyId);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

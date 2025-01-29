@@ -10,4 +10,8 @@ export class GuestInputPort {
   updateGuest(guestData, propertyId) {
     return this.guestService.updateGuest(guestData, propertyId);
   }
+
+  findGuestById(guestId, propertyId) {
+    return this.guestService.findGuestById(guestId, propertyId);
+  }
 }
