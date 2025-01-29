@@ -21,7 +21,7 @@ export class MySQLGuestRepository {
 
   async findGuestById(id, propertyId, conn = null) {
     try {
-      const query = "SELECT * FROM guest WHERE id = ? AND property_id = ?";
+      const query = "SELECT * FROM guests WHERE id = ? AND property_id = ?";
       const params = [id, propertyId];
 
       const [result] = await (conn || this.pool).execute(query, params);
@@ -61,10 +61,10 @@ export class MySQLGuestRepository {
     }
   }
 
-  async updateUser(guest) {
+  async updateGuest(guest) {
     try {
       const query =
-        "UPDATE guest SET (first_name, last_name, id_number, email, phone_number, street, city, country_code, postal_code) VALUES (?,?,?,?,?,?,?,?,?) WHERE id = ?";
+        "UPDATE guests SET first_name = ?, last_name = ?, id_number = ?, email = ?, phone_number = ?, street = ?, city = ?, country_code = ?, postal_code = ? WHERE id = ?";
       const params = [
         guest.getFirstName(),
         guest.getLastName(),
@@ -78,7 +78,7 @@ export class MySQLGuestRepository {
         guest.getId(),
       ];
 
-      const [result] = this.pool.execute(query, params);
+      const [result] = await this.pool.execute(query, params);
 
       return {
         affectedRows: result.affectedRows,
