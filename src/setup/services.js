@@ -53,7 +53,10 @@ export default function initializeServices() {
   );
 
   const propertyOutputPort = new PropertyOutputPort(propertyRepository);
-  const guestOutputPort = new GuestOutputPort(guestRepository);
+  const guestOutputPort = new GuestOutputPort(
+    guestRepository,
+    propertyRepository
+  );
 
   // Initialize the core services
   const propertyService = new PropertyService(propertyOutputPort, mysqlPool);
