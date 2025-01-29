@@ -11,17 +11,65 @@ export const reservationSchema = {
     },
     toInt: true,
   },
-  roomTypeId: {
+  selectedRooms: {
     in: ["body"],
     exists: {
       bail: true,
-      errorMessage: "Room type ID must be provided",
+      errorMessage: "Selected rooms must be provided",
     },
-    isInt: {
+    isArray: {
       bail: true,
-      errorMessage: "Room type ID must be a valid Id",
+      errorMessage: "Selected rooms must be an array",
     },
-    toInt: true,
+    custom: {
+      options: values => {
+        // Ensure values is an array
+        if (!Array.isArray(values)) {
+          throw new Error("Selected rooms must be an array");
+        }
+
+        // Ensure array is not empty
+        if (values.length === 0) {
+          throw new Error("Selected rooms array cannot be empty");
+        }
+
+        const validKeys = ["room_type_id", "number_of_guests", "total_amount"];
+
+        // Ensure each value of the array is an object
+        for (const obj of values) {
+          if (typeof obj !== "object" || obj === null) {
+            throw new Error("Each item in selected room must be an object");
+          }
+
+          // Ensure object only contains valid keys
+          const objKeys = Object.keys(obj);
+          if (!objKeys.every(key => validKeys.includes(key))) {
+            throw new Error("Invalid key provided in SelectedRooms object");
+          }
+
+          // Ensure room_type_id is an integer.
+          if (!Number.isInteger(obj.room_type_id)) {
+            throw new Error("room_type_id must be an integer");
+          }
+
+          // Ensure number_of_guests is an integer.
+          if (!Number.isInteger(obj.number_of_guest)) {
+            throw new Error("number_of_guests must be an integer");
+          }
+
+          // Ensure total_amount is valid number.
+          if (typeof obj.total_amount !== "number" || isNaN(obj.total_amount)) {
+            throw new Error("total_amount must be a valid number");
+          }
+
+          // Ensure total amount is positive
+          if (obj.total_amount < 0) {
+            throw new Error("total_amount must be a positive number");
+          }
+        }
+        return true;
+      },
+    },
   },
   bookingSource: {
     in: ["body"],
