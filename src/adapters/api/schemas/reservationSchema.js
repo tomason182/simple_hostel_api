@@ -1,9 +1,7 @@
-import { escape } from "mysql2";
-
 export const reservationSchema = {
   guestId: {
     in: ["body"],
-    exits: {
+    exists: {
       bail: true,
       errorMessage: "Guest ID must be provided",
     },
@@ -11,6 +9,7 @@ export const reservationSchema = {
       bail: true,
       errorMessage: "Guest ID must be a valid Id",
     },
+    toInt: true,
   },
   roomTypeId: {
     in: ["body"],
@@ -22,6 +21,7 @@ export const reservationSchema = {
       bail: true,
       errorMessage: "Room type ID must be a valid Id",
     },
+    toInt: true,
   },
   bookingSource: {
     in: ["body"],
@@ -32,29 +32,29 @@ export const reservationSchema = {
     isIn: {
       options: [["booking.com", "hostelWorld.com", "direct", "website"]],
       errorMessage:
-        "Booking source must be one of: booking.com, hostelWord.com, direct or website",
+        "Booking source must be one of: booking.com, hostelWorld.com, direct or website",
     },
   },
   checkIn: {
     in: ["body"],
     exists: {
       bail: true,
-      errorMessage: "Check in date must be provided",
+      errorMessage: "Check-in date must be provided",
     },
     isISO8601: {
       strict: true,
-      errorMessage: "Check in date mus be ISO8601 format",
+      errorMessage: "Check-in date mus be ISO8601 format",
     },
   },
   checkOut: {
     in: ["body"],
     exists: {
       bail: true,
-      errorMessage: "Check out date must be provided",
+      errorMessage: "Check-out date must be provided",
     },
     isISO8601: {
       strict: true,
-      errorMessage: "Check out date mus be ISO8601 format",
+      errorMessage: "Check-out date mus be ISO8601 format",
     },
   },
   numberOfGuests: {
@@ -68,6 +68,7 @@ export const reservationSchema = {
       options: { min: 1, max: 100 },
       errorMessage: "Number of guest must be integer",
     },
+    toInt: true,
   },
   totalPrice: {
     in: ["body"],
@@ -75,11 +76,12 @@ export const reservationSchema = {
       bail: true,
       errorMessage: "Total price must be provided",
     },
-    isFloat: {
+    isDecimal: {
       bail: true,
       options: { min: 1 },
       errorMessage: "Total price must be a decimal number",
     },
+    toFloat: true,
   },
   currency: {
     in: ["body"],
@@ -119,10 +121,6 @@ export const reservationSchema = {
   },
   specialRequest: {
     in: ["body"],
-    exists: {
-      bail: true,
-      errorMessage: "special request must be provided. Use an empty string",
-    },
     trim: true,
     escape: true,
     isLength: {
