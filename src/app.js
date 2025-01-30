@@ -14,6 +14,7 @@ import rateLimit from "express-rate-limit";
 import { createUserRoutes } from "./adapters/api/routes/userRoutes.js";
 import { createPropertyRoutes } from "./adapters/api/routes/propertyRoutes.js";
 import { createGuestRoutes } from "./adapters/api/routes/guestRoutes.js";
+import { createReservationRoutes } from "./adapters/api/routes/reservationRoutes.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -74,6 +75,7 @@ export async function createApp(services) {
   app.use("/api/v2/users", createUserRoutes(services));
   app.use("/api/v2/properties", createPropertyRoutes(services));
   app.use("/api/v2/guests", createGuestRoutes(services));
+  app.use / "/api/v2/reservations", createReservationRoutes(services);
 
   // Use error middleware
   app.use(notFound);
