@@ -75,7 +75,7 @@ export async function createApp(services) {
   app.use("/api/v2/users", createUserRoutes(services));
   app.use("/api/v2/properties", createPropertyRoutes(services));
   app.use("/api/v2/guests", createGuestRoutes(services));
-  app.use / "/api/v2/reservations", createReservationRoutes(services);
+  app.use("/api/v2/reservations", createReservationRoutes(services));
 
   // Use error middleware
   app.use(notFound);
