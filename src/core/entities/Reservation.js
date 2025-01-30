@@ -29,22 +29,16 @@ export class Reservation {
     this.updated_by = updated_by;
     this.created_at = created_at;
     this.updated_at = updated_at;
-    this.selected_rooms = [
-      {
-        room_type_id: null,
-        number_of_guests: null,
-        total_amount: null,
-      },
-    ];
+    this.selected_rooms = [];
   }
 
   // Setter and Getter for selected rooms
   setSelectedRooms(rooms) {
     for (const room in rooms) {
       this.selected_rooms = {
-        room_type_id: room.id,
-        number_of_guests: room.guests,
-        total_amount: room.amount,
+        room_type_id: room.room_type_id,
+        number_of_guests: room.number_of_guests,
+        total_amount: room.total_amount,
       };
     }
   }
