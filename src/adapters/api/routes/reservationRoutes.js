@@ -19,4 +19,6 @@ export function createReservationRoutes(services) {
     checkSchema(reservationSchema),
     reservationController.createReservation
   );
+
+  return router;
 }
