@@ -53,7 +53,7 @@ export const reservationSchema = {
           }
 
           // Ensure number_of_guests is an integer.
-          if (!Number.isInteger(obj.number_of_guest)) {
+          if (!Number.isInteger(obj.number_of_guests)) {
             throw new Error("number_of_guests must be an integer");
           }
 
