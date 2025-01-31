@@ -1,6 +1,6 @@
 import { validationResult, matchedData } from "express-validator";
 
-export class ratesAndAvailabilityController {
+export class RatesAndAvailabilityController {
   constructor(ratesAndAvailabilityInputPort) {
     this.ratesAndAvailabilityInputPort = ratesAndAvailabilityInputPort;
   }
@@ -15,10 +15,25 @@ export class ratesAndAvailabilityController {
         return res.status(400).json(errors.array());
       }
 
-      const data = matchedData(req);
-      console.log(data);
+      const propertyId = req.user.property_id;
+      const userId = req.user._id;
 
-      return status(200).json({ msg: "ok" });
+      const data = matchedData(req);
+      const ratesAndAvailabilityData = {
+        room_type_id: data.roomTypeId,
+        start_date: data.startDate,
+        end_date: data.endDate,
+        custom_rate: data.customRate,
+        custom_availability: data.customAvailability,
+      };
+
+      const result = await this.ratesAndAvailabilityInputPort.createNewRange(
+        ratesAndAvailabilityData,
+        propertyId,
+        userId
+      );
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }
