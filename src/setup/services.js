@@ -15,7 +15,7 @@ import { PropertyService } from "../core/PropertyService.js";
 import { ReservationService } from "../core/ReservationService.js";
 import { UserService } from "../core/UserService.js";
 import { UserCompositeService } from "../core/UserCompositeService.js";
-import { RateAndAvailabilityService } from "../core/RatesAndAvailabilityService.js";
+import { RatesAndAvailabilityService } from "../core/RatesAndAvailabilityService.js";
 
 // PORTS
 import { UserInputPort } from "../core/ports/UserInputPort.js";
@@ -38,10 +38,7 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 import { UserController } from "../adapters/api/controllers/UserController.js";
 import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
 import { GuestController } from "../adapters/api/controllers/GuestController.js";
-import {
-  ratesAndAvailabilityController,
-  ratesAndAvailabilityController,
-} from "../adapters/api/controllers/RatesAndAvailabilityController.js";
+import { RatesAndAvailabilityController } from "../adapters/api/controllers/RatesAndAvailabilityController.js";
 import { ReservationController } from "../adapters/api/controllers/ReservationController.js";
 
 export default function initializeServices() {
@@ -83,7 +80,7 @@ export default function initializeServices() {
   const propertyService = new PropertyService(propertyOutputPort, mysqlPool);
   const userService = new UserService(userOutputPort);
   const guestService = new GuestService(guestOutputPort);
-  const ratesAndAvailabilityService = new ratesAndAvailabilityService(
+  const ratesAndAvailabilityService = new RatesAndAvailabilityService(
     ratesAndAvailabilityOutputPort
   );
   const reservationService = new ReservationService(reservationOutputPort);
@@ -124,7 +121,7 @@ export default function initializeServices() {
   const userController = new UserController(userInputPort);
   const propertyController = new PropertyController(propertyInputPort);
   const guestController = new GuestController(guestInputPort);
-  const ratesAndAvailabilityController = new ratesAndAvailabilityController(
+  const ratesAndAvailabilityController = new RatesAndAvailabilityController(
     ratesAndAvailabilityInputPort
   );
   const reservationController = new ReservationController(reservationInputPort);
