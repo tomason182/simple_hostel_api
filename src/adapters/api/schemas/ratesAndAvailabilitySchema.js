@@ -23,14 +23,14 @@ export const ratesAndAvailabilitySchema = {
       strict: true,
       errorMessage: "Start date must be ISO8601 format",
     },
-    custom: {
+    customSanitizer: {
       options: value => {
         const date = new Date(value);
         if (isNaN(date.getTime())) {
           throw new Error("Invalid start date provided");
         }
 
-        return date.toISOString();
+        return date;
       },
     },
   },
@@ -45,14 +45,14 @@ export const ratesAndAvailabilitySchema = {
       strict: true,
       errorMessage: "End date must be ISO8601 format",
     },
-    custom: {
+    customSanitizer: {
       options: value => {
         const date = new Date(value);
         if (isNaN(date.getTime())) {
           throw new Error("Invalid start date provided");
         }
 
-        return date.toISOString();
+        return date;
       },
     },
   },
@@ -67,8 +67,7 @@ export const ratesAndAvailabilitySchema = {
       bail: true,
       errorMessage: "Rate must be a decimal number",
     },
-    toFloat: true,
-    custom: {
+    customSanitizer: {
       options: value => {
         const rate = parseFloat(value);
         if (isNaN(rate) || rate < 0) {
@@ -90,8 +89,7 @@ export const ratesAndAvailabilitySchema = {
       bail: true,
       errorMessage: "Custom availability must be an integer number",
     },
-    toInt: true,
-    custom: {
+    customSanitizer: {
       options: value => {
         const availability = parseInt(value, 10);
         if (isNaN(availability) || availability < 0) {
