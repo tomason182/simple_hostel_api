@@ -29,4 +29,17 @@ export class availabilityService {
         checkOut
       );
   }
+
+  async checkCustomAvailability(roomTypeId, startDate, endDate, conn = null) {
+    try {
+      // Get the reservations for the current range start date - end date.
+      const reservationList = this.availabilityOutPutPort.getReservationsList(
+        roomTypeId,
+        startDate,
+        endDate
+      );
+    } catch (e) {
+      throw e;
+    }
+  }
 }
