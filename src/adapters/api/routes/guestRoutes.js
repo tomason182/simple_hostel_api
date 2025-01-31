@@ -1,5 +1,5 @@
 import express from "express";
-import { checkSchema, body, param } from "express-validator";
+import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
 import { guestSchema } from "../schemas/guestSchema.js";
