@@ -17,6 +17,8 @@ export function createRatesAndAvailabilityRoutes(service) {
     "/create",
     authMiddleware(tokenService),
     checkSchema(ratesAndAvailabilitySchema),
-    rateAndAvailabilityController.createRange
+    rateAndAvailabilityController.createNewRange
   );
+
+  return router;
 }
