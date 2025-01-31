@@ -3,14 +3,11 @@ export class RatesAndAvailabilityInputPort {
     this.ratesAndAvailabilityService = ratesAndAvailabilityService;
   }
 
-  createRatesAndAvailabilityRange(
-    ratesAndAvailabilityData,
-    propertyId,
-    conn = null
-  ) {
-    return this.ratesAndAvailabilityService.createRange(
+  createNewRange(ratesAndAvailabilityData, propertyId, userId, conn = null) {
+    return this.ratesAndAvailabilityService.createNewRange(
       ratesAndAvailabilityData,
       propertyId,
+      userId,
       conn
     );
   }
