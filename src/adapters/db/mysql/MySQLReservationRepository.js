@@ -29,4 +29,24 @@ export class MySQLReservationRepository {
       );
     }
   }
+  async getReservationListByDateRange(
+    roomTypeId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
+    try {
+      const query =
+        "SELECT id, check_in, check_out, number_of_guest FROM reservations WHERE room_type_id = ? AND reservation_status NOT IN ('canceled', 'no_show') AND check_in < ? AND check_out > ?";
+      const params = [roomTypeId, checkOut, checkIn];
+
+      const [result] = (conn || this.pool).execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred when getting the reservation list. Error: ${e.message}`
+      );
+    }
+  }
 }
