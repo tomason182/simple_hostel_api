@@ -151,3 +151,42 @@ CREATE TABLE IF NOT EXISTS reservation_rooms (
 
 -- Create rates and availability table.
 
+-- PROCEDURES
+-- Create procedure for handle rates and availability insertions
+DELIMITER //
+CREATE PROCEDURE InsertOrUpdateRate(
+  IN p_room_type_id INT,
+  IN p_start_date DATE,
+  IN p_end_date DATE,
+  IN p_custom_rate DECIMAL(10,2),
+  IN p_custom_availability INT
+)
+BEGIN
+  -- Delete exact overlapping record if needed
+  DELETE FROM rates_and_availability
+  WHERE room_type_id = p_room_type_id
+  AND start_date >= p_start_date
+  AND end_date <= p_end_date;
+
+  -- Adjust previous range if needed
+  UPDATE rates_and_availability
+  SET end_date = DATE_SUB(p_start_date, INTERVAL 1 DAY)
+  WHERE room_type_id = p_room_type_id
+  AND start_date < p_start_date
+  AND end_date >= p_start_date
+
+  -- Adjust following range if needed
+  UPDATE rates_and_availability
+  SET start_date = DATE_ADD(p_end_date, INTERVAL 1 DAY)
+  WHERE room_type_id = p_room_type_id
+  AND start_date <= p_end_date
+  AND end_date > p_end_date;
+
+  --Insert new rate
+  INSERT INTO rates_and_availability (room_type_id, start_date, end_date, custom_rate, p_custom_availability)
+  VALUES (p_room_type_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
+END //
+DELIMITER ;
+
+
+
