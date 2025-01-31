@@ -67,6 +67,7 @@ export const ratesAndAvailabilitySchema = {
       bail: true,
       errorMessage: "Rate must be a decimal number",
     },
+    toFloat: true,
     custom: {
       options: value => {
         const rate = parseFloat(value);
@@ -89,6 +90,7 @@ export const ratesAndAvailabilitySchema = {
       bail: true,
       errorMessage: "Custom availability must be an integer number",
     },
+    toInt: true,
     custom: {
       options: value => {
         const availability = parseInt(value, 10);
