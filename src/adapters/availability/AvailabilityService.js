@@ -30,14 +30,68 @@ export class availabilityService {
       );
   }
 
-  async checkCustomAvailability(roomTypeId, startDate, endDate, conn = null) {
+  async checkCustomAvailability(
+    roomType,
+    startDate,
+    endDate,
+    customAvailability,
+    conn = null
+  ) {
     try {
       // Get the reservations for the current range start date - end date.
       const reservationList = this.availabilityOutPutPort.getReservationsList(
-        roomTypeId,
+        roomType.getId(),
         startDate,
         endDate
       );
+
+      const maxCapacity = roomType.getInventory() * roomType.getMaxOccupancy();
+
+      if (customAvailability > maxCapacity) {
+        return {
+          status: false,
+          maxAvailability: maxCapacity,
+        };
+      }
+
+      if (reservationList.length === 0) {
+        return {
+          status: true,
+          maxAvailability: maxCapacity,
+        };
+      }
+
+      let maxAvailability = 0;
+      for (
+        let date = new Date(startDate);
+        date <= endDate;
+        date.setDate(date.getDate() + 1)
+      ) {
+        const currentDate = date;
+        const reservations = reservationList.filter(
+          r => r.check_in <= currentDate && r.check_out > currentDate
+        );
+        const totalGuest = reservations.reduce(
+          (acc, value) => acc + value.number_of_guest
+        );
+
+        if (customAvailability > maxCapacity - totalGuest) {
+          return {
+            status: false,
+            maxAvailability: maxCapacity - totalGuest,
+          };
+        }
+
+        maxAvailability =
+          maxAvailability > maxCapacity - totalGuest
+            ? maxCapacity - totalGuest
+            : maxAvailability;
+      }
+
+      return {
+        status: true,
+        maxAvailability,
+      };
     } catch (e) {
       throw e;
     }
