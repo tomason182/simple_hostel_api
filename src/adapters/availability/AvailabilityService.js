@@ -42,7 +42,8 @@ export class availabilityService {
       const reservationList = this.availabilityOutPutPort.getReservationsList(
         roomType.getId(),
         startDate,
-        endDate
+        endDate,
+        conn
       );
 
       const maxCapacity = roomType.getInventory() * roomType.getMaxOccupancy();

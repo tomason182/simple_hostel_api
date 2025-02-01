@@ -5,7 +5,7 @@ export class RatesAndAvailabilityService {
     this.ratesAndAvailabilityOutputPort = ratesAndAvailabilityOutputPort;
   }
 
-  async createNewRange(
+  async createRatesAndAvailabilityRange(
     rateAndAvailabilityData,
     propertyId,
     userId,
@@ -18,31 +18,37 @@ export class RatesAndAvailabilityService {
     rateAndAvailability.setCreatedBy(userId);
 
     // Check if the roomType belong to the property
-    const isValidRoomTypeId =
-      this.ratesAndAvailabilityOutputPort.findRoomTypeById(
-        rateAndAvailability.getRoomTypeId(),
-        propertyId,
-        conn
-      );
+    // We can find the room type only by its ID but we need to ensure that it belong to the property.
+    const roomTypeData = this.ratesAndAvailabilityOutputPort.findRoomTypeById(
+      rateAndAvailability.getRoomTypeId(),
+      propertyId,
+      conn
+    );
 
-    if (isValidRoomTypeId === null) {
+    if (roomTypeData === null) {
       throw new Error("Room type ID provided does not belong to property");
     }
 
+    const startDate = rateAndAvailability.getStartDate();
+    const endDate = rateAndAvailability.getEndDate();
+
     // Check if start date is smaller that end date
-    if (rateAndAvailability.getStartDate() > rateAndAvailability.getEndDate()) {
+    if (startDate > endDate) {
       throw new Error("Start date can not be greater that end date");
     }
+
+    const roomType = new RoomType(roomTypeData);
 
     // Check if custom availability > availability - total guest;
     const isCustomAvailabilityValid =
       this.ratesAndAvailabilityOutputPort.checkCustomAvailability(
+        roomType,
         rateAndAvailability
       );
 
     if (isCustomAvailabilityValid.status === false) {
       throw new Error(
-        `Minimum availability to set is ${isCustomAvailabilityValid.min}`
+        `Minimum availability to set is ${isCustomAvailabilityValid.maxAvailability}`
       );
     }
 
@@ -50,10 +56,7 @@ export class RatesAndAvailabilityService {
       rateAndAvailability
     );
 
-    console.log("ratesObj: ", rateAndAvailability);
-
-    return true;
-    // Check that the room type ID provided correspond to the property
+    return result;
   }
 
   findByDateRange() {

@@ -27,11 +27,12 @@ export class RatesAndAvailabilityController {
         custom_availability: data.customAvailability,
       };
 
-      const result = await this.ratesAndAvailabilityInputPort.createNewRange(
-        ratesAndAvailabilityData,
-        propertyId,
-        userId
-      );
+      const result =
+        await this.ratesAndAvailabilityInputPort.createRatesAndAvailabilityRange(
+          ratesAndAvailabilityData,
+          propertyId,
+          userId
+        );
 
       return res.status(200).json(result);
     } catch (e) {

@@ -1,7 +1,12 @@
 export class RatesAndAvailabilityOutputPort {
-  constructor(ratesAndAvailabilityRepository, roomTypeRepository) {
+  constructor(
+    ratesAndAvailabilityRepository,
+    roomTypeRepository,
+    availabilityService
+  ) {
     this.ratesAndAvailabilityRepository = ratesAndAvailabilityRepository;
     this.roomTypeRepository = roomTypeRepository;
+    this.availabilityService = availabilityService;
   }
 
   findRoomTypeById(roomTypeId, propertyId, conn = null) {
@@ -9,6 +14,22 @@ export class RatesAndAvailabilityOutputPort {
     return this.roomTypeRepository.findRoomTypeById(
       roomTypeId,
       propertyId,
+      conn
+    );
+  }
+
+  checkCustomAvailability(
+    roomType,
+    startDate,
+    endDate,
+    customAvailability,
+    conn = null
+  ) {
+    return this.availabilityService.checkCustomAvailability(
+      roomType,
+      startDate,
+      endDate,
+      customAvailability,
       conn
     );
   }
