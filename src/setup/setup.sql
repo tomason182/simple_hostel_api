@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS access_control (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   property_id INT NOT NULL,
-  role ENUM("admin", "manager", "employee") NOT NULL,
+  role ENUM('admin', 'manager', 'employee') NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (property_id) REFERENCES properties(id)
 );
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS policies (
   allow_cancellation BOOLEAN DEFAULT false,
   allow_pets BOOLEAN DEFAULT false,
   allow_minors BOOLEAN DEFAULT false,
-  minors_room_types ENUM("all_rooms", "only_private_rooms"),
+  minors_room_types ENUM('all_rooms', 'only_private_rooms'),
   description TEXT, 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS guests (
   postal_code VARCHAR(10),
   country_code VARCHAR(2),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -115,23 +115,37 @@ CREATE TABLE IF NOT EXISTS reservations (
   id INT AUTO_INCREMENT PRIMARY KEY,
   guest_id INT NOT NULL,
   property_id INT NOT NULL,
-  booking_source ENUM("booking.com", "hostelWorld.com", "direct", "website") NOT NULL,
-  currencies CHAR(3) NOT NULL,
-  reservation_status ENUM("confirmed", "provisional", "canceled", "no_show") NOT NULL,
-  payment_status ENUM("pending", "canceled", "refunded", "paid", "partial") NOT NULL,
+  booking_source ENUM('booking.com', 'hostelworld.com', 'direct', 'website') NOT NULL,
+  currency CHAR(3) NOT NULL,
+  reservation_status ENUM('confirmed', 'provisional', 'canceled', 'no_show') NOT NULL,
+  payment_status ENUM('pending', 'canceled', 'refunded', 'paid', 'partial') NOT NULL,
   check_in DATE NOT NULL,
   check_out DATE NOT NULL,
   special_request VARCHAR(500) DEFAULT NULL,
-  created_by INT NOT NULL,
+  created_by INT DEFAULT NULL,
   updated_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (guest_id) REFERENCES guests(id) ON DELETE CASCADE,
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
   FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
-)
+);
+
+-- Create room types table.
+CREATE TABLE IF NOT EXISTS room_types (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  type VARCHAR(10) NOT NULL,
+  gender VARCHAR(10) NOT NULL,
+  max_occupancy INT NOT NULL CHECK (max_occupancy >= 0),
+  inventory INT NOT NULL CHECK (inventory >= 0),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
 
 -- create reservation_rooms table
 CREATE TABLE IF NOT EXISTS reservation_rooms (
@@ -143,9 +157,7 @@ CREATE TABLE IF NOT EXISTS reservation_rooms (
 
   FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
   FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE
-)
-
--- Create room types table.
+);
 
 -- Create products table.
 
@@ -157,13 +169,13 @@ CREATE TABLE IF NOT EXISTS rates_and_availability(
   end_date DATE NOT NULL,
   custom_rate DECIMAL(10, 2) NOT NULL CHECK (custom_rate >= 0),
   custom_availability  INT NOT NULL CHECK (custom_availability >= 0),
-  created_by INT NOT NULL,
+  created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE
+  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
-  )
+  );
 
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
@@ -187,7 +199,7 @@ BEGIN
   SET end_date = DATE_SUB(p_start_date, INTERVAL 1 DAY)
   WHERE room_type_id = p_room_type_id
   AND start_date < p_start_date
-  AND end_date >= p_start_date
+  AND end_date >= p_start_date;
 
   -- Adjust following range if needed
   UPDATE rates_and_availability
@@ -196,7 +208,7 @@ BEGIN
   AND start_date <= p_end_date
   AND end_date > p_end_date;
 
-  --Insert new rate
+  -- Insert new rate
   INSERT INTO rates_and_availability (room_type_id, start_date, end_date, custom_rate, custom_availability)
   VALUES (p_room_type_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
 END //
