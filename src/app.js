@@ -13,6 +13,7 @@ import rateLimit from "express-rate-limit";
 // Import Routes
 import { createUserRoutes } from "./adapters/api/routes/userRoutes.js";
 import { createPropertyRoutes } from "./adapters/api/routes/propertyRoutes.js";
+import { createRoomTypeRoutes } from "./adapters/api/routes/roomTypeRoutes.js";
 import { createGuestRoutes } from "./adapters/api/routes/guestRoutes.js";
 
 // Disable console.log in production
@@ -73,6 +74,7 @@ export async function createApp(services) {
   // Use routes
   app.use("/api/v2/users", createUserRoutes(services));
   app.use("/api/v2/properties", createPropertyRoutes(services));
+  app.use("/api/v2/room-types", createRoomTypeRoutes(services));
   app.use("/api/v2/guests", createGuestRoutes(services));
 
   // Use error middleware
