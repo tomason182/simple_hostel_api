@@ -72,7 +72,7 @@ export class RoomTypeService {
   }
 
 
-  async readRoomType(id) {
+  async findRoomTypeById(id) {
     try {
       
       const roomType = await this.roomTypeOutputPort.findRoomTypeById(id);
@@ -88,7 +88,7 @@ export class RoomTypeService {
   }
 
 
-  async updateRoomType(roomTypeData, propertyId) {
+  async updateRoomTypeById(roomTypeData, propertyId) {
     try {
       // Check if new description is unique
       // Check if room type exist in the database
@@ -115,7 +115,7 @@ export class RoomTypeService {
   }
 
 
-  async deleteRoomType(id) {
+  async deleteRoomTypeById(id) {
     try {
 
       const roomTypeDeleted = await this.roomTypeOutputPort.deleteRoomTypeById(id);

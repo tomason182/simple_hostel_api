@@ -32,6 +32,14 @@ export class RoomTypeController {
         amenities: data.amenities,
       };
 
+      //En este punto del código se puede traducir el array de amenities en un número binario
+      //donde los ceros del mismo equivaldrían a false y los unos a true. Y la posición de cada 
+      //dígito en este número binario indicaría el estado de un valor único de amenity.
+      //Para mantener la coherencia: un valor de amenity siempre se va a encontrar en la misma
+      //posición de este binario. Con esto nos ahorraríamos crear una nueva tabla en la bd, si 
+      //por alguna razón este fuera nuestro deseo.
+
+
       const result = await this.roomTypeInputPort.createRoomType(
         propertyId,
         roomTypeData
