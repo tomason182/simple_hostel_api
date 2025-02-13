@@ -40,10 +40,14 @@ export async function createApp(services) {
   const app = express();
 
   const corsOptions = {
-    origen:
+    origin:
       process.env.NODE_ENV === "production"
         ? ["https://simplehostel.net", "https://www.simplehostel.net"]
-        : ["http://localhost:5173", "http://localhost:5174"],
+        : [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://localhost:8080",
+          ],
     credentials: true,
   };
 
