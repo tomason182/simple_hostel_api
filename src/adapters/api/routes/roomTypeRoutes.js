@@ -19,14 +19,14 @@ export function createRoomTypeRoutes(services) {
     "/create",
     authMiddleware(tokenService),
     checkSchema(roomTypeSchema),
-    roomTypeController.createRoomType
+    roomTypeController.roomTypeCreate
   );
 
   // Read room types
   router.get(
     "/",
     authMiddleware(tokenService),
-    roomTypeController.readRoomTypes
+    roomTypeController.getAllPropertyRoomTypes
   );
 
   // Read only one room type
@@ -34,7 +34,7 @@ export function createRoomTypeRoutes(services) {
     "/:id",
     authMiddleware(tokenService),
     param("id").trim().isInt().withMessage("Not a valid ID"),
-    roomTypeController.readRoomType
+    roomTypeController.getRoomTypeById
   );
 
   // Update a room type
@@ -43,7 +43,7 @@ export function createRoomTypeRoutes(services) {
     authMiddleware(tokenService),
     checkSchema(updateRoomTypeSchema),
     param("id").trim().isInt().withMessage("Not a valid ID"),
-    roomTypeController.updateRoomType
+    roomTypeController.roomTypeUpdate
   );
 
   // Delete a room type
@@ -51,7 +51,7 @@ export function createRoomTypeRoutes(services) {
     "/delete/:id",
     authMiddleware(tokenService),
     param("id").trim().isInt().withMessage("Not a valid ID"),
-    roomTypeController.deleteRoomType
+    roomTypeController.roomTypeDelete
   );
 
   return router;

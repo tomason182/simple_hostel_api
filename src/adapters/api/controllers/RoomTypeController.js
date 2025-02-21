@@ -42,7 +42,7 @@ export class RoomTypeController {
   // @desc    Reads all room types for a property id
   // @route   GET /api/v2/room-types/
   // @access  Private
-  roomTypesRead = async (req, res, next) => {
+  getAllPropertyRoomTypes = async (req, res, next) => {
     try {
       const propertyId = req.user.property_id;
 
@@ -62,7 +62,7 @@ export class RoomTypeController {
   // @desc    Read a room type through its identifier.
   // @route   GET /api/v2/room-types/:id
   // @access  Private
-  roomTypeRead = async (req, res, next) => {
+  getRoomTypeById = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
