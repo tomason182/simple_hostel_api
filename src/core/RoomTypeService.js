@@ -10,8 +10,7 @@ export class RoomTypeService {
       const roomTypeExist =
         await this.roomTypeOutputPort.findRoomTypeByDescription(
           roomTypeData.description,
-          propertyId,
-          connection
+          propertyId
         );
 
       if (roomTypeExist !== null) {
@@ -20,10 +19,12 @@ export class RoomTypeService {
 
       // Limit roomType creation
       const roomTypeList =
-        await this.roomTypeOutputPort.findAllPropertyRoomTypes(
-          propertyId,
-          connection
-        );
+        await this.roomTypeOutputPort.findAllPropertyRoomTypes(propertyId);
+
+      console.log("Room exits: ", roomTypeExist);
+      console.log("roomTypeList: ", roomTypeList);
+
+      throw new Error("stop");
 
       const roomType = new RoomType(roomTypeData);
 

@@ -8,7 +8,7 @@ export class RoomTypeOutputPort {
   }
 
   findRoomTypeByDescription(description, propertyId, conn = null) {
-    return this.roomTypeRepository.findOneRoomTypeByDescription(
+    return this.roomTypeRepository.findRoomTypeByDescription(
       description,
       propertyId,
       conn
@@ -16,10 +16,7 @@ export class RoomTypeOutputPort {
   }
 
   findAllPropertyRoomTypes(propertyId, conn = null) {
-    return this.roomTypeRepository.findAllRoomTypesByPropertyId(
-      propertyId,
-      conn
-    );
+    return this.roomTypeRepository.findAllPropertyRoomTypes(propertyId, conn);
   }
 
   findRoomTypeById(id, conn = null) {
