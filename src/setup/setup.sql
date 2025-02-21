@@ -140,8 +140,8 @@ CREATE TABLE IF NOT EXISTS room_types (
   description VARCHAR(100) NOT NULL,
   type VARCHAR(10) NOT NULL,
   gender VARCHAR(10) NOT NULL,
-  max_occupancy INT NOT NULL CHECK (max_occupancy >= 0),
-  inventory INT NOT NULL CHECK (inventory >= 0),
+  max_occupancy INT NOT NULL CHECK (max_occupancy > 0),
+  inventory INT NOT NULL CHECK (inventory > 0),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
