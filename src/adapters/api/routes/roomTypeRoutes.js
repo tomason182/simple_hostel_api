@@ -1,5 +1,5 @@
 import express from "express";
-import { checkSchema, body, param } from "express-validator";
+import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
@@ -12,8 +12,8 @@ export function createRoomTypeRoutes(services) {
 
   const tokenService = createTokenService();
 
-  const roomTypeController = services.roomTypeController;                                          //Crear en services el room type controller y sus metodos
-                                                                                                   // estudiar lo del tokenservices
+  const roomTypeController = services.roomTypeController;
+
   // Create a new room type
   router.post(
     "/create",
@@ -23,7 +23,11 @@ export function createRoomTypeRoutes(services) {
   );
 
   // Read room types
-  router.get("/", authMiddleware(tokenService), roomTypeController.readRoomTypes);
+  router.get(
+    "/",
+    authMiddleware(tokenService),
+    roomTypeController.readRoomTypes
+  );
 
   // Read only one room type
   router.get(
