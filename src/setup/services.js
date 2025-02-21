@@ -80,8 +80,7 @@ export default function initializeServices() {
     accessControlService,
     tokenService,
     emailService,
-    roomTypeService,
-    roomTypeRepository,
+    roomTypeRepository
   );
 
   // Initialize composite services
