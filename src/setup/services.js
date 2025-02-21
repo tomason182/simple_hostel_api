@@ -4,6 +4,7 @@ import { mysqlConnect } from "../adapters/config/mysql_config.js";
 // REPOSITORIES
 import { MySQLUserRepository } from "../adapters/db/mysql/MySQLUserRepository.js";
 import { MySQLPropertyRepository } from "../adapters/db/mysql/MySQLPropertyRepository.js";
+import { MySQLRoomTypeRepository } from "../adapters/db/mysql/MySQLRoomTypeRepository.js";
 import { MySQLAccessControlRepository } from "../adapters/db/mysql/MySQLAccessControlRepository.js";
 import { MySQLGuestRepository } from "../adapters/db/mysql/MySQLGuestRepository.js";
 import { MySQLReservationRepository } from "../adapters/db/mysql/MySQLReservationRepository.js";
@@ -16,12 +17,15 @@ import { ReservationService } from "../core/ReservationService.js";
 import { UserService } from "../core/UserService.js";
 import { UserCompositeService } from "../core/UserCompositeService.js";
 import { RatesAndAvailabilityService } from "../core/RatesAndAvailabilityService.js";
+import { RoomTypeService } from "../core/RoomTypeService.js";
 
 // PORTS
 import { UserInputPort } from "../core/ports/UserInputPort.js";
 import { UserOutputPort } from "../core/ports/UserOutputPort.js";
 import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
 import { PropertyOutputPort } from "../core/ports/PropertyOutputPort.js";
+import { RoomTypeInputPort } from "../core/ports/RoomTypeInputPort.js";
+import { RoomTypeOutputPort } from "../core/ports/RoomTypeOutputPort.js";
 import { GuestInputPort } from "../core/ports/GuestInputPort.js";
 import { GuestOutputPort } from "../core/ports/GuestOutputPort.js";
 import { RatesAndAvailabilityInputPort } from "../core/ports/RatesAndAvailabilityInputPort.js";
@@ -37,6 +41,7 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 // Import controllers
 import { UserController } from "../adapters/api/controllers/UserController.js";
 import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
+import { RoomTypeController } from "../adapters/api/controllers/RoomTypeController.js";
 import { GuestController } from "../adapters/api/controllers/GuestController.js";
 import { RatesAndAvailabilityController } from "../adapters/api/controllers/RatesAndAvailabilityController.js";
 import { ReservationController } from "../adapters/api/controllers/ReservationController.js";
@@ -47,6 +52,7 @@ export default function initializeServices() {
   // INITIALIZE REPOSITORIES.
   const userRepository = new MySQLUserRepository(mysqlPool);
   const propertyRepository = new MySQLPropertyRepository(mysqlPool);
+  const roomTypeRepository = new MySQLRoomTypeRepository(mysqlPool);
   const accessControlService = new MySQLAccessControlRepository(mysqlPool);
   const guestRepository = new MySQLGuestRepository(mysqlPool);
   const reservationRepository = new MySQLReservationRepository(mysqlPool);
@@ -65,6 +71,7 @@ export default function initializeServices() {
     emailService
   );
   const propertyOutputPort = new PropertyOutputPort(propertyRepository);
+  const roomTypeOutputPort = new RoomTypeOutputPort(roomTypeRepository);
   const guestOutputPort = new GuestOutputPort(
     guestRepository,
     propertyRepository
@@ -84,6 +91,7 @@ export default function initializeServices() {
     ratesAndAvailabilityOutputPort
   );
   const reservationService = new ReservationService(reservationOutputPort);
+  const roomTypeService = new RoomTypeService(roomTypeOutputPort);
 
   // Initialize transaction manager ports
   const userTransactionManagerPort = new UserTransactionManagerPort(
@@ -110,6 +118,7 @@ export default function initializeServices() {
     tokenService
   );
   const propertyInputPort = new PropertyInputPort(propertyService);
+  const roomTypeInputPort = new RoomTypeInputPort(roomTypeService);
   const guestInputPort = new GuestInputPort(guestService);
   const ratesAndAvailabilityInputPort = new RatesAndAvailabilityInputPort(
     ratesAndAvailabilityService
@@ -120,6 +129,7 @@ export default function initializeServices() {
   // Initialize controllers
   const userController = new UserController(userInputPort);
   const propertyController = new PropertyController(propertyInputPort);
+  const roomTypeController = new RoomTypeController(roomTypeInputPort);
   const guestController = new GuestController(guestInputPort);
   const ratesAndAvailabilityController = new RatesAndAvailabilityController(
     ratesAndAvailabilityInputPort
@@ -132,5 +142,6 @@ export default function initializeServices() {
     guestController,
     ratesAndAvailabilityController,
     reservationController,
+    roomTypeController,
   };
 }
