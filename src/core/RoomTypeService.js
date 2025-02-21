@@ -20,7 +20,7 @@ export class RoomTypeService {
 
       // Limit roomType creation
       const roomTypeList =
-        await this.roomTypeOutputPort.findAllRoomTypesByPropertyId(
+        await this.roomTypeOutputPort.findAllPropertyRoomTypes(
           propertyId,
           connection
         );

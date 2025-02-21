@@ -15,7 +15,7 @@ export class RoomTypeOutputPort {
     );
   }
 
-  findAllRoomTypesByPropertyId(propertyId, conn = null) {
+  findAllPropertyRoomTypes(propertyId, conn = null) {
     return this.roomTypeRepository.findAllRoomTypesByPropertyId(
       propertyId,
       conn
