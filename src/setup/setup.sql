@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS reservations (
 CREATE TABLE IF NOT EXISTS room_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
+  description VARCHAR(100) NOT NULL,
   type VARCHAR(10) NOT NULL,
   gender VARCHAR(10) NOT NULL,
   max_occupancy INT NOT NULL CHECK (max_occupancy >= 0),
@@ -160,6 +161,20 @@ CREATE TABLE IF NOT EXISTS reservation_rooms (
 );
 
 -- Create products table.
+CREATE TABLE IF NOT EXISTS products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  room_type_id INT NOT NULL,
+  room_name VARCHAR(100) NOT NULL,
+
+  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
+);
+
+-- Create beds table.
+CREATE TABLE IF NOT EXISTS beds (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_id INT NOT NULL,
+  bed_number INT NOT NULL,
+)
 
 -- Create rates and availability table.
 CREATE TABLE IF NOT EXISTS rates_and_availability(
