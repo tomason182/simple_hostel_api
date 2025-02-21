@@ -26,10 +26,6 @@ export class RoomTypeController {
         gender: data.gender,
         max_occupancy: data.maxOccupancy,
         inventory: data.inventory,
-        basic_amenities: data.basic_amenities,
-        comfort_amenities: data.comfort_amenities,
-        hygiene_and_extras_amenities: data.hygiene_and_extras_amenities,
-        additional_amenities: data.additional_amenities,
       };
 
       const result = await this.roomTypeInputPort.createRoomType(
