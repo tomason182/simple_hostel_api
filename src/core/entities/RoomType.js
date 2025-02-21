@@ -7,9 +7,11 @@ export class RoomType {
     gender,
     max_occupancy,
     inventory,
-    base_rate,
-    currency,
-    amenities,
+    products = [],
+    basic_amenities = [],
+    comfort_amenities = [],
+    hygiene_and_extras_amenities = [],
+    additional_amenities = [],
     created_at = null,
     updated_at = null,
   }) {
@@ -20,9 +22,11 @@ export class RoomType {
     this.gender = gender;
     this.max_occupancy = max_occupancy;
     this.inventory = inventory;
-    this.base_rate = base_rate;
-    this.currency = currency;
-    this.amenities = amenities;
+    this.products = products;
+    this.basic_amenities = basic_amenities;
+    this.comfort_amenities = comfort_amenities;
+    this.hygiene_and_extras_amenities = hygiene_and_extras_amenities;
+    this.additional_amenities = additional_amenities;
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
@@ -82,38 +86,9 @@ export class RoomType {
     this.inventory = newInv;
   }
 
-  // Getter & setter for base rate.
-  getBaseRate() {
-    return this.base_rate;
-  }
-  
-  setBaseRate(newBaseRate) {
-    this.base_rate = newBaseRate;
-  }
+  // Getter and Setter for products
 
-  // Getter & setter for currency.
-  getCurrency() {
-    return this.currency;
-  }
-  
-  setCurrency(newCurrency) {
-    this.currency = newCurrency;
-  }
-
-  // Getter & setter for amenities.
-  getAmenities() {
-    return this.amenities;
-  }
-  
-  setAmenities(newListAmenities) {
-    this.amenities = newListAmenities;
-  }
-
-  addAmenity(newAmenity) {
-    this.amenities.push(newAmenity);  // mejorarlo para que busque si la amenity que ingreso existe o no
-  }
-
-/*  setProducts() {
+  setProducts() {
     // Tal vez tengamos que limitar el numero maximo de inventory y max_occupancy en schema.
     for (let i = 0; i < this.inventory; i++) {
       let bedsArray = [];
@@ -126,8 +101,8 @@ export class RoomType {
         bedsArray = new Array(parseInt(this.max_occupancy)).fill(null);
       }
 
-      // Agregamos un ID a cada cama
-      const bedsList = bedsArray.map(() => new ObjectId());
+      // Agregamos un numero de cama. El numero de cama puede repetirse. No es el ID de la cama.
+      const bedsList = bedsArray.map((bed, i) => (bed = i + 1));
 
       const roomNum = (i + 1).toString();
       this.products.push({
@@ -137,18 +112,7 @@ export class RoomType {
     }
   }
 
-  setRatesAndAvailability(
-    start_date,
-    end_date,
-    custom_rate,
-    custom_availability
-  ) {
-    this.rates_and_availability.push({
-      start_date,
-      end_date,
-      custom_rate,
-      custom_availability,
-    });
-  }*/ 
-
+  getProducts() {
+    return this.products;
+  }
 }
