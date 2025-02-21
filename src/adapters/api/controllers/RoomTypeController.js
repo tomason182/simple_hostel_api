@@ -1,6 +1,5 @@
 import { validationResult, matchedData } from "express-validator";
 
-
 export class RoomTypeController {
   constructor(roomTypeInputPort) {
     this.roomTypeInputPort = roomTypeInputPort;
@@ -27,18 +26,11 @@ export class RoomTypeController {
         gender: data.gender,
         max_occupancy: data.maxOccupancy,
         inventory: data.inventory,
-        base_rate: data.baseRate,
-        currency: data.currency,
-        amenities: data.amenities,
+        basic_amenities: data.basic_amenities,
+        comfort_amenities: data.comfort_amenities,
+        hygiene_and_extras_amenities: data.hygiene_and_extras_amenities,
+        additional_amenities: data.additional_amenities,
       };
-
-      //En este punto del código se puede traducir el array de amenities en un número binario
-      //donde los ceros del mismo equivaldrían a false y los unos a true. Y la posición de cada 
-      //dígito en este número binario indicaría el estado de un valor único de amenity.
-      //Para mantener la coherencia: un valor de amenity siempre se va a encontrar en la misma
-      //posición de este binario. Con esto nos ahorraríamos crear una nueva tabla en la bd, si 
-      //por alguna razón este fuera nuestro deseo.
-
 
       const result = await this.roomTypeInputPort.createRoomType(
         propertyId,
@@ -81,7 +73,6 @@ export class RoomTypeController {
         return res.status(400).json(errors.array());
       }
 
-      
       const { id } = matchedData(req);
 
       const result = await this.roomTypeInputPort.findRoomTypeById(id); // aca pasar propertyId no tiene sentido
@@ -116,9 +107,12 @@ export class RoomTypeController {
 
       const propertyId = req.user.property_id;
 
-      const result = await this.roomTypeInputPort.updateRoomTypeById(roomTypeData, propertyId);
+      const result = await this.roomTypeInputPort.updateRoomTypeById(
+        roomTypeData,
+        propertyId
+      );
 
-      return res.status(200).json({result});
+      return res.status(200).json({ result });
     } catch (err) {
       next(err);
     }
@@ -144,30 +138,4 @@ export class RoomTypeController {
       next(err);
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
- 
 }
