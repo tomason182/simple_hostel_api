@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS reservations (
 CREATE TABLE IF NOT EXISTS room_types (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
-  description VARCHAR(100) NOT NULL,
+  description VARCHAR(255) NOT NULL,
   type VARCHAR(10) NOT NULL,
   gender VARCHAR(10) NOT NULL,
   max_occupancy INT NOT NULL CHECK (max_occupancy > 0),
