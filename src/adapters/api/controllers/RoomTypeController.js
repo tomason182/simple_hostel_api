@@ -24,8 +24,8 @@ export class RoomTypeController {
         description: data.description,
         type: data.type,
         gender: data.gender,
-        max_occupancy: data.maxOccupancy,
-        inventory: data.inventory,
+        max_occupancy: parseInt(data.max_occupancy),
+        inventory: parseInt(data.inventory),
       };
 
       const result = await this.roomTypeInputPort.createRoomType(
