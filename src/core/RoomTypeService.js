@@ -49,11 +49,14 @@ export class RoomTypeService {
     }
   }
 
-  async readRoomTypes(propertyId) {
+  async getAllPropertyRoomTypes(propertyId, conn = null) {
     try {
       // Brings all room types from a specific property
       const roomTypesByProperty =
-        await this.roomTypeOutputPort.findAllRoomTypesByPropertyId(propertyId);
+        await this.roomTypeOutputPort.findAllPropertyRoomTypes(
+          propertyId,
+          conn
+        );
 
       if (roomTypesByProperty === null) {
         throw new Error("No room types found that belong to this property");
