@@ -174,7 +174,7 @@ CREATE TABLE IF NOT EXISTS beds (
   id INT AUTO_INCREMENT PRIMARY KEY,
   product_id INT NOT NULL,
   bed_number INT NOT NULL,
-)
+);
 
 -- Create rates and availability table.
 CREATE TABLE IF NOT EXISTS rates_and_availability(
@@ -194,6 +194,8 @@ CREATE TABLE IF NOT EXISTS rates_and_availability(
 
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
+DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
+
 DELIMITER //
 CREATE PROCEDURE InsertOrUpdateRate(
   IN p_room_type_id INT,
