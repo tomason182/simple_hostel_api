@@ -25,9 +25,10 @@ export function createRatesAndAvailabilityRoutes(service) {
 
   // @desc Check Availability
   // @route POST /api/v2/rates_availability/check
-  // @access Public
+  // @access Private
   router.post(
     "/check-availability",
+    authMiddleware(tokenService),
     checkSchema(checkAvailabilitySchema),
     ratesAndAvailabilityController.checkAvailability
   );
