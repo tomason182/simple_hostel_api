@@ -173,7 +173,9 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS beds (
   id INT AUTO_INCREMENT PRIMARY KEY,
   product_id INT NOT NULL,
-  bed_number INT NOT NULL
+  bed_number INT NOT NULL,
+
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Create rates and availability table.

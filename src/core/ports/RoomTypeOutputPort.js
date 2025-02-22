@@ -3,8 +3,8 @@ export class RoomTypeOutputPort {
     this.roomTypeRepository = roomTypeRepository;
   }
 
-  save(roomType, connection) {
-    return this.roomTypeRepository.save(roomType, connection);
+  save(roomType) {
+    return this.roomTypeRepository.save(roomType);
   }
 
   findRoomTypeByDescription(description, propertyId, conn = null) {

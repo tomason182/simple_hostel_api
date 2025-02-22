@@ -21,14 +21,9 @@ export class RoomTypeService {
       const roomTypeList =
         await this.roomTypeOutputPort.findAllPropertyRoomTypes(propertyId);
 
-      console.log("Room exits: ", roomTypeExist);
-      console.log("roomTypeList: ", roomTypeList);
-
-      throw new Error("stop");
-
       const roomType = new RoomType(roomTypeData);
 
-      roomTypeList.push(roomType);
+      roomTypeList.push(roomTypeData);
 
       const numberOfGuest = roomTypeList.reduce(
         (acc, currentValue) =>
@@ -36,9 +31,9 @@ export class RoomTypeService {
         0
       );
 
-      if (numberOfGuest > 25) {
+      if (numberOfGuest > 50) {
         throw new Error(
-          "Maximum number of beds reached. You can not create more than 25 beds"
+          "Maximum number of beds reached. You can not create more than 50 beds"
         );
       }
 
@@ -46,13 +41,7 @@ export class RoomTypeService {
       roomType.setProducts();
 
       // Add room type to room type table and get back the ID.
-      const result = await this.roomTypeOutputPort.save(roomType, connection);
-
-      // Add the room type products in the products table.
-      const productResult = await this.roomTypeOutputPort.saveProduct(
-        roomType.getProducts(),
-        connection
-      );
+      const result = await this.roomTypeOutputPort.save(roomType);
 
       return result;
     } catch (e) {

@@ -77,7 +77,7 @@ export class MySQLRoomTypeRepository {
       const params = [propertyId];
 
       const [result] = await this.pool.execute(query, params);
-      return result[0] || null;
+      return result || [];
     } catch (e) {
       throw new Error(
         `An Error occurred trying to find all property roomTypes: ${e.message}`
