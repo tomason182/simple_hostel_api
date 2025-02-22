@@ -70,13 +70,13 @@ export class MySQLRoomTypeRepository {
   }
 
   // Find all room types by property ID
-  async findAllPropertyRoomTypes(propertyId) {
+  async findAllPropertyRoomTypes(propertyId, conn = null) {
     try {
       const query =
         "SELECT id, property_id, description, type, gender, max_occupancy, inventory FROM room_types WHERE property_id = ?";
       const params = [propertyId];
 
-      const [result] = await this.pool.execute(query, params);
+      const [result] = await (conn || this.pool).execute(query, params);
       return result || [];
     } catch (e) {
       throw new Error(
