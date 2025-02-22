@@ -73,7 +73,7 @@ export class MySQLRoomTypeRepository {
   async findAllPropertyRoomTypes(propertyId, conn = null) {
     try {
       const query =
-        "SELECT id, property_id, description, type, gender, max_occupancy, inventory FROM room_types WHERE property_id = ?";
+        "SELECT room_types.id as id, room_types.property_id, room_types.description, room_types.type, room_types.gender, room_types.max_occupancy, room_types.inventory, products.id as product_id, products.room_name, beds.bed_number FROM room_types JOIN products ON products.room_type_id = room_types.id JOIN beds ON beds.product_id = products.id WHERE room_types.property_id = ?";
       const params = [propertyId];
 
       const [result] = await (conn || this.pool).execute(query, params);
