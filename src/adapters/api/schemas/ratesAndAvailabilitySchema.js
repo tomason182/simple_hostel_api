@@ -101,3 +101,30 @@ export const ratesAndAvailabilitySchema = {
     },
   },
 };
+
+export const checkAvailabilitySchema = {
+  from: {
+    in: ["body"],
+    trim: true,
+    exists: {
+      bail: true,
+      errorMessage: "From date is required",
+    },
+    isISO8601: {
+      strict: true,
+      errorMessage: "From date must be ISO 8601 format",
+    },
+  },
+  to: {
+    in: ["body"],
+    trim: true,
+    exists: {
+      bail: true,
+      errorMessage: "To date is required",
+    },
+    isISO8601: {
+      strict: true,
+      errorMessage: "To date mus be ISO8601 format",
+    },
+  },
+};
