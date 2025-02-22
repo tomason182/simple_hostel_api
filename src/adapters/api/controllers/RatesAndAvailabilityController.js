@@ -49,13 +49,15 @@ export class RatesAndAvailabilityController {
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
-
+      const propertyId = req.user.property_id;
       const data = matchedData(req);
 
-      const result = await this.ratesAndAvailabilityInputPort.checkAvailability(
-        data.from,
-        data.to
-      );
+      const result =
+        await this.ratesAndAvailabilityInputPort.checkAvailabilityForProperty(
+          propertyId,
+          data.from,
+          data.to
+        );
 
       return res.status(200).json(result);
     } catch (e) {
