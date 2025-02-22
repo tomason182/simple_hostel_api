@@ -6,7 +6,7 @@ export class RatesAndAvailabilityController {
   }
 
   // @desc Add a new rate and availability range
-  // @route POST /api/v1/rates_availability/create/:id
+  // @route POST /api/v2/rates_availability/create/:id
   // @access Private
   createNewRange = async (req, res, next) => {
     try {
@@ -33,6 +33,29 @@ export class RatesAndAvailabilityController {
           propertyId,
           userId
         );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Check availability
+  // @route POST /api/v2/rates_availability/check-availability
+  // @access Private
+  checkAvailability = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const data = matchedData(req);
+
+      const result = await this.ratesAndAvailabilityInputPort.checkAvailability(
+        data.from,
+        data.to
+      );
 
       return res.status(200).json(result);
     } catch (e) {
