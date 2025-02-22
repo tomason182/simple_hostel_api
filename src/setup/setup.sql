@@ -181,6 +181,7 @@ CREATE TABLE IF NOT EXISTS beds (
 -- Create rates and availability table.
 CREATE TABLE IF NOT EXISTS rates_and_availability(
   id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
   room_type_id INT NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
@@ -190,6 +191,7 @@ CREATE TABLE IF NOT EXISTS rates_and_availability(
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
   FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
   );
