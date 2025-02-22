@@ -11,11 +11,21 @@ export class AvailabilityService {
     conn = null
   ) {
     try {
-      const roomTypes =
-        await this.availabilityTransactionManagerPort.getAllPropertyRoomTypes(
+      // En realidad no necesitamos los room types sino lo rangos de rates and avaialbility seteados por el usuario.
+      const ratesAndAvailabilityRanges =
+        await this.availabilityTransactionManagerPort.getPropertyRatesAndAvailabilityRanges(
           propertyId,
           conn
         );
+
+      console.log(ratesAndAvailabilityRanges);
+
+      if (ratesAndAvailabilityRanges.length === 0) {
+        throw new Error(
+          "There are no rates and availability created for this property"
+        );
+      }
+      throw Error("stop");
       const reservations =
         await this.availabilityTransactionManagerPort.getReservationListForDateRange(
           propertyId,

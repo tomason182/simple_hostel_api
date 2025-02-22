@@ -1,21 +1,26 @@
 export class AvailabilityTransactionManagerPort {
   constructor(
-    ratesAndAvailabilityService,
+    ratesAndAvailabilityRepository,
     roomTypeService,
     reservationService
   ) {
-    this.ratesAndAvailabilityService = ratesAndAvailabilityService;
+    this.ratesAndAvailabilityRepository = ratesAndAvailabilityRepository;
     this.roomTypeService = roomTypeService;
     this.reservationService = reservationService;
   }
 
-  // Get all property room types.
-  getAllPropertyRoomTypes(propertyId, conn = null) {
-    return this.roomTypeService.getAllPropertyRoomTypes(propertyId, conn);
+  // Get rates and availability ranges for the property
+  getPropertyRatesAndAvailabilityRanges(propertyId, from, to, conn = null) {
+    return this.ratesAndAvailabilityRepository.getAllRanges(
+      propertyId,
+      from,
+      to,
+      conn
+    );
   }
 
   getRanges(roomTypeId, checkIn, checkOut, conn = null) {
-    return this.ratesAndAvailabilityService.getRanges(
+    return this.ratesAndAvailabilityRepository.getRanges(
       roomTypeId,
       checkIn,
       checkOut,

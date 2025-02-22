@@ -18,7 +18,12 @@ export class RatesAndAvailabilityInputPort {
     );
   }
 
-  checkAvailability(propertyId, checkIn, checkOut, conn = null) {
-    return this.availabilityService(propertyId, checkIn, checkOut, conn);
+  checkAvailabilityForProperty(propertyId, checkIn, checkOut, conn = null) {
+    return this.availabilityService.checkAvailabilityForProperty(
+      propertyId,
+      checkIn,
+      checkOut,
+      conn
+    );
   }
 }

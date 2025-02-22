@@ -99,7 +99,7 @@ export default function initializeServices() {
 
   const availabilityTransactionManagerPort =
     new AvailabilityTransactionManagerPort(
-      ratesAndAvailabilityService,
+      ratesAndAvailabilityRepository,
       roomTypeService,
       reservationService
     );
