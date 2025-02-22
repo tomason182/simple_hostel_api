@@ -1,33 +1,62 @@
 export class availabilityService {
-  constructor(availabilityOutPutPort) {
-    this.availabilityOutPutPort = availabilityOutPutPort;
+  constructor(availabilityTransactionManagerPort) {
+    this.availabilityTransactionManagerPort =
+      availabilityTransactionManagerPort;
+  }
+
+  async checkAvailabilityForProperty(
+    propertyId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
+    try {
+      const roomTypes =
+        await this.availabilityTransactionManagerPort.getAllPropertyRoomTypes(
+          propertyId,
+          conn
+        );
+      const reservations =
+        await this.availabilityTransactionManagerPort.getReservationListForDateRange(
+          propertyId,
+          checkIn,
+          checkOut
+        );
+    } catch (e) {
+      throw e;
+    }
   }
 
   async checkAvailability(roomTypeId, checkIn, checkOut, conn = null) {
-    // Bring the availability ranges
-    const ranges = await this.availabilityOutPutPort.getRanges(
-      roomTypeId,
-      checkIn,
-      checkOut,
-      conn
-    );
-    const roomType = await this.availabilityOutPutPort.getRoomTypeById(
-      roomTypeId,
-      conn
-    );
-
-    if (roomType === null) {
-      throw new Error("Room type ID not found");
-    }
-
-    const totalBeds = "Get the total bed for the room type object";
-
-    const reservationList =
-      await this.availabilityOutPutPort.getReservationsList(
+    try {
+      // Bring the availability ranges
+      const ranges = await this.availabilityTransactionManagerPort.getRanges(
         roomTypeId,
         checkIn,
-        checkOut
+        checkOut,
+        conn
       );
+      const roomType =
+        await this.availabilityTransactionManagerPort.getRoomTypeById(
+          roomTypeId,
+          conn
+        );
+
+      if (roomType === null) {
+        throw new Error("Room type ID not found");
+      }
+
+      const totalBeds = "Get the total bed for the room type object";
+
+      const reservationList =
+        await this.availabilityTransactionManagerPort.getReservationsList(
+          roomTypeId,
+          checkIn,
+          checkOut
+        );
+    } catch (e) {
+      throw e;
+    }
   }
 
   async checkCustomAvailability(
@@ -39,12 +68,13 @@ export class availabilityService {
   ) {
     try {
       // Get the reservations for the current range start date - end date.
-      const reservationList = this.availabilityOutPutPort.getReservationsList(
-        roomType.getId(),
-        startDate,
-        endDate,
-        conn
-      );
+      const reservationList =
+        this.availabilityTransactionManagerPort.getReservationsList(
+          roomType.getId(),
+          startDate,
+          endDate,
+          conn
+        );
 
       const maxCapacity = roomType.getInventory() * roomType.getMaxOccupancy();
 
