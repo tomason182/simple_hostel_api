@@ -166,14 +166,14 @@ CREATE TABLE IF NOT EXISTS products (
   room_type_id INT NOT NULL,
   room_name VARCHAR(100) NOT NULL,
 
-  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
+  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE
 );
 
 -- Create beds table.
 CREATE TABLE IF NOT EXISTS beds (
   id INT AUTO_INCREMENT PRIMARY KEY,
   product_id INT NOT NULL,
-  bed_number INT NOT NULL,
+  bed_number INT NOT NULL
 );
 
 -- Create rates and availability table.
