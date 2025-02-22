@@ -1,6 +1,7 @@
 export class RatesAndAvailabilityInputPort {
-  constructor(ratesAndAvailabilityService) {
+  constructor(ratesAndAvailabilityService, availabilityService) {
     this.ratesAndAvailabilityService = ratesAndAvailabilityService;
+    this.availabilityService = availabilityService;
   }
 
   createRatesAndAvailabilityRange(
@@ -15,5 +16,9 @@ export class RatesAndAvailabilityInputPort {
       userId,
       conn
     );
+  }
+
+  checkAvailability(propertyId, checkIn, checkOut, conn = null) {
+    return this.availabilityService(propertyId, checkIn, checkOut, conn);
   }
 }
