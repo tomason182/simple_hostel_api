@@ -14,26 +14,7 @@ export class ReservationCompositeService {
     try {
       await conn.beginTransaction();
       const guest = new Guest(guestData);
-
-      // Find if Guest already exist for the property
-      const guestExist =
-        await this.ReservationTransactionManagerPort.findGuestByEmail(
-          guest.getEmail(),
-          reservation.getPropertyId(),
-          conn
-        );
-
-      if (guestExist === null) {
-        await this.ReservationTransactionManagerPort.createGuest(guest, conn);
-      } else {
-        await this.ReservationTransactionManagerPort.updateGuest(guest, conn);
-      }
-
       const reservation = new Reservation(reservationData);
-      // Set get ID to reservation
-      reservation.setGuestId(guest.getId());
-      // Set selected rooms
-      reservation.setSelectedRooms(reservationData.selectedRooms);
 
       // Check availability
       const SelectedRoomsList = reservation.getSelectedRooms();
@@ -52,6 +33,25 @@ export class ReservationCompositeService {
           throw new Error("No beds available for the selected dates.");
         }
       }
+
+      // Find if Guest already exist for the property
+      const guestExist =
+        await this.ReservationTransactionManagerPort.findGuestByEmail(
+          guest.getEmail(),
+          reservation.getPropertyId(),
+          conn
+        );
+
+      if (guestExist === null) {
+        await this.ReservationTransactionManagerPort.createGuest(guest, conn);
+      } else {
+        await this.ReservationTransactionManagerPort.updateGuest(guest, conn);
+      }
+
+      // Set get ID to reservation
+      reservation.setGuestId(guest.getId());
+      // Set selected rooms
+      reservation.setSelectedRooms(reservationData.selectedRooms);
 
       await this.ReservationTransactionManagerPort.createReservation(
         reservation,
