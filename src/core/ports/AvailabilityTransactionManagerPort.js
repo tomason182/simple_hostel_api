@@ -11,7 +11,7 @@ export class AvailabilityTransactionManagerPort {
 
   // Get rates and availability ranges for the property
   getPropertyRatesAndAvailabilityRanges(propertyId, from, to, conn = null) {
-    return this.ratesAndAvailabilityRepository.getAllRanges(
+    return this.ratesAndAvailabilityRepository.getAllPropertyRanges(
       propertyId,
       from,
       to,
@@ -19,6 +19,7 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
+  // Get rates and availability ranges for room type id.
   getRanges(roomTypeId, checkIn, checkOut, conn = null) {
     return this.ratesAndAvailabilityRepository.getRanges(
       roomTypeId,

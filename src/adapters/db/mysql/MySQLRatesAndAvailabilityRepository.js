@@ -13,11 +13,11 @@ export class MySQLRatesAndAvailabilityRepository {
     }
   }
 
-  async getAllRanges(propertyId, conn = null) {
+  async getAllPropertyRanges(propertyId, checkIn, checkOut, conn = null) {
     try {
       const query =
-        "SELECT * FROM rates_and_availability WHERE property_id = ?";
-      const params = [propertyId];
+        "SELECT * FROM rates_and_availability WHERE property_id = ? AND end_date >= ? AND start_date < ?";
+      const params = [propertyId, checkIn, checkOut];
 
       const [result] = await (conn || this.mysqlPool).execute(query, params);
 

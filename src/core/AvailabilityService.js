@@ -15,6 +15,8 @@ export class AvailabilityService {
       const ratesAndAvailabilityRanges =
         await this.availabilityTransactionManagerPort.getPropertyRatesAndAvailabilityRanges(
           propertyId,
+          checkIn,
+          checkOut,
           conn
         );
 
