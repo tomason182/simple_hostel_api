@@ -9,6 +9,11 @@ export class availabilityTransactionManagerPort {
     this.reservationService = reservationService;
   }
 
+  // Get all property room types.
+  getAllPropertyRoomTypes(propertyId, conn = null) {
+    return this.roomTypeService.getAllPropertyRoomTypes(propertyId, conn);
+  }
+
   getRanges(roomTypeId, checkIn, checkOut, conn = null) {
     return this.ratesAndAvailabilityService.getRanges(
       roomTypeId,
