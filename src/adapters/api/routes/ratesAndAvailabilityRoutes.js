@@ -14,7 +14,7 @@ export function createRatesAndAvailabilityRoutes(service) {
   const ratesAndAvailabilityController = service.ratesAndAvailabilityController;
 
   // @desc Add a new rate and availability range
-  // @route POST /api/v1/rates_availability/create/:id
+  // @route POST /api/v2/rates_availability/create/:id
   // @access Private
   router.post(
     "/create",
