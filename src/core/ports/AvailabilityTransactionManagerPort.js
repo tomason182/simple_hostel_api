@@ -1,4 +1,4 @@
-export class availabilityTransactionManagerPort {
+export class AvailabilityTransactionManagerPort {
   constructor(
     ratesAndAvailabilityService,
     roomTypeService,

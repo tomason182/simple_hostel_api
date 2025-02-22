@@ -1,4 +1,4 @@
-export class availabilityService {
+export class AvailabilityService {
   constructor(availabilityTransactionManagerPort) {
     this.availabilityTransactionManagerPort =
       availabilityTransactionManagerPort;

@@ -11,6 +11,7 @@ import { MySQLReservationRepository } from "../adapters/db/mysql/MySQLReservatio
 import { MySQLRatesAndAvailabilityRepository } from "../adapters/db/mysql/MySQLRatesAndAvailabilityRepository.js";
 
 // SERVICES
+import { AvailabilityService } from "../core/AvailabilityService.js";
 import { GuestService } from "../core/GuestService.js";
 import { PropertyService } from "../core/PropertyService.js";
 import { ReservationService } from "../core/ReservationService.js";
@@ -20,6 +21,7 @@ import { RatesAndAvailabilityService } from "../core/RatesAndAvailabilityService
 import { RoomTypeService } from "../core/RoomTypeService.js";
 
 // PORTS
+import { AvailabilityTransactionManagerPort } from "../core/ports/AvailabilityTransactionManagerPort.js";
 import { UserInputPort } from "../core/ports/UserInputPort.js";
 import { UserOutputPort } from "../core/ports/UserOutputPort.js";
 import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
@@ -93,7 +95,20 @@ export default function initializeServices() {
   const reservationService = new ReservationService(reservationOutputPort);
   const roomTypeService = new RoomTypeService(roomTypeOutputPort);
 
-  // Initialize transaction manager ports
+  // Initialize transaction manager port
+
+  const availabilityTransactionManagerPort =
+    new AvailabilityTransactionManagerPort(
+      ratesAndAvailabilityService,
+      roomTypeService,
+      reservationService
+    );
+
+  // Initialize availability service
+  const availabilityService = new AvailabilityService(
+    availabilityTransactionManagerPort
+  );
+
   const userTransactionManagerPort = new UserTransactionManagerPort(
     userService,
     propertyService,
@@ -121,7 +136,8 @@ export default function initializeServices() {
   const roomTypeInputPort = new RoomTypeInputPort(roomTypeService);
   const guestInputPort = new GuestInputPort(guestService);
   const ratesAndAvailabilityInputPort = new RatesAndAvailabilityInputPort(
-    ratesAndAvailabilityService
+    ratesAndAvailabilityService,
+    availabilityService
   );
 
   const reservationInputPort = new ReservationInputPort(reservationService);
