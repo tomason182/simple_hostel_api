@@ -10,7 +10,6 @@ export class RatesAndAvailabilityOutputPort {
   }
 
   findRoomTypeById(roomTypeId, propertyId, conn = null) {
-    return true;
     return this.roomTypeRepository.findRoomTypeById(
       roomTypeId,
       propertyId,

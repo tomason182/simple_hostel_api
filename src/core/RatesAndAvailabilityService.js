@@ -18,7 +18,6 @@ export class RatesAndAvailabilityService {
     rateAndAvailability.setCreatedBy(userId);
 
     // Check if the roomType belong to the property
-    // We can find the room type only by its ID but we need to ensure that it belong to the property.
     const roomTypeData = this.ratesAndAvailabilityOutputPort.findRoomTypeById(
       rateAndAvailability.getRoomTypeId(),
       propertyId,
