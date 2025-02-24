@@ -27,7 +27,7 @@ export class AvailabilityService {
           "There are no rates and availability created for this property"
         );
       }
-      throw Error("stop");
+
       const reservations =
         await this.availabilityTransactionManagerPort.getReservationListForDateRange(
           propertyId,
