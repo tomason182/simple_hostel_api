@@ -15,6 +15,7 @@ export class ReservationController {
         return res.status(400).json(errors.array());
       }
       const propertyId = req.user.property_id;
+      const user = req.user._id;
       const data = matchedData(req);
 
       const reservationData = {
@@ -28,6 +29,7 @@ export class ReservationController {
         check_out: data.checkOut,
         special_request: data.specialRequest || null,
         selected_rooms: data.selectedRooms,
+        created_by: user,
       };
 
       const result = await this.reservationInputPort.createReservation(
