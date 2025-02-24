@@ -29,18 +29,24 @@ export class MySQLRatesAndAvailabilityRepository {
     }
   }
 
-  async insertRange(ratesAndAvailability, conn = null) {
+  async insertOrUpdateRange(
+    roomTypeId,
+    propertyId,
+    startDate,
+    endDate,
+    customRate,
+    customAvailability,
+    conn = null
+  ) {
     try {
-      const query =
-        "INSERT INTO rates_and_availability (room_type_id, start_date, end_date, custom_rate, custom_availability, created_by, property_id) VALUES (?,?,?,?,?,?,?)";
+      const query = "CALL InsertOrUpdateRate(?,?,?,?,?,?)";
       const params = [
-        ratesAndAvailability.getRoomTypeId(),
-        ratesAndAvailability.getStartDate(),
-        ratesAndAvailability.getEndDate(),
-        ratesAndAvailability.getCustomRate(),
-        ratesAndAvailability.getCustomAvailability(),
-        ratesAndAvailability.getCreatedBy(),
-        ratesAndAvailability.getPropertyId(),
+        roomTypeId,
+        propertyId,
+        startDate,
+        endDate,
+        customRate,
+        customAvailability,
       ];
 
       const [result] = await (conn || this.mysqlPool).execute(query, params);

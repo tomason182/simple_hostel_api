@@ -9,9 +9,22 @@ export class RatesAndAvailabilityOutputPort {
     this.availabilityService = availabilityService;
   }
 
-  insertRange(rateAndAvailability, conn = null) {
-    return this.ratesAndAvailabilityRepository.insertRange(
-      rateAndAvailability,
+  insertOrUpdateRange(
+    roomTypeId,
+    propertyId,
+    startDate,
+    endDate,
+    customRate,
+    customAvailability,
+    conn = null
+  ) {
+    return this.ratesAndAvailabilityRepository.insertOrUpdateRange(
+      roomTypeId,
+      propertyId,
+      startDate,
+      endDate,
+      customRate,
+      customAvailability,
       conn
     );
   }

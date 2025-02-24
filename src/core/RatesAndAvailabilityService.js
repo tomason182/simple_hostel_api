@@ -56,9 +56,15 @@ export class RatesAndAvailabilityService {
       );
     }
 
-    const result = await this.ratesAndAvailabilityOutputPort.insertRange(
-      rateAndAvailability
-    );
+    const result =
+      await this.ratesAndAvailabilityOutputPort.insertOrUpdateRange(
+        rateAndAvailability.getRoomTypeId(),
+        rateAndAvailability.getPropertyId(),
+        rateAndAvailability.getStartDate(),
+        rateAndAvailability.getEndDate(),
+        rateAndAvailability.getCustomRate(),
+        rateAndAvailability.getCustomAvailability()
+      );
 
     console.log(result);
 
