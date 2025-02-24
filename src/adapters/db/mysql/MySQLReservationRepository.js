@@ -53,7 +53,7 @@ export class MySQLReservationRepository {
   ) {
     try {
       const query =
-        "SELECT id, check_in, check_out, number_of_guest FROM reservations WHERE room_type_id = ? AND reservation_status NOT IN ('canceled', 'no_show') AND check_in <= ? AND check_out > ?";
+        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_guests, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservations_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
       const params = [roomTypeId, endDate, startDate];
 
       const [result] = await (conn || this.mysqlPool).execute(query, params);
