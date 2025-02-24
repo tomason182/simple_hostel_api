@@ -203,6 +203,7 @@ DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
 DELIMITER //
 CREATE PROCEDURE InsertOrUpdateRate(
   IN p_room_type_id INT,
+  IN p_property_id INT,
   IN p_start_date DATE,
   IN p_end_date DATE,
   IN p_custom_rate DECIMAL(10,2),
@@ -230,10 +231,7 @@ BEGIN
   AND end_date > p_end_date;
 
   -- Insert new rate
-  INSERT INTO rates_and_availability (room_type_id, start_date, end_date, custom_rate, custom_availability)
-  VALUES (p_room_type_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
+  INSERT INTO rates_and_availability (room_type_id, property_id,start_date, end_date, custom_rate, custom_availability)
+  VALUES (p_room_type_id, p_property_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
 END //
 DELIMITER ;
-
-
-
