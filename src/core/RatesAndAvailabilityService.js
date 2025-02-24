@@ -5,7 +5,7 @@ export class RatesAndAvailabilityService {
     this.ratesAndAvailabilityOutputPort = ratesAndAvailabilityOutputPort;
   }
 
-  async createRatesAndAvailabilityRange(
+  async createNewRange(
     rateAndAvailabilityData,
     propertyId,
     userId,

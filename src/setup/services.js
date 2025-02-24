@@ -79,7 +79,8 @@ export default function initializeServices() {
     propertyRepository
   );
   const ratesAndAvailabilityOutputPort = new RatesAndAvailabilityOutputPort(
-    ratesAndAvailabilityRepository
+    ratesAndAvailabilityRepository,
+    roomTypeRepository
   );
   const reservationOutputPort = new ReservationOutputPort(
     reservationRepository
