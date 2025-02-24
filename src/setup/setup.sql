@@ -210,28 +210,87 @@ CREATE PROCEDURE InsertOrUpdateRate(
   IN p_custom_availability INT
 )
 BEGIN
+  -- Declare necessary variables
+  DECLARE id_var INT
+  DECLARE start_date_var, end_date_var DATE;
+  DECLARE custom_rate_var DECIMAL(10,2);
+  DECLARE custom_availability_var INT;
+  DECLARE existing_records INT DEFAULT 0;
+  DECLARE exit_handler INT DEFAULT 0; -- Error flag
+
+  -- Error handling: If an error occurs, set exit_handler to 1.
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+  BEGIN
+    SET exit_handler = 1;
+    ROLLBACK;
+  END;
+
+  -- Start transaction
+  START TRANSACTION;
+
   -- Delete exact overlapping record if needed
   DELETE FROM rates_and_availability
   WHERE room_type_id = p_room_type_id
   AND start_date >= p_start_date
   AND end_date <= p_end_date;
 
-  -- Adjust previous range if needed
-  UPDATE rates_and_availability
-  SET end_date = DATE_SUB(p_start_date, INTERVAL 1 DAY)
+  -- Check for existing overlapping records
+  SELECT COUNT(*)
+  INTO existing_records
+  FROM rates_and_availability
   WHERE room_type_id = p_room_type_id
-  AND start_date < p_start_date
-  AND end_date >= p_start_date;
+    AND start_date < p_end_date
+    AND end_date > p_start_date
 
-  -- Adjust following range if needed
-  UPDATE rates_and_availability
-  SET start_date = DATE_ADD(p_end_date, INTERVAL 1 DAY)
-  WHERE room_type_id = p_room_type_id
-  AND start_date <= p_end_date
-  AND end_date > p_end_date;
+  IF existing_records > 0 THEN
+    SELECT id, start_date, end_date, custom_rate, custom_availability
+    INTO id_var, start_date_var, end_date_var, custom_rate_var, custom_availability_var
+    FROM rates_and_availability
+    WHERE room_type_id = p_room_type_id
+      AND start_date < p_start_date
+      AND end_date > p_end_date
+    LIMIT 1;
+
+    IF start_date_var IS NOT NULL AND end_date_var IS NOT NULL THEN
+      -- Insert first half before the new range
+      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, custom_availability)
+      VALUES (p_room_type_id, p_property_id, start_date_var, DATE_SUB(p_start_date, INTERVAL 1 day), custom_rate_var, custom_availability_var);
+
+      -- Insert second half after the new range
+      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, custom_availability)
+      VALUES (p_room_type_id, p_property_id, DATE_ADD(p_end_date, INTERVAL 1 DAY), end_date_var, custom_rate_var, custom_availability_var)
+
+      -- Delete the original overlapping record
+      DELETE FROM rates_and_availability
+      WHERE id = id_var;
+    END IF;
+
+
+    -- Adjust previous range if needed
+    UPDATE rates_and_availability
+    SET end_date = DATE_SUB(p_start_date, INTERVAL 1 DAY)
+    WHERE room_type_id = p_room_type_id
+    AND start_date < p_start_date
+    AND end_date >= p_start_date;
+
+    -- Adjust following range if needed
+    UPDATE rates_and_availability
+    SET start_date = DATE_ADD(p_end_date, INTERVAL 1 DAY)
+    WHERE room_type_id = p_room_type_id
+    AND start_date <= p_end_date
+    AND end_date > p_end_date;
+  
+  END IF;
 
   -- Insert new rate
   INSERT INTO rates_and_availability (room_type_id, property_id,start_date, end_date, custom_rate, custom_availability)
   VALUES (p_room_type_id, p_property_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
+
+  IF exit_handler = 0 THEN
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+  
 END //
 DELIMITER ;
