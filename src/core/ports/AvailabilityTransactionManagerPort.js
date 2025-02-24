@@ -1,12 +1,12 @@
 export class AvailabilityTransactionManagerPort {
   constructor(
     ratesAndAvailabilityRepository,
-    roomTypeService,
-    reservationService
+    roomTypeRepository,
+    reservationRepository
   ) {
     this.ratesAndAvailabilityRepository = ratesAndAvailabilityRepository;
-    this.roomTypeService = roomTypeService;
-    this.reservationService = reservationService;
+    this.roomTypeService = roomTypeRepository;
+    this.reservationService = reservationRepository;
   }
 
   // Get rates and availability ranges for the property
@@ -30,11 +30,11 @@ export class AvailabilityTransactionManagerPort {
   }
 
   getAllRoomTypeBeds(roomTypeId, conn = null) {
-    return this.roomTypeService.getAllRoomTypeBeds(roomTypeId, conn);
+    return this.roomTypeRepository.getAllRoomTypeBeds(roomTypeId, conn);
   }
 
   getReservationListForDateRange(roomTypeId, checkIn, checkOut, conn) {
-    return this.reservationService.getReservationListForDateRange(
+    return this.reservationRepository.getReservationListForDateRange(
       roomTypeId,
       checkIn,
       checkOut,

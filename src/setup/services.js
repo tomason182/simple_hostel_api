@@ -65,6 +65,18 @@ export default function initializeServices() {
   const emailService = createEmailNotification();
   const tokenService = createTokenService();
 
+  const availabilityTransactionManagerPort =
+    new AvailabilityTransactionManagerPort(
+      ratesAndAvailabilityRepository,
+      roomTypeRepository,
+      reservationRepository
+    );
+
+  // Initialize availability service
+  const availabilityService = new AvailabilityService(
+    availabilityTransactionManagerPort
+  );
+
   // INITIALIZE OUTPUT PORT.
   const userOutputPort = new UserOutputPort(
     userRepository,
@@ -80,7 +92,8 @@ export default function initializeServices() {
   );
   const ratesAndAvailabilityOutputPort = new RatesAndAvailabilityOutputPort(
     ratesAndAvailabilityRepository,
-    roomTypeRepository
+    roomTypeRepository,
+    availabilityService
   );
   const reservationOutputPort = new ReservationOutputPort(
     reservationRepository
@@ -97,18 +110,6 @@ export default function initializeServices() {
   const roomTypeService = new RoomTypeService(roomTypeOutputPort);
 
   // Initialize transaction manager port
-
-  const availabilityTransactionManagerPort =
-    new AvailabilityTransactionManagerPort(
-      ratesAndAvailabilityRepository,
-      roomTypeService,
-      reservationService
-    );
-
-  // Initialize availability service
-  const availabilityService = new AvailabilityService(
-    availabilityTransactionManagerPort
-  );
 
   const userTransactionManagerPort = new UserTransactionManagerPort(
     userService,
