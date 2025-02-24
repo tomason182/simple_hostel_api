@@ -88,15 +88,16 @@ export class MySQLRoomTypeRepository {
   // Find room type by ID and property ID
   async findRoomTypeById(roomTypeId, propertyId, conn = null) {
     try {
-      const query =
-        "SELECT id FROM room_types WHERE id = ? AND property_id = ?";
+      const query = "SELECT * FROM room_types WHERE id = ? AND property_id = ?";
       const params = [roomTypeId, propertyId];
 
       const [result] = await (conn || this.pool).execute(query, params);
 
-      return result || null;
+      return result[0] || null;
     } catch (e) {
-      throw new Error(`An Error occurred trying to find room type by ID`);
+      throw new Error(
+        `An Error occurred trying to find room type by ID: Error: ${e.message}`
+      );
     }
   }
 }

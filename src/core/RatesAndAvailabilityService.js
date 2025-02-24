@@ -1,4 +1,5 @@
 import { RateAndAvailability } from "./entities/RatesAndAvailability.js";
+import { RoomType } from "./entities/RoomType.js";
 
 export class RatesAndAvailabilityService {
   constructor(ratesAndAvailabilityOutputPort) {
@@ -18,11 +19,12 @@ export class RatesAndAvailabilityService {
     rateAndAvailability.setCreatedBy(userId);
 
     // Check if the roomType belong to the property
-    const roomTypeData = this.ratesAndAvailabilityOutputPort.findRoomTypeById(
-      rateAndAvailability.getRoomTypeId(),
-      propertyId,
-      conn
-    );
+    const roomTypeData =
+      await this.ratesAndAvailabilityOutputPort.findRoomTypeById(
+        rateAndAvailability.getRoomTypeId(),
+        propertyId,
+        conn
+      );
 
     if (roomTypeData === null) {
       throw new Error("Room type ID provided does not belong to property");
