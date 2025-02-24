@@ -17,6 +17,7 @@ export class RatesAndAvailabilityService {
     );
 
     rateAndAvailability.setCreatedBy(userId);
+    rateAndAvailability.setPropertyId(propertyId);
 
     // Check if the roomType belong to the property
     const roomTypeData =
@@ -42,9 +43,11 @@ export class RatesAndAvailabilityService {
 
     // Check if custom availability > availability - total guest;
     const isCustomAvailabilityValid =
-      this.ratesAndAvailabilityOutputPort.checkCustomAvailability(
+      await this.ratesAndAvailabilityOutputPort.checkCustomAvailability(
         roomType,
-        rateAndAvailability
+        startDate,
+        endDate,
+        rateAndAvailability.getCustomAvailability()
       );
 
     if (isCustomAvailabilityValid.status === false) {
@@ -53,9 +56,11 @@ export class RatesAndAvailabilityService {
       );
     }
 
-    const result = await this.ratesAndAvailabilityOutputPort.insertOrUpdateRate(
+    const result = await this.ratesAndAvailabilityOutputPort.insertRange(
       rateAndAvailability
     );
+
+    console.log(result);
 
     return result;
   }

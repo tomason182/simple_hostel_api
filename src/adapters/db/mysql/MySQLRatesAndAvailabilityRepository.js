@@ -28,4 +28,28 @@ export class MySQLRatesAndAvailabilityRepository {
       );
     }
   }
+
+  async insertRange(ratesAndAvailability, conn = null) {
+    try {
+      const query =
+        "INSERT INTO rates_and_availability (room_type_id, start_date, end_date, custom_rate, custom_availability, created_by, property_id) VALUES (?,?,?,?,?,?,?)";
+      const params = [
+        ratesAndAvailability.getRoomTypeId(),
+        ratesAndAvailability.getStartDate(),
+        ratesAndAvailability.getEndDate(),
+        ratesAndAvailability.getCustomRate(),
+        ratesAndAvailability.getCustomAvailability(),
+        ratesAndAvailability.getCreatedBy(),
+        ratesAndAvailability.getPropertyId(),
+      ];
+
+      const [result] = await (conn || this.mysqlPool).execute(query, params);
+
+      return result.insertId;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to insert a new rates ranges. Error: ${e.message}`
+      );
+    }
+  }
 }

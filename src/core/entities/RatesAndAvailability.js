@@ -2,6 +2,7 @@ export class RateAndAvailability {
   constructor({
     id = null,
     room_type_id,
+    property_id,
     start_date,
     end_date,
     custom_rate,
@@ -11,7 +12,7 @@ export class RateAndAvailability {
   }) {
     this.id = id;
     this.room_type_id = room_type_id;
-    this.start_date = start_date;
+    (this.property_id = property_id), (this.start_date = start_date);
     this.end_date = end_date;
     this.custom_rate = custom_rate;
     this.custom_availability = custom_availability;
@@ -78,5 +79,14 @@ export class RateAndAvailability {
 
   setCreatedBy(id) {
     this.created_by = id;
+  }
+
+  // Getter and Setter for property ID
+  getPropertyId() {
+    return this.property_id;
+  }
+
+  setPropertyId(id) {
+    this.property_id = id;
   }
 }
