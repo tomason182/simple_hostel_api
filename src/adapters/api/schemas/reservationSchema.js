@@ -93,6 +93,15 @@ export const reservationSchema = {
       strict: true,
       errorMessage: "Check-in date mus be ISO8601 format",
     },
+    customSanitizer: {
+      options: value => {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) {
+          throw new Error("Invalid check in date provided");
+        }
+        return date;
+      },
+    },
   },
   checkOut: {
     in: ["body"],
@@ -103,6 +112,15 @@ export const reservationSchema = {
     isISO8601: {
       strict: true,
       errorMessage: "Check-out date mus be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => {
+        const date = new Date(value);
+        if (isNaN(date.getTime())) {
+          throw new Error("Invalid check out date provided");
+        }
+        return date;
+      },
     },
   },
   currency: {
