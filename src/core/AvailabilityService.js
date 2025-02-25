@@ -74,7 +74,7 @@ export class AvailabilityService {
           checkOut
         );
 
-      const initialDate = checkIn;
+      const initialDate = new Date(checkIn);
       for (
         let date = initialDate;
         date < checkOut;

@@ -27,12 +27,12 @@ export class MySQLReservationRepository {
       reservation.setId(result.insertId);
 
       const setRoomsQuery =
-        "INSERT INTO reservation_rooms (reservation_id, room_type_id, number_of_guest, total_amount) VALUES (?,?,?,?)";
-      for (room of reservation.getSelectedRooms()) {
+        "INSERT INTO reservation_rooms (reservation_id, room_type_id, number_of_guests, total_amount) VALUES (?,?,?,?)";
+      for (const room of reservation.getSelectedRooms()) {
         const roomParams = [
           reservation.getId(),
           room.room_type_id,
-          room.number_of_guest,
+          room.number_of_guests,
           room.total_amount,
         ];
 
