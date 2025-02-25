@@ -16,7 +16,7 @@ export class Reservation {
     updated_at = null,
   }) {
     this.id = id;
-    this.guest = guest_id;
+    this.guest_id = guest_id;
     this.property_id = property_id;
     this.booking_source = booking_source;
     this.currency = currency;
@@ -34,13 +34,7 @@ export class Reservation {
 
   // Setter and Getter for selected rooms
   setSelectedRooms(rooms) {
-    for (const room in rooms) {
-      this.selected_rooms = {
-        room_type_id: room.room_type_id,
-        number_of_guests: room.number_of_guests,
-        total_amount: room.total_amount,
-      };
-    }
+    this.selected_rooms = rooms;
   }
 
   getSelectedRooms() {
@@ -97,6 +91,10 @@ export class Reservation {
 
   setReservationStatus(status) {
     this.reservation_status = status;
+  }
+
+  getPaymentStatus() {
+    return this.payment_status;
   }
 
   // Getter and Setter for check-in
