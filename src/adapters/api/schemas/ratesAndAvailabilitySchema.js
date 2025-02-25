@@ -23,16 +23,6 @@ export const ratesAndAvailabilitySchema = {
       strict: true,
       errorMessage: "Start date must be ISO8601 format",
     },
-    customSanitizer: {
-      options: value => {
-        const date = new Date(value);
-        if (isNaN(date.getTime())) {
-          throw new Error("Invalid start date provided");
-        }
-
-        return date;
-      },
-    },
   },
   endDate: {
     in: ["body"],
@@ -44,16 +34,6 @@ export const ratesAndAvailabilitySchema = {
     isISO8601: {
       strict: true,
       errorMessage: "End date must be ISO8601 format",
-    },
-    customSanitizer: {
-      options: value => {
-        const date = new Date(value);
-        if (isNaN(date.getTime())) {
-          throw new Error("Invalid start date provided");
-        }
-
-        return date;
-      },
     },
   },
   customRate: {
