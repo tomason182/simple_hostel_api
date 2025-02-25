@@ -211,7 +211,7 @@ CREATE PROCEDURE InsertOrUpdateRate(
 )
 BEGIN
   -- Declare necessary variables
-  DECLARE id_var INT
+  DECLARE id_var INT;
   DECLARE start_date_var, end_date_var DATE;
   DECLARE custom_rate_var DECIMAL(10,2);
   DECLARE custom_availability_var INT;
@@ -240,7 +240,7 @@ BEGIN
   FROM rates_and_availability
   WHERE room_type_id = p_room_type_id
     AND start_date < p_end_date
-    AND end_date > p_start_date
+    AND end_date > p_start_date;
 
   IF existing_records > 0 THEN
     SELECT id, start_date, end_date, custom_rate, custom_availability
@@ -258,7 +258,7 @@ BEGIN
 
       -- Insert second half after the new range
       INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, custom_availability)
-      VALUES (p_room_type_id, p_property_id, DATE_ADD(p_end_date, INTERVAL 1 DAY), end_date_var, custom_rate_var, custom_availability_var)
+      VALUES (p_room_type_id, p_property_id, DATE_ADD(p_end_date, INTERVAL 1 DAY), end_date_var, custom_rate_var, custom_availability_var);
 
       -- Delete the original overlapping record
       DELETE FROM rates_and_availability
