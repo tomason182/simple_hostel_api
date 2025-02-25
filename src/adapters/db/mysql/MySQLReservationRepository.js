@@ -3,10 +3,12 @@ export class MySQLReservationRepository {
     this.mysqlPool = mysqlPool;
   }
 
-  async createReservation(reservation, conn = null) {
+  async createReservation(reservation) {
+    const conn = await this.mysqlPool.getConnection();
     try {
+      await conn.beginTransaction();
       const query =
-        "INSERT INTO reservations (guest_id, property_id, booking_source, currencies, reservation_status, payment_status, check_in, check_out, special_request, created_by) VALUES(?,?,?,?,?,?,?,?,?)";
+        "INSERT INTO reservations (guest_id, property_id, booking_source, currency, reservation_status, payment_status, check_in, check_out, special_request, created_by) VALUES(?,?,?,?,?,?,?,?,?,?)";
       const params = [
         reservation.getGuestId(),
         reservation.getPropertyId(),
@@ -17,7 +19,7 @@ export class MySQLReservationRepository {
         reservation.getCheckIn(),
         reservation.getCheckOut(),
         reservation.getSpecialRequest(),
-        reservation.getCreateBy(),
+        reservation.getCreatedBy(),
       ];
 
       const [result] = await conn.execute(query, params);
@@ -37,15 +39,19 @@ export class MySQLReservationRepository {
         await conn.execute(setRoomsQuery, roomParams);
       }
 
+      await conn.commit();
       return reservation;
     } catch (e) {
+      await conn.rollback();
       throw new Error(
         `An error occurred when creating a new reservation. Error: ${e.message}`
       );
+    } finally {
+      await conn.release();
     }
   }
 
-  async getReservationListByDateRange(
+  async getReservationsListByDateRange(
     roomTypeId,
     startDate,
     endDate,
