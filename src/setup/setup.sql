@@ -239,8 +239,8 @@ BEGIN
   INTO existing_records
   FROM rates_and_availability
   WHERE room_type_id = p_room_type_id
-    AND start_date < p_end_date
-    AND end_date > p_start_date;
+    AND start_date <= p_end_date
+    AND end_date >= p_start_date;
 
   IF existing_records > 0 THEN
     SELECT id, start_date, end_date, custom_rate, custom_availability
