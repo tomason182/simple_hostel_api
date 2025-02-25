@@ -17,6 +17,7 @@ class MySQLConnect {
       user,
       password,
       database,
+      timezone: "Z",
       waitForConnections: true,
       connectionLimit: parseInt(process.env.MYSQL_POOL_SIZE) || 10,
       queueLimit: parseInt(process.env.MYSQL_QUEUE_LIMIT) || 0,
