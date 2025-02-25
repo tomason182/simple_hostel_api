@@ -5,8 +5,8 @@ export class AvailabilityTransactionManagerPort {
     reservationRepository
   ) {
     this.ratesAndAvailabilityRepository = ratesAndAvailabilityRepository;
-    this.roomTypeService = roomTypeRepository;
-    this.reservationService = reservationRepository;
+    this.roomTypeRepository = roomTypeRepository;
+    this.reservationRepository = reservationRepository;
   }
 
   // Get rates and availability ranges for the property
@@ -29,12 +29,18 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
-  getAllRoomTypeBeds(roomTypeId, conn = null) {
-    return this.roomTypeRepository.getAllRoomTypeBeds(roomTypeId, conn);
+  // ROOM TYPES
+  findRoomTypeById(roomTypeId, propertyId, conn = null) {
+    return this.roomTypeRepository.findRoomTypeById(
+      roomTypeId,
+      propertyId,
+      conn
+    );
   }
 
-  getReservationListForDateRange(roomTypeId, checkIn, checkOut, conn) {
-    return this.reservationRepository.getReservationListForDateRange(
+  // RESERVATIONS
+  getOverlappingReservations(roomTypeId, checkIn, checkOut, conn) {
+    return this.reservationRepository.getReservationsListByDateRange(
       roomTypeId,
       checkIn,
       checkOut,

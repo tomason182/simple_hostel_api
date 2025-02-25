@@ -29,7 +29,7 @@ export class AvailabilityService {
       }
 
       const reservations =
-        await this.availabilityTransactionManagerPort.getReservationListForDateRange(
+        await this.availabilityTransactionManagerPort.getOverlappingReservations(
           propertyId,
           checkIn,
           checkOut
@@ -39,33 +39,77 @@ export class AvailabilityService {
     }
   }
 
-  async checkAvailability(roomTypeId, checkIn, checkOut, conn = null) {
+  async checkAvailability(
+    selectedRoom,
+    propertyId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
     try {
       // Bring the availability ranges
       const ranges = await this.availabilityTransactionManagerPort.getRanges(
-        roomTypeId,
+        selectedRoom.room_type_id,
         checkIn,
         checkOut,
         conn
       );
-      const roomType =
-        await this.availabilityTransactionManagerPort.getRoomTypeById(
-          roomTypeId,
-          conn
-        );
 
-      if (roomType === null) {
-        throw new Error("Room type ID not found");
+      if (ranges.length === 0) {
+        throw new Error("No rates and availability ranges created.");
       }
 
-      const totalBeds = "Get the total bed for the room type object";
+      // Get the room type.
+      const roomType =
+        await this.availabilityTransactionManagerPort.findRoomTypeById(
+          selectedRoom.room_type_id,
+          propertyId
+        );
 
+      // Brings the reservation_room table and the check-in, check-out from the reseravtion table.
       const reservationList =
-        await this.availabilityTransactionManagerPort.getReservationsList(
-          roomTypeId,
+        await this.availabilityTransactionManagerPort.getOverlappingReservations(
+          selectedRoom.room_type_id,
           checkIn,
           checkOut
         );
+
+      const initialDate = checkIn;
+      for (
+        let date = initialDate;
+        date < checkOut;
+        date.setDate(date.getDate() + 1)
+      ) {
+        const currentDate = date;
+        const hasRange = ranges.find(
+          r => r.start_date <= currentDate && r.end_date >= currentDate
+        );
+        // Check if there is a rates and availability range created for the current date.
+        if (hasRange === undefined) {
+          throw new Error("There are rates and availability ranges missing.");
+        }
+
+        const filteredReservations = reservationList.filter(
+          r => r.check_in <= date && r.check_out > date
+        );
+
+        filteredReservations.push(selectedRoom);
+
+        let totalGuest =
+          roomType.type === "dorm"
+            ? filteredReservations.reduce(
+                (acc, reservation) => acc + reservation.number_of_guests,
+                0
+              )
+            : filteredReservations.length;
+        const availability = hasRange.customAvailability;
+
+        if (totalGuest > availability) {
+          return false;
+        }
+      }
+
+      return true;
     } catch (e) {
       throw e;
     }
@@ -81,7 +125,7 @@ export class AvailabilityService {
     try {
       // Get the reservations for the current range start date - end date.
       const reservationList =
-        this.availabilityTransactionManagerPort.getReservationsList(
+        await this.availabilityTransactionManagerPort.getOverlappingReservations(
           roomType.getId(),
           startDate,
           endDate,
