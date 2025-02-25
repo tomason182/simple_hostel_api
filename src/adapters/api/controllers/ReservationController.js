@@ -30,6 +30,7 @@ export class ReservationController {
         special_request: data.specialRequest || null,
         selected_rooms: data.selectedRooms,
         created_by: user,
+        updated_by: user,
       };
 
       const result = await this.reservationInputPort.createReservation(
