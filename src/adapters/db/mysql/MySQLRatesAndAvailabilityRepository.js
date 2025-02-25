@@ -5,8 +5,9 @@ export class MySQLRatesAndAvailabilityRepository {
 
   async getRanges(roomTypeId, startDate, endDate, conn = null) {
     try {
+      // LOCK THE ROW SELECTED TO PREVENT RACE CONDITIONS
       const query =
-        "SELECT * FROM rates_and_availability WHERE room_type_id = ? AND start_date < ? AND end_date >= ?";
+        "SELECT * FROM rates_and_availability WHERE room_type_id = ? AND start_date < ? AND end_date >= ? FOR UPDATE";
       const params = [roomTypeId, endDate, startDate];
 
       const [result] = await (conn || this.mysqlPool).execute(query, params);
