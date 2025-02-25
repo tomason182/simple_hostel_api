@@ -23,6 +23,9 @@ export const ratesAndAvailabilitySchema = {
       strict: true,
       errorMessage: "Start date must be ISO8601 format",
     },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
   },
   endDate: {
     in: ["body"],
@@ -34,6 +37,9 @@ export const ratesAndAvailabilitySchema = {
     isISO8601: {
       strict: true,
       errorMessage: "End date must be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
     },
   },
   customRate: {

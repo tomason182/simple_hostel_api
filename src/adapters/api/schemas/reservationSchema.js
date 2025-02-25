@@ -93,6 +93,9 @@ export const reservationSchema = {
       strict: true,
       errorMessage: "Check-in date mus be ISO8601 format",
     },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
   },
   checkOut: {
     in: ["body"],
@@ -103,6 +106,9 @@ export const reservationSchema = {
     isISO8601: {
       strict: true,
       errorMessage: "Check-out date mus be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
     },
   },
   currency: {
