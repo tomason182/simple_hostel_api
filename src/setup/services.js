@@ -96,7 +96,9 @@ export default function initializeServices() {
     availabilityService
   );
   const reservationOutputPort = new ReservationOutputPort(
-    reservationRepository
+    reservationRepository,
+    availabilityService,
+    emailService
   );
 
   // Initialize the core services

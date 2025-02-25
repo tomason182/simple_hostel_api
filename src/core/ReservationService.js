@@ -8,18 +8,19 @@ export class ReservationService {
   async createReservation(reservationData, conn = null) {
     try {
       const reservation = new Reservation(reservationData);
+      reservation.setSelectedRooms(reservationData.selected_rooms);
 
       // Check availability.
       const selectedRooms = reservation.getSelectedRooms();
       const checkIn = reservation.getCheckIn();
       const checkOut = reservation.getCheckOut();
+      const propertyId = reservation.getPropertyId();
 
       let isAvailable = true;
-      for (room in selectedRooms) {
-        roomTypeId = room.room_type_id;
-        numberOfGuest = room.number_of_guest;
+      for (const room of selectedRooms) {
         isAvailable = await this.reservationOutport.checkAvailability(
-          roomTypeId,
+          room,
+          propertyId,
           checkIn,
           checkOut,
           conn
@@ -35,7 +36,7 @@ export class ReservationService {
       const result = await this.reservationOutport.saveReservation(reservation);
 
       // send email to guest
-      await this.reservationOutport.sendEmail();
+      // await this.reservationOutport.sendEmail();
 
       return result;
     } catch (e) {

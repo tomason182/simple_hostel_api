@@ -3,12 +3,18 @@ export class MySQLRatesAndAvailabilityRepository {
     this.mysqlPool = mysqlPool;
   }
 
-  async create(rateAndAvailability, conn = null) {
+  async getRanges(roomTypeId, startDate, endDate, conn = null) {
     try {
-      return "Rate and availability created";
+      const query =
+        "SELECT * FROM rates_and_availability WHERE room_type_id = ? AND start_date < ? AND end_date >= ?";
+      const params = [roomTypeId, endDate, startDate];
+
+      const [result] = await (conn || this.mysqlPool).execute(query, params);
+
+      return result;
     } catch (e) {
       throw new Error(
-        `An error occurred trying to create rate and availability range. Error: ${e.message}`
+        `An error occurred trying to get rates ranges. Error: ${e.message}`
       );
     }
   }
