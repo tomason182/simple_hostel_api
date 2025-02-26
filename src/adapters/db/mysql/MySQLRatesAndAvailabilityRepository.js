@@ -10,12 +10,33 @@ export class MySQLRatesAndAvailabilityRepository {
         "SELECT * FROM rates_and_availability WHERE room_type_id = ? AND start_date < ? AND end_date >= ? FOR UPDATE";
       const params = [roomTypeId, endDate, startDate];
 
-      const [result] = await (conn || this.mysqlPool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
 
       return result;
     } catch (e) {
       throw new Error(
         `An error occurred trying to get rates ranges. Error: ${e.message}`
+      );
+    }
+  }
+
+  // GET RANGES FOR ALL SELECTED ROOM. LOCK ROW TO PREVENT RACE CONDITION.
+  async getAllRanges(selectedRoomsList, startDate, endDate, conn = null) {
+    try {
+      const placeholders = selectedRoomsList.map(() => "?").join(", ");
+      const query = `SELECT * FROM rates_and_availability WHERE room_type_id IN (${placeholders}) AND start_date < ? AND end_date >= ? FOR UPDATE`;
+      const params = [...selectedRoomsList, endDate, startDate];
+
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get ranges for selected rooms. Error: ${e.message}`
       );
     }
   }

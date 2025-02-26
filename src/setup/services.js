@@ -127,11 +127,11 @@ export default function initializeServices() {
 
   const reservationTransactionManagerPort =
     new ReservationTransactionManagerPort(
-      reservationService,
-      guestService,
+      reservationRepository,
+      guestRepository,
+      ratesAndAvailabilityRepository,
       availabilityService,
-      emailService,
-      ratesAndAvailabilityRepository
+      emailService
     );
 
   // Initialize composite services
@@ -160,7 +160,10 @@ export default function initializeServices() {
     availabilityService
   );
 
-  const reservationInputPort = new ReservationInputPort(reservationService);
+  const reservationInputPort = new ReservationInputPort(
+    reservationService,
+    reservationCompositeService
+  );
 
   // Initialize controllers
   const userController = new UserController(userInputPort);

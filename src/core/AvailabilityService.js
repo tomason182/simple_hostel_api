@@ -40,7 +40,8 @@ export class AvailabilityService {
   }
 
   async checkAvailability(
-    selectedRoom,
+    room,
+    ranges,
     propertyId,
     checkIn,
     checkOut,
@@ -48,30 +49,34 @@ export class AvailabilityService {
   ) {
     try {
       // Bring the availability ranges
-      const ranges = await this.availabilityTransactionManagerPort.getRanges(
-        selectedRoom.room_type_id,
-        checkIn,
-        checkOut,
-        conn
+      const rangeList = ranges.filter(
+        range => range.room_type_id === room.room_type_id
       );
-
-      if (ranges.length === 0) {
-        throw new Error("No rates and availability ranges created.");
+      if (rangeList.length === 0) {
+        throw new Error(
+          `No rates and availability ranges created for room type ${room.room_type_id}.`
+        );
       }
 
       // Get the room type.
       const roomType =
         await this.availabilityTransactionManagerPort.findRoomTypeById(
-          selectedRoom.room_type_id,
-          propertyId
+          room.room_type_id,
+          propertyId,
+          conn
         );
 
-      // Brings the reservation_room table and the check-in, check-out from the reseravtion table.
+      if (!roomType) {
+        throw new Error("Unable to find the room type");
+      }
+
+      // Brings the reservation_room table and the check-in, check-out from the reservation table.
       const reservationList =
         await this.availabilityTransactionManagerPort.getOverlappingReservations(
-          selectedRoom.room_type_id,
+          room.room_type_id,
           checkIn,
-          checkOut
+          checkOut,
+          conn
         );
 
       const initialDate = new Date(checkIn);
@@ -81,7 +86,7 @@ export class AvailabilityService {
         date.setDate(date.getDate() + 1)
       ) {
         const currentDate = date;
-        const hasRange = ranges.find(
+        const hasRange = rangeList.find(
           r => r.start_date <= currentDate && r.end_date >= currentDate
         );
         // Check if there is a rates and availability range created for the current date.
@@ -93,7 +98,7 @@ export class AvailabilityService {
           r => r.check_in <= date && r.check_out > date
         );
 
-        filteredReservations.push(selectedRoom);
+        filteredReservations.push(room);
 
         let totalGuest =
           roomType.type === "dorm"

@@ -9,7 +9,9 @@ export class MySQLGuestRepository {
         "SELECT * FROM guests WHERE email = ? AND property_id = ? LIMIT 1";
       const params = [email, propertyId];
 
-      const [result] = await (conn || this.pool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.pool.execute(query, params));
 
       return result[0] || null;
     } catch (e) {
@@ -33,7 +35,7 @@ export class MySQLGuestRepository {
     }
   }
 
-  async saveGuest(guest, propertyId, conn) {
+  async save(guest, propertyId, conn) {
     try {
       const query =
         "INSERT INTO guests (property_id, first_name, last_name, id_number, email, phone_number, city, street, postal_code, country_code) VALUES(?,?,?,?,?,?,?,?,?,?)";
@@ -50,9 +52,12 @@ export class MySQLGuestRepository {
         guest.getCountryCode(),
       ];
 
-      const [result] = await (conn || this.pool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.pool.execute(query, params));
 
       guest.setId(result.insertId);
+
       return guest;
     } catch (e) {
       throw Error(
@@ -61,7 +66,7 @@ export class MySQLGuestRepository {
     }
   }
 
-  async updateGuest(guest) {
+  async update(guest, conn = null) {
     try {
       const query =
         "UPDATE guests SET first_name = ?, last_name = ?, id_number = ?, email = ?, phone_number = ?, street = ?, city = ?, country_code = ?, postal_code = ? WHERE id = ?";

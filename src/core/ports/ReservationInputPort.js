@@ -1,9 +1,13 @@
 export class ReservationInputPort {
-  constructor(reservationService) {
+  constructor(reservationService, reservationCompositeService) {
     this.reservationService = reservationService;
+    this.reservationCompositeService = reservationCompositeService;
   }
 
-  createReservation(reservationData, conn = null) {
-    return this.reservationService.createReservation(reservationData, conn);
+  createReservationAndGuest(reservationData, guestData) {
+    return this.reservationCompositeService.createReservationAndGuest(
+      reservationData,
+      guestData
+    );
   }
 }

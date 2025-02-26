@@ -1,30 +1,49 @@
 import { Guest } from "../core/entities/Guest.js";
+import { confirmationMailBody } from "../utils/emailBodyGenerator.js";
 import { Reservation } from "./entities/Reservation.js";
 
 export class ReservationCompositeService {
-  constructor(ReservationTransactionManagerPort, mysqlPool) {
-    (this.ReservationTransactionManagerPort =
-      ReservationTransactionManagerPort),
-      (this.mysqlPool = mysqlPool);
+  constructor(reservationTransactionManagerPort, mysqlPool) {
+    this.reservationTransactionManagerPort = reservationTransactionManagerPort;
+    this.mysqlPool = mysqlPool;
   }
 
   // Create a new Reservation
-  async createReservation(reservationData, guestData) {
+  async createReservationAndGuest(reservationData, guestData) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
+
       const guest = new Guest(guestData);
       const reservation = new Reservation(reservationData);
+      reservation.setSelectedRooms(reservationData.selected_rooms);
 
-      // Check availability
-      const SelectedRoomsList = reservation.getSelectedRooms();
+      const selectedRooms = reservation.getSelectedRooms();
       const checkIn = reservation.getCheckIn();
       const checkOut = reservation.getCheckOut();
-      for (const room in SelectedRoomsList) {
+      const propertyId = reservation.getPropertyId();
+
+      const roomsIdList = selectedRooms.flatMap(room => room.room_type_id);
+
+      // Get ranges for all selected room types and lock rows to prevent race conditions.
+      const ranges = await this.reservationTransactionManagerPort.getAllRanges(
+        roomsIdList,
+        checkIn,
+        checkOut,
+        conn
+      );
+
+      if (ranges.length === 0) {
+        throw Error("No ranges found for the selected dates.");
+      }
+
+      // Check availability Logic
+      for (const room of selectedRooms) {
         const isAvailable =
-          await this.ReservationTransactionManagerPort.checkAvailability(
-            room.room_type_id,
-            room.number_of_guest,
+          await this.reservationTransactionManagerPort.checkAvailability(
+            room,
+            ranges,
+            propertyId,
             checkIn,
             checkOut,
             conn
@@ -36,30 +55,43 @@ export class ReservationCompositeService {
 
       // Find if Guest already exist for the property
       const guestExist =
-        await this.ReservationTransactionManagerPort.findGuestByEmail(
+        await this.reservationTransactionManagerPort.findGuestByEmail(
           guest.getEmail(),
           reservation.getPropertyId(),
           conn
         );
 
       if (guestExist === null) {
-        await this.ReservationTransactionManagerPort.createGuest(guest, conn);
+        await this.reservationTransactionManagerPort.saveGuest(
+          guest,
+          propertyId,
+          conn
+        );
       } else {
-        await this.ReservationTransactionManagerPort.updateGuest(guest, conn);
+        guest.setId(guestExist.id);
+        await this.reservationTransactionManagerPort.updateGuest(guest, conn);
       }
 
       // Set get ID to reservation
       reservation.setGuestId(guest.getId());
-      // Set selected rooms
-      reservation.setSelectedRooms(reservationData.selectedRooms);
 
-      await this.ReservationTransactionManagerPort.createReservation(
+      await this.reservationTransactionManagerPort.saveReservation(
         reservation,
         conn
       );
 
-      await this.ReservationTransactionManagerPort.sendEmailToGuest();
-      await this.ReservationTransactionManagerPort.sendEmailToProperty();
+      const to = guest.getEmail();
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Your reservation is confirmed";
+      const body = confirmationMailBody();
+
+      await this.reservationTransactionManagerPort.sendEmailToGuest(
+        guest.getEmail(),
+        subject,
+        body,
+        from
+      );
+      await this.reservationTransactionManagerPort.sendEmailToProperty();
 
       await conn.commit();
       return "something";

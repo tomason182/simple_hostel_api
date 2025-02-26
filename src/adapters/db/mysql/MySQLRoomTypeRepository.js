@@ -91,7 +91,9 @@ export class MySQLRoomTypeRepository {
       const query = "SELECT * FROM room_types WHERE id = ? AND property_id = ?";
       const params = [roomTypeId, propertyId];
 
-      const [result] = await (conn || this.pool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.pool.execute(query, params));
 
       return result[0] || null;
     } catch (e) {

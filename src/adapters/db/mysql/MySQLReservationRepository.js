@@ -3,8 +3,7 @@ export class MySQLReservationRepository {
     this.mysqlPool = mysqlPool;
   }
 
-  async createReservation(reservation) {
-    const conn = await this.mysqlPool.getConnection();
+  async save(reservation, conn = null) {
     try {
       await conn.beginTransaction();
       const query =
@@ -22,7 +21,9 @@ export class MySQLReservationRepository {
         reservation.getCreatedBy(),
       ];
 
-      const [result] = await conn.execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
 
       reservation.setId(result.insertId);
 
@@ -39,15 +40,11 @@ export class MySQLReservationRepository {
         await conn.execute(setRoomsQuery, roomParams);
       }
 
-      await conn.commit();
       return reservation;
     } catch (e) {
-      await conn.rollback();
       throw new Error(
         `An error occurred when creating a new reservation. Error: ${e.message}`
       );
-    } finally {
-      await conn.release();
     }
   }
 
@@ -62,7 +59,9 @@ export class MySQLReservationRepository {
         "SELECT reservation_rooms.id as id, reservation_rooms.number_of_guests, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
       const params = [roomTypeId, endDate, startDate];
 
-      const [result] = await (conn || this.mysqlPool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
 
       return result;
     } catch (e) {
