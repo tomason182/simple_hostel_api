@@ -18,8 +18,19 @@ export class ReservationController {
       const user = req.user._id;
       const data = matchedData(req);
 
+      const guestData = {
+        first_name: data.first_name,
+        last_name: data.last_name,
+        id_number: data.id_number || null,
+        email: data.email,
+        phone_number: data.phone_number || null,
+        street: data.street || null,
+        city: data.city || null,
+        country_code: data.country_code || null,
+        postal_code: data.postal_code || null,
+      };
+
       const reservationData = {
-        guest_id: data.guestId,
         property_id: propertyId,
         booking_source: data.bookingSource,
         currency: data.currency,
@@ -33,7 +44,7 @@ export class ReservationController {
         updated_by: user,
       };
 
-      const result = await this.reservationInputPort.createReservation(
+      const result = await this.reservationInputPort.createReservationAndGuest(
         reservationData
       );
 
