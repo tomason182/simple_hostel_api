@@ -15,6 +15,7 @@ import { AvailabilityService } from "../core/AvailabilityService.js";
 import { GuestService } from "../core/GuestService.js";
 import { PropertyService } from "../core/PropertyService.js";
 import { ReservationService } from "../core/ReservationService.js";
+import { ReservationCompositeService } from "../core/ReservationCompositeService.js";
 import { UserService } from "../core/UserService.js";
 import { UserCompositeService } from "../core/UserCompositeService.js";
 import { RatesAndAvailabilityService } from "../core/RatesAndAvailabilityService.js";
@@ -34,6 +35,7 @@ import { RatesAndAvailabilityInputPort } from "../core/ports/RatesAndAvailabilit
 import { RatesAndAvailabilityOutputPort } from "../core/ports/RatesAndAvailabilityOutputPort.js";
 import { ReservationInputPort } from "../core/ports/ReservationInputPort.js";
 import { ReservationOutputPort } from "../core/ports/ReservationOutputPort.js";
+import { ReservationTransactionManagerPort } from "../core/ports/ReservationTransactionManagerPort.js";
 import { UserTransactionManagerPort } from "../core/ports/UserTransactionManagerPort.js";
 
 // Import nodemailer email notification service
@@ -123,10 +125,24 @@ export default function initializeServices() {
     emailService
   );
 
+  const reservationTransactionManagerPort =
+    new ReservationTransactionManagerPort(
+      reservationService,
+      guestService,
+      availabilityService,
+      emailService,
+      ratesAndAvailabilityRepository
+    );
+
   // Initialize composite services
   const userCompositeService = new UserCompositeService(
     mysqlPool,
     userTransactionManagerPort
+  );
+
+  const reservationCompositeService = new ReservationCompositeService(
+    reservationTransactionManagerPort,
+    mysqlPool
   );
 
   // Initialize input ports
