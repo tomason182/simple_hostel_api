@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS guests (
   first_name VARCHAR(255) NOT NULL,
   last_name VARCHAR(255) NOT NULL,
   id_number VARCHAR(25),
-  email VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
   phone_number VARCHAR(15),
   city VARCHAR(255),
   street VARCHAR(255),
