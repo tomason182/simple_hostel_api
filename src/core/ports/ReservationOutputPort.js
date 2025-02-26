@@ -13,8 +13,4 @@ export class ReservationOutputPort {
       conn
     );
   }
-
-  saveReservation(reservation, conn = null) {
-    return this.reservationRepository.createReservation(reservation, conn);
-  }
 }

@@ -4,10 +4,11 @@ export class ReservationInputPort {
     this.reservationCompositeService = reservationCompositeService;
   }
 
-  createReservationAndGuest(reservationData, guestData) {
+  createReservationAndGuest(reservationData, guestData, source) {
     return this.reservationCompositeService.createReservationAndGuest(
       reservationData,
-      guestData
+      guestData,
+      source
     );
   }
 }

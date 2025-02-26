@@ -9,7 +9,7 @@ export class ReservationCompositeService {
   }
 
   // Create a new Reservation
-  async createReservationAndGuest(reservationData, guestData) {
+  async createReservationAndGuest(reservationData, guestData, source) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
@@ -26,6 +26,7 @@ export class ReservationCompositeService {
       const roomsIdList = selectedRooms.flatMap(room => room.room_type_id);
 
       // Get ranges for all selected room types and lock rows to prevent race conditions.
+      // DE ESTOS RANGOS PUEDO CALCULAR DISPONIBILIDAD Y TAMBIEN PRECIO TOTAL.
       const ranges = await this.reservationTransactionManagerPort.getAllRanges(
         roomsIdList,
         checkIn,
@@ -91,7 +92,17 @@ export class ReservationCompositeService {
         body,
         from
       );
-      await this.reservationTransactionManagerPort.sendEmailToProperty();
+
+      if (source === "web") {
+        // We send an email to the property if the reservation is made form the website.
+        await this.reservationTransactionManagerPort.sendEmailToProperty();
+
+        // We can also send a whatsapp message here.
+        //await this.reservationTransactionManagerPort.sendWhatsappMessage();
+
+        // We can send a notification to the app via Websocket
+        //await this.reservationTransactionManagerPort.sendNotification()
+      }
 
       await conn.commit();
       return "something";

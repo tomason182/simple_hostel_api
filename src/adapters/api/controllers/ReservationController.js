@@ -5,7 +5,7 @@ export class ReservationController {
     this.reservationInputPort = reservationInputPort;
   }
 
-  // @desc Create a new reservation
+  // @desc Create a new reservation from the app.
   // @route POST /api/v1/reservations/new
   // @access Private
   createReservation = async (req, res, next) => {
@@ -17,6 +17,9 @@ export class ReservationController {
       const propertyId = req.user.property_id;
       const user = req.user._id;
       const data = matchedData(req);
+
+      // Set source to app. This prevent notification been send in the reservation service.
+      const source = "app"; // when coming from website source = "web"
 
       const guestData = {
         first_name: data.firstName,
@@ -46,7 +49,8 @@ export class ReservationController {
 
       const result = await this.reservationInputPort.createReservationAndGuest(
         reservationData,
-        guestData
+        guestData,
+        source
       );
 
       return res.status(200).json(result);
