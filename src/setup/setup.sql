@@ -178,6 +178,16 @@ CREATE TABLE IF NOT EXISTS beds (
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
+-- Create table assigned_beds
+CREATE TABLE IF NOT EXISTS assigned_beds (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reservation_id INT NOT NULL,
+  bed_id INT NOT NULL,
+
+  FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
+  FOREIGN KEY (bed_id) REFERENCES beds(id) ON DELETE CASCADE
+);
+
 -- Create rates and availability table.
 CREATE TABLE IF NOT EXISTS rates_and_availability(
   id INT AUTO_INCREMENT PRIMARY KEY,
