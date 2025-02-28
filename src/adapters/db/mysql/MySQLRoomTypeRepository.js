@@ -102,4 +102,24 @@ export class MySQLRoomTypeRepository {
       );
     }
   }
+
+  async getRoomTypeBeds(roomTypeId, conn = null) {
+    try {
+      const query =
+        "SELECT beds.id FROM beds JOIN products ON products.id = beds.product_id WHERE products.room_type_id = ?";
+      const params = [roomTypeId];
+
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.pool.execute(query, params));
+
+      const bedsId = result.map(row => row.id);
+
+      return bedsId;
+    } catch (e) {
+      throw new Error(
+        `An Error occurred trying to get all room types beds. Error: ${e.message}`
+      );
+    }
+  }
 }
