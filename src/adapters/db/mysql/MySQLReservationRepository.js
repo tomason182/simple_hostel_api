@@ -40,6 +40,15 @@ export class MySQLReservationRepository {
         await conn.execute(setRoomsQuery, roomParams);
       }
 
+      const setBedsQuery =
+        "INSERT INTO assigned_beds (reservation_id, bed_id) VALUES (?,?)";
+
+      for (const bed of reservation.getBeds()) {
+        const bedsParams = [reservation.getId(), bed];
+
+        await conn.execute(setBedsQuery, bedsParams);
+      }
+
       return reservation;
     } catch (e) {
       throw new Error(
@@ -67,6 +76,24 @@ export class MySQLReservationRepository {
     } catch (e) {
       throw new Error(
         `An error occurred when getting the reservation list. Error: ${e.message}`
+      );
+    }
+  }
+
+  async getReservationsListLimit(roomTypeId, from, conn = null) {
+    try {
+      const query =
+        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_guests, reservation_rooms.room_type_id, GROUP_CONCAT(assigned_beds.id) AS bed_ids FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_guests, reservation_rooms.room_type_id  LIMIT 500";
+      const params = [roomTypeId, from];
+
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get the reservation list. Error: ${e.message}`
       );
     }
   }

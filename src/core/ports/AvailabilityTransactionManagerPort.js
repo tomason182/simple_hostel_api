@@ -38,12 +38,24 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
+  getRoomTypeBeds(roomTypeId, conn = null) {
+    return this.roomTypeRepository.getRoomTypeBeds(roomTypeId, conn);
+  }
+
   // RESERVATIONS
   getOverlappingReservations(roomTypeId, checkIn, checkOut, conn) {
     return this.reservationRepository.getReservationsListByDateRange(
       roomTypeId,
       checkIn,
       checkOut,
+      conn
+    );
+  }
+
+  getReservationsListLimit(roomTypeId, from, conn = null) {
+    return this.reservationRepository.getReservationsListLimit(
+      roomTypeId,
+      from,
       conn
     );
   }

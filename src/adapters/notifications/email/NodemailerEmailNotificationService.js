@@ -5,13 +5,13 @@ export class NodemailerEmailNotificationService {
     this.transporter = nodemailer.createTransport(config);
   }
 
-  async sendEmail(to, subject, html, from) {
+  async sendEmail(to, subject, body, from) {
     try {
       const mailOptions = {
         from,
         to,
         subject,
-        html,
+        html: body,
       };
 
       await this.transporter.sendMail(mailOptions);

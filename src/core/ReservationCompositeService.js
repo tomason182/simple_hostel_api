@@ -38,20 +38,15 @@ export class ReservationCompositeService {
         throw Error("No ranges found for the selected dates.");
       }
 
-      // Check availability Logic
-      for (const room of selectedRooms) {
-        const isAvailable =
-          await this.reservationTransactionManagerPort.checkAvailability(
-            room,
-            ranges,
-            propertyId,
-            checkIn,
-            checkOut,
-            conn
-          );
-        if (isAvailable === false) {
-          throw new Error("No beds available for the selected dates.");
-        }
+      const bedsAssigned =
+        await this.reservationTransactionManagerPort.checkAvailabilityAndAssignBeds(
+          reservation,
+          ranges,
+          conn
+        );
+
+      if (bedsAssigned === false) {
+        throw new Error("No beds available for the selected dates.");
       }
 
       // Find if Guest already exist for the property
@@ -73,8 +68,13 @@ export class ReservationCompositeService {
         await this.reservationTransactionManagerPort.updateGuest(guest, conn);
       }
 
+      // Update reservations assigned beds if needed.  [{id1: bed_id_1}, {id2:bed_id_2}]
+      if (bedsAssigned.reservationToUpdate.length > 0) {
+      }
+
       // Set get ID to reservation
       reservation.setGuestId(guest.getId());
+      reservation.setBeds(isAvailable.bedsToAssign);
 
       await this.reservationTransactionManagerPort.saveReservation(
         reservation,
@@ -84,10 +84,10 @@ export class ReservationCompositeService {
       const to = guest.getEmail();
       const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
       const subject = "Your reservation is confirmed";
-      const body = confirmationMailBody();
+      const body = "<p>You made your first reservation</p>";
 
       await this.reservationTransactionManagerPort.sendEmailToGuest(
-        guest.getEmail(),
+        to,
         subject,
         body,
         from
@@ -105,7 +105,7 @@ export class ReservationCompositeService {
       }
 
       await conn.commit();
-      return "something";
+      return true;
     } catch (e) {
       await conn.rollback();
       throw e;

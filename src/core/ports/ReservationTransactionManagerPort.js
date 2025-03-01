@@ -46,8 +46,15 @@ export class ReservationTransactionManagerPort {
 
   // AVAILABILITY SERVICE
   // Check Availability Service.
-  checkAvailability(room, ranges, propertyId, checkIn, checkOut, conn = null) {
-    return this.availabilityService.checkAvailability(
+  checkAvailabilityAndAssignBeds(
+    room,
+    ranges,
+    propertyId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
+    return this.availabilityService.checkAvailabilityAndAssignBeds(
       room,
       ranges,
       propertyId,
@@ -58,7 +65,7 @@ export class ReservationTransactionManagerPort {
   }
 
   // EMAIL SERVICES
-  sendEmailToGuest(email) {
-    return this.emailService(toString, subject, body, from);
+  sendEmailToGuest(to, subject, body, from) {
+    return this.emailService.sendEmail(to, subject, body, from);
   }
 }
