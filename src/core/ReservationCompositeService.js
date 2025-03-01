@@ -69,12 +69,12 @@ export class ReservationCompositeService {
       }
 
       // Update reservations assigned beds if needed.  [{id1: bed_id_1}, {id2:bed_id_2}]
-      if (bedsAssigned.reservationToUpdate.length > 0) {
+      if (bedsAssigned.reservationsToUpdate.length > 0) {
       }
 
       // Set get ID to reservation
       reservation.setGuestId(guest.getId());
-      reservation.setBeds(isAvailable.bedsToAssign);
+      reservation.setBeds(bedsAssigned.bedsToAssign);
 
       await this.reservationTransactionManagerPort.saveReservation(
         reservation,

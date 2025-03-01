@@ -195,11 +195,11 @@ export class AvailabilityService {
 
         const currentReservation = {
           id: -1,
-          checkIn: reservation.getCheckIn(),
-          checkOut: reservation.getCheckOut(),
+          check_in: reservation.getCheckIn(),
+          check_out: reservation.getCheckOut(),
           number_of_guests: reservation.getNumberOfGuest(room.room_type_id),
           room_type_id: room.room_type_id,
-          assigned_beds: [],
+          assigned_beds: {},
         };
 
         const bedAssignment = new BedAssignment(
@@ -259,9 +259,6 @@ class BedAssignment {
 
     // if (condition to retrieve more reservations if we are reaching the end of the list)
 
-    console.log(this.reservationsList);
-    throw Error();
-
     const overlappingReservations = this.reservationsList.filter(
       r => r.check_in <= checkOut && r.check_out > checkIn
     );
@@ -294,7 +291,7 @@ class BedAssignment {
       return null;
     }
 
-    const assignBeds = result.assigned_beds.map(object => object.bed_id);
+    const assignBeds = Object.values(result.assigned_beds);
 
     const overlappingReservations = this.reservationsList.filter(
       r =>
@@ -303,7 +300,7 @@ class BedAssignment {
     );
 
     const reservationsWithConflict = overlappingReservations.filter(r => {
-      const rBeds = r.assigned_beds.map(assigned => assigned.bed_id);
+      const rBeds = Object.values(r.assigned_beds);
       return assignBeds.some(bed => rBeds.includes(bed));
     });
 
@@ -335,12 +332,18 @@ class BedAssignment {
   }
 
   greedyBedAssignment(reservation, overlappingReservations) {
+    const currentReservationBeds = {};
+
+    for (const [key, value] of Object.entries(reservation.assigned_beds)) {
+      if (this.roomTypeTotalBeds.includes(value)) {
+        currentReservationBeds = { ...currentReservationBeds, [key]: value };
+      }
+    }
+
     let assignedBeds = new Set(); // Set works if we handle only primitive values (strings or numbers)
 
     for (const overlappingReservation of overlappingReservations) {
-      const beds = overlappingReservation.assigned_beds.flatMap(
-        assigned_bed => assigned_bed.bed_id
-      );
+      const beds = Object.values(overlappingReservation.assigned_beds);
       beds.forEach(bed => assignedBeds.add(bed));
     }
 
@@ -358,17 +361,24 @@ class BedAssignment {
 
     const bedsToAssign = freeBeds.slice(0, bedsNeeded);
 
-    if (reservation.assigned_bed && reservation.assigned_bed.length > 0) {
-      reservation.assigned_beds.forEach(
-        (obj, index) => (obj.bed_id = freeBeds[index])
-      );
-      this.pushReservationToUpdate({
-        id: reservation.id,
-        bed_id: reservation.assigned_beds,
+    if (Object.keys(currentReservationBeds).length > 0) {
+      Object.keys(currentReservationBeds).forEach((key, index) => {
+        currentReservationBeds[key] = freeBeds[index];
+
+        this.pushReservationToUpdate({
+          id: key,
+          bed_id: freeBeds[index],
+        });
       });
     } else {
+      bedsToAssign.forEach((bed, index) => {
+        currentReservationBeds[index] = bed;
+      });
+
       this.pushBedsToCurrentReservation(bedsToAssign);
     }
+
+    reservation.assigned_beds = currentReservationBeds;
 
     this.pushReservationToList(reservation);
 
