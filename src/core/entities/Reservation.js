@@ -30,6 +30,7 @@ export class Reservation {
     this.created_at = created_at;
     this.updated_at = updated_at;
     this.selected_rooms = [];
+    this.assigned_beds = [];
   }
 
   // Setter and Getter for selected rooms
@@ -39,6 +40,23 @@ export class Reservation {
 
   getSelectedRooms() {
     return this.selected_rooms;
+  }
+
+  // Setter and Getter for beds
+  setBeds(beds) {
+    this.assigned_beds = beds;
+  }
+
+  getBeds() {
+    return this.assigned_beds;
+  }
+
+  // Getter for number of guest
+  getNumberOfGuest(roomId) {
+    const selectedRooms = this.selected_rooms;
+    const room = selectedRooms.find(r => r.room_type_id === roomId);
+
+    return room.number_of_guests;
   }
 
   // Setter and Getter for ID
