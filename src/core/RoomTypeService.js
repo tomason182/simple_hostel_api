@@ -18,20 +18,20 @@ export class RoomTypeService {
       }
 
       // Limit roomType creation
-      const roomTypeList =
-        await this.roomTypeOutputPort.findAllPropertyRoomTypes(propertyId);
+      const beds = await this.roomTypeOutputPort.getAllPropertyBeds(propertyId);
 
       const roomType = new RoomType(roomTypeData);
 
-      roomTypeList.push(roomTypeData);
+      let newBeds = 0;
+      if (roomType.getType() === "dorm") {
+        newBeds = roomType.getMaxOccupancy() * roomType.getInventory();
+      } else {
+        newBeds = roomType.getInventory();
+      }
 
-      const numberOfGuest = roomTypeList.reduce(
-        (acc, currentValue) =>
-          acc + currentValue.max_occupancy * currentValue.inventory,
-        0
-      );
+      const totalBeds = beds.length + newBeds;
 
-      if (numberOfGuest > 50) {
+      if (totalBeds > 50) {
         throw new Error(
           "Maximum number of beds reached. You can not create more than 50 beds"
         );
