@@ -278,8 +278,7 @@ class BedAssignment {
   async resolveConflictWithBackTracking(reservation) {
     const leftSideOverlappingReservations = this.reservationsList.filter(
       r =>
-        r.check_in <= reservation.check_in &&
-        r.check_out > reservation.check_out
+        r.check_in <= reservation.check_in && r.check_out > reservation.check_in
     );
 
     const result = this.greedyBedAssignment(
@@ -296,7 +295,8 @@ class BedAssignment {
     const overlappingReservations = this.reservationsList.filter(
       r =>
         r.check_in <= reservation.check_out &&
-        r.check_out > reservation.check_in
+        r.check_out > reservation.check_in &&
+        r.id !== reservation.id
     );
 
     const reservationsWithConflict = overlappingReservations.filter(r => {
@@ -336,7 +336,7 @@ class BedAssignment {
 
     for (const [key, value] of Object.entries(reservation.assigned_beds)) {
       if (this.roomTypeTotalBeds.includes(value)) {
-        currentReservationBeds = { ...currentReservationBeds, [key]: value };
+        currentReservationBeds[key] = value;
       }
     }
 
