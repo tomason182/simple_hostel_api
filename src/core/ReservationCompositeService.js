@@ -69,7 +69,18 @@ export class ReservationCompositeService {
       }
 
       // Update reservations assigned beds if needed.  [{id1: bed_id_1}, {id2:bed_id_2}]
+
       if (bedsAssigned.reservationsToUpdate.length > 0) {
+        const bedsToReassign = bedsAssigned.reservationsToUpdate;
+        console.log(bedsToReassign);
+
+        for (const object of bedsToReassign) {
+          await this.reservationTransactionManagerPort.updateAssignedBed(
+            parseInt(object.id),
+            object.bed_id,
+            conn
+          );
+        }
       }
 
       // Set get ID to reservation

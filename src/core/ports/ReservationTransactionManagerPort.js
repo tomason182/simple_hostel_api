@@ -34,6 +34,13 @@ export class ReservationTransactionManagerPort {
   saveReservation(reservation, conn = null) {
     return this.reservationRepository.save(reservation, conn);
   }
+
+  // Update reservations beds
+  updateAssignedBed(id, bed, conn) {
+    return this.reservationRepository.updateAssignedBed(id, bed, conn);
+  }
+
+  // RATES AND AVAILABILITY SERVICES.
   // Get all the rates and availability ranges
   getAllRanges(selectedRooms, checkIn, checkOut, conn = null) {
     return this.ratesAndAvailabilityRepository.getAllRanges(
