@@ -97,4 +97,21 @@ export class MySQLReservationRepository {
       );
     }
   }
+
+  async updateAssignedBed(id, bed, conn) {
+    try {
+      const query = "UPDATE assigned_beds SET bed_id=? WHERE id=?";
+      const params = [bed, id];
+
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
+
+      return result.changedRows;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update assigned beds. Error: ${e.message}`
+      );
+    }
+  }
 }
