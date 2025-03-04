@@ -170,16 +170,22 @@ export class UserController {
       const result = await this.userInputPort.authUser(username, password);
 
       res.cookie("jwt", result.token, {
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".simplehostel.net"
+            : "localhost",
         path: "/",
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         signed: true,
-        sameSite: "strict",
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "None",
+        partitioned: true,
         maxAge: 3600 * 8 * 1000, // 8hs in milliseconds.
       });
+
       return res
         .status(200)
-        .json({ username: result.username, firstName: result.firstName });
+        .json({ username: result.username, firstName: result.first_name });
     } catch (e) {
       next(e);
     }
