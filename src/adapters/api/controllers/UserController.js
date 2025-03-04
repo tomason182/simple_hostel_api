@@ -35,17 +35,19 @@ export class UserController {
 
       // Comment accept terms and captcha validation for testing.
 
-      /*       if (acceptTerms !== true) {
-                  throw new Error(
-                    "Terms and conditions must be accepted before registration"
-                  );
-                }
-          
-                isCaptchaTokenValid = await verifyCaptcha(captchaToken);
-          
-                if (isCaptchaTokenValid === false) {
-                  throw new Error("Unable to verify reCaptcha");
-                } */
+      if (acceptTerms !== true) {
+        throw new Error(
+          "Terms and conditions must be accepted before registration"
+        );
+      }
+
+      console.log("token: ", captchaToken);
+      const isCaptchaTokenValid = await verifyCaptcha(captchaToken);
+      console.log("isTokenValid: ", isCaptchaTokenValid);
+
+      if (isCaptchaTokenValid === false) {
+        throw new Error("Unable to verify reCaptcha");
+      }
 
       const userData = {
         username,
