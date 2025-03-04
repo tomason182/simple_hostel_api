@@ -58,11 +58,41 @@ export class RoomTypeService {
           conn
         );
 
-      if (roomTypesByProperty === null) {
-        throw new Error("No room types found that belong to this property");
-      }
+      let roomTypes = [];
+      roomTypesByProperty.forEach(element => {
+        let roomType = roomTypes.find(r => r.getId() === element.id);
 
-      return roomTypesByProperty;
+        if (!roomType) {
+          roomType = new RoomType({
+            id: element.id,
+            property_id: element.property_id,
+            description: element.description,
+            type: element.type,
+            gender: element.gender,
+            max_occupancy: element.max_occupancy,
+            inventory: element.inventory,
+          });
+
+          roomTypes.push(roomType);
+        }
+
+        let products = roomType.getProducts();
+        let beds = [];
+        let product = products.find(p => p.id === element.product_id);
+        if (!product) {
+          beds.push(element.bed_id);
+          let product = {
+            id: element.product_id,
+            room_name: element.room_name,
+            beds,
+          };
+          products.push(product);
+        } else {
+          product.beds.push(element.bed_id);
+        }
+      });
+
+      return roomTypes;
     } catch (e) {
       throw e;
     }

@@ -62,6 +62,9 @@ export class RoomType {
   getType() {
     return this.type;
   }
+  setType(type) {
+    this.type = type;
+  }
 
   // Getter & Setter for gender
   getGender() {
@@ -75,6 +78,10 @@ export class RoomType {
   // Getter for max occupancy.
   getMaxOccupancy() {
     return this.max_occupancy;
+  }
+
+  setMaxOccupancy(maxOcc) {
+    this.max_occupancy = maxOcc;
   }
 
   // Getter & setter for inventory.

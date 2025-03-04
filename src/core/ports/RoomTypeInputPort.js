@@ -9,12 +9,12 @@ export class RoomTypeInputPort {
   }
 
   readRoomTypes(propertyId) {
-    return this.roomTypeService.readRoomTypes(propertyId);
-  }  
+    return this.roomTypeService.getAllPropertyRoomTypes(propertyId);
+  }
 
   findRoomTypeById(id) {
     return this.roomTypeService.findRoomTypeById(id);
-  } 
+  }
 
   updateRoomTypeById(roomTypeData) {
     return this.roomTypeService.updateRoomTypeById(roomTypeData);
@@ -22,5 +22,5 @@ export class RoomTypeInputPort {
 
   deleteRoomTypeById(id) {
     return this.roomTypeService.deleteRoomTypeById(id);
-  }   
+  }
 }
