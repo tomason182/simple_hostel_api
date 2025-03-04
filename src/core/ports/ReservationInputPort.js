@@ -11,4 +11,8 @@ export class ReservationInputPort {
       source
     );
   }
+
+  findReservationsByDate(propertyId, date) {
+    return this.reservationService.findReservationsByDate(propertyId, date);
+  }
 }

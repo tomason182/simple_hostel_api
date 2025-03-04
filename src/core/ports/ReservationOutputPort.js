@@ -13,4 +13,8 @@ export class ReservationOutputPort {
       conn
     );
   }
+
+  findReservationsByDate(propertyId, date) {
+    return this.reservationRepository.findReservationsByDate(propertyId, date);
+  }
 }

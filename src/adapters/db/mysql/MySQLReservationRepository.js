@@ -114,4 +114,21 @@ export class MySQLReservationRepository {
       );
     }
   }
+
+  async findReservationsByDate(propertyId, date) {
+    try {
+      const query =
+        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservations.reservation_status ,guests.first_name, guests.last_name FROM reservations JOIN guests ON guests.id = reservations.guest_id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out >= ?";
+      const params = [propertyId, date, date];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      console.log(result);
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get reservations for specific date`
+      );
+    }
+  }
 }

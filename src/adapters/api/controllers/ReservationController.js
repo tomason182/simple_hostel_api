@@ -58,4 +58,25 @@ export class ReservationController {
       next(e);
     }
   };
+
+  findByDate = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const date = req.params.date;
+
+      const result = await this.reservationInputPort.findReservationsByDate(
+        propertyId,
+        date
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }
