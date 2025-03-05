@@ -44,7 +44,7 @@ export class AvailabilityTransactionManagerPort {
 
   // RESERVATIONS
   getOverlappingReservations(roomTypeId, checkIn, checkOut, conn) {
-    return this.reservationRepository.getReservationsListByDateRange(
+    return this.reservationRepository.getOverlappingReservations(
       roomTypeId,
       checkIn,
       checkOut,

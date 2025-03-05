@@ -15,4 +15,12 @@ export class ReservationInputPort {
   findReservationsByDate(propertyId, date) {
     return this.reservationService.findReservationsByDate(propertyId, date);
   }
+
+  findReservationsByDateRange(propertyId, from, to) {
+    return this.reservationService.findReservationsByDateRange(
+      propertyId,
+      from,
+      to
+    );
+  }
 }

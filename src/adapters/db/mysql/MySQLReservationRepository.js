@@ -57,7 +57,7 @@ export class MySQLReservationRepository {
     }
   }
 
-  async getReservationsListByDateRange(
+  async getOverlappingReservations(
     roomTypeId,
     startDate,
     endDate,
@@ -123,11 +123,26 @@ export class MySQLReservationRepository {
 
       const [result] = await this.mysqlPool.execute(query, params);
 
-      console.log(result);
       return result;
     } catch (e) {
       throw new Error(
         `An error occurred trying to get reservations for specific date`
+      );
+    }
+  }
+
+  async getReservationsByDateRange(propertyId, from, to) {
+    try {
+      const query =
+        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in >= ? AND reservations.check_in <= ?";
+      const params = [propertyId, from, to];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get reservations by date range. Error: ${e.message}`
       );
     }
   }

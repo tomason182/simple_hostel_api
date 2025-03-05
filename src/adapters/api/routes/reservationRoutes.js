@@ -34,5 +34,38 @@ export function createReservationRoutes(services) {
     reservationController.findByDate
   );
 
+  // @desc Find reservation by date range
+  // @route GET /api/v2/reservations/find/:from-:to
+  // @access Private
+  router.get(
+    "/find-by-range/:from-:to",
+    authMiddleware(tokenService),
+    param("from")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isISO8601({ strict: true })
+      .withMessage("Not valid 8601 format")
+      .customSanitizer(value => {
+        const year = value.substring(0, 4);
+        const month = value.substring(4, 6);
+        const day = value.substring(6, 8);
+        return new Date(`${year}-${month}-${day}`);
+      }),
+    param("to")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isISO8601({ strict: true })
+      .withMessage("Not valid 8601 format")
+      .customSanitizer(value => {
+        const year = value.substring(0, 4);
+        const month = value.substring(4, 6);
+        const day = value.substring(6, 8);
+        return new Date(`${year}-${month}-${day}`);
+      }),
+    reservationController.findByDateRange
+  );
+
   return router;
 }
