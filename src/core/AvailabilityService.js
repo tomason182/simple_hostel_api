@@ -22,7 +22,8 @@ export class AvailabilityService {
           conn
         );
 
-      console.log(ratesAndAvailabilityRanges);
+      console.log("checkIn: ", checkIn);
+      console.log("checkOut: ", checkOut);
 
       if (ratesAndAvailabilityRanges.length === 0) {
         throw new Error(
@@ -30,12 +31,21 @@ export class AvailabilityService {
         );
       }
 
+      const roomTypes =
+        await this.availabilityTransactionManagerPort.getPropertyRoomTypes(
+          propertyId
+        );
+
       const reservations =
-        await this.availabilityTransactionManagerPort.getOverlappingReservations(
+        await this.availabilityTransactionManagerPort.getOverlappingReservationsByPropertyId(
           propertyId,
           checkIn,
           checkOut
         );
+
+      console.log(reservations);
+
+      return "ok";
     } catch (e) {
       throw e;
     }
@@ -180,7 +190,7 @@ export class AvailabilityService {
                 )
               : filteredReservations.length;
 
-          const availability = hasRange.customAvailability;
+          const availability = hasRange.custom_availability;
 
           if (totalGuest > availability) {
             return false;
