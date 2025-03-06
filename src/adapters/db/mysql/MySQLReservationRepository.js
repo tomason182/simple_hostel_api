@@ -57,6 +57,27 @@ export class MySQLReservationRepository {
     }
   }
 
+  async getOverlappingReservationsByPropertyId(
+    propertyId,
+    startDate,
+    endDate,
+    conn = null
+  ) {
+    try {
+      const query =
+        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservation_rooms.room_type_id, reservation_rooms.number_of_guests FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
+      const params = [propertyId, endDate, startDate];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred when getting reservations by property ID. Error: ${e.message}`
+      );
+    }
+  }
+
   async getOverlappingReservations(
     roomTypeId,
     startDate,
@@ -65,7 +86,7 @@ export class MySQLReservationRepository {
   ) {
     try {
       const query =
-        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_guests, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
+        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_guests, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in < ? AND reservations.check_out > ?";
       const params = [roomTypeId, endDate, startDate];
 
       const [result] = await (conn
@@ -134,8 +155,8 @@ export class MySQLReservationRepository {
   async getReservationsByDateRange(propertyId, from, to) {
     try {
       const query =
-        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in >= ? AND reservations.check_in <= ?";
-      const params = [propertyId, from, to];
+        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ?";
+      const params = [propertyId, to, from];
 
       const [result] = await this.mysqlPool.execute(query, params);
 

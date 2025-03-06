@@ -74,6 +74,8 @@ export async function createApp(services) {
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
+    message: "To many requests, please try again later",
+    headers: true,
   });
 
   app.use(limiter);

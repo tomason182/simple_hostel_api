@@ -30,6 +30,10 @@ export class AvailabilityTransactionManagerPort {
   }
 
   // ROOM TYPES
+  getPropertyRoomTypes(propertyId, conn = null) {
+    return this.roomTypeRepository.findPropertyRoomTypes(propertyId, conn);
+  }
+
   findRoomTypeById(roomTypeId, propertyId, conn = null) {
     return this.roomTypeRepository.findRoomTypeById(
       roomTypeId,
@@ -43,9 +47,23 @@ export class AvailabilityTransactionManagerPort {
   }
 
   // RESERVATIONS
-  getOverlappingReservations(roomTypeId, checkIn, checkOut, conn) {
+  getOverlappingReservations(roomTypeId, checkIn, checkOut, conn = null) {
     return this.reservationRepository.getOverlappingReservations(
       roomTypeId,
+      checkIn,
+      checkOut,
+      conn
+    );
+  }
+
+  getOverlappingReservationsByPropertyId(
+    propertyId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
+    return this.reservationRepository.getOverlappingReservationsByPropertyId(
+      propertyId,
       checkIn,
       checkOut,
       conn

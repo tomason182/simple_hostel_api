@@ -162,7 +162,8 @@ export default function initializeServices() {
 
   const reservationInputPort = new ReservationInputPort(
     reservationService,
-    reservationCompositeService
+    reservationCompositeService,
+    availabilityService
   );
 
   // Initialize controllers

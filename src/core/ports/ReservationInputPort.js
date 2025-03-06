@@ -1,7 +1,12 @@
 export class ReservationInputPort {
-  constructor(reservationService, reservationCompositeService) {
+  constructor(
+    reservationService,
+    reservationCompositeService,
+    availabilityService
+  ) {
     this.reservationService = reservationService;
     this.reservationCompositeService = reservationCompositeService;
+    this.availabilityService = availabilityService;
   }
 
   createReservationAndGuest(reservationData, guestData, source) {
@@ -21,6 +26,14 @@ export class ReservationInputPort {
       propertyId,
       from,
       to
+    );
+  }
+
+  checkAvailability(propertyId, check_in, check_out) {
+    return this.availabilityService.checkAvailabilityForProperty(
+      propertyId,
+      check_in,
+      check_out
     );
   }
 }

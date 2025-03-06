@@ -13,6 +13,15 @@ export class AvailabilityService {
     conn = null
   ) {
     try {
+      // Check dates
+      if (checkIn >= checkOut) {
+        throw new Error("Invalid dates order");
+      }
+
+      if (!checkIn instanceof Date || !checkOut instanceof Date) {
+        throw new Error("Invalid Date format");
+      }
+
       // En realidad no necesitamos los room types sino lo rangos de rates and avaialbility seteados por el usuario.
       const ratesAndAvailabilityRanges =
         await this.availabilityTransactionManagerPort.getPropertyRatesAndAvailabilityRanges(
@@ -21,9 +30,6 @@ export class AvailabilityService {
           checkOut,
           conn
         );
-
-      console.log("checkIn: ", checkIn);
-      console.log("checkOut: ", checkOut);
 
       if (ratesAndAvailabilityRanges.length === 0) {
         throw new Error(
@@ -43,9 +49,78 @@ export class AvailabilityService {
           checkOut
         );
 
-      console.log(reservations);
+      let roomList = [];
 
-      return "ok";
+      const totalNights = (checkOut - checkIn) / (1000 * 3600 * 24);
+
+      for (const roomType of roomTypes) {
+        let availability = roomType.max_occupancy * roomType.inventory;
+        let accRate = 0;
+        let avgRate = 0;
+        let room = {
+          ...roomType,
+          availability,
+          avgRate,
+        };
+
+        const filteredRatesByRoom = ratesAndAvailabilityRanges.filter(
+          r => r.room_type_id === roomType.id
+        );
+
+        avgRate =
+          filteredRatesByRoom.reduce(
+            (acc, rates) => acc + rates.custom_rate,
+            0
+          ) / filteredRatesByRoom.length;
+
+        const filteredReservations = reservations.filter(
+          r => r.room_type_id === roomType.id
+        );
+
+        const startDate = new Date(checkIn);
+        for (
+          let date = startDate;
+          date < checkOut;
+          date.setDate(date.getDate() + 1)
+        ) {
+          const currentDate = date;
+          const hasRange = filteredRatesByRoom.find(
+            r => r.start_date <= currentDate && r.end_date >= currentDate
+          );
+          // Check if there is a rates and availability range created for the current date.
+          if (hasRange === undefined) {
+            room.availability = 0;
+            room.avgRate = 0;
+            break;
+          }
+
+          const overlappingReservations = filteredReservations.filter(
+            r => r.check_in <= currentDate && r.check_out > currentDate
+          );
+
+          let totalGuest =
+            roomType.type === "dorm"
+              ? overlappingReservations.reduce(
+                  (acc, reservation) => acc + reservation.number_of_guests,
+                  0
+                )
+              : overlappingReservations.length;
+
+          const availableBeds = hasRange.custom_availability - totalGuest;
+
+          accRate += Number(hasRange.custom_rate);
+
+          if (availableBeds < availability) {
+            availability = availableBeds;
+            room.availability = availability;
+          }
+        }
+
+        room.avgRate = Math.round((accRate / totalNights) * 100) / 100;
+        roomList.push(room);
+      }
+
+      return roomList;
     } catch (e) {
       throw e;
     }

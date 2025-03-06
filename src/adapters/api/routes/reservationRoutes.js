@@ -50,6 +50,15 @@ export function createReservationRoutes(services) {
         const year = value.substring(0, 4);
         const month = value.substring(4, 6);
         const day = value.substring(6, 8);
+
+        const check = new Date(year, month, day);
+        if (
+          check.getFullYear() !== parseInt(year) ||
+          check.getMonth() !== parseInt(month) ||
+          check.getDate() !== parseInt(day)
+        ) {
+          throw new Error("Invalid date format");
+        }
         return new Date(`${year}-${month}-${day}`);
       }),
     param("to")
@@ -65,6 +74,48 @@ export function createReservationRoutes(services) {
         return new Date(`${year}-${month}-${day}`);
       }),
     reservationController.findByDateRange
+  );
+
+  // @desc check property availability
+  // @route GET /api/v2/reservations/check-availability/:check_in-:check_out
+  // @access Private
+  router.get(
+    "/check-availability/:check_in-:check_out",
+    authMiddleware(tokenService),
+    param("check_in")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isISO8601({ strict: true })
+      .withMessage("Not valid 8601 format")
+      .customSanitizer(value => {
+        const year = value.substring(0, 4);
+        const month = value.substring(4, 6);
+        const day = value.substring(6, 8);
+
+        const check = new Date(year, month, day);
+        if (
+          check.getFullYear() !== parseInt(year) ||
+          check.getMonth() !== parseInt(month) ||
+          check.getDate() !== parseInt(day)
+        ) {
+          throw new Error("Invalid date format");
+        }
+        return new Date(`${year}-${month}-${day}`);
+      }),
+    param("check_out")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isISO8601({ strict: true })
+      .withMessage("Not valid 8601 format")
+      .customSanitizer(value => {
+        const year = value.substring(0, 4);
+        const month = value.substring(4, 6);
+        const day = value.substring(6, 8);
+        return new Date(`${year}-${month}-${day}`);
+      }),
+    reservationController.checkPropertyAvailability
   );
 
   return router;
