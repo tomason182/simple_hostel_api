@@ -86,4 +86,20 @@ export class MySQLRatesAndAvailabilityRepository {
       );
     }
   }
+
+  async getPropertyCurrencies(propertyId) {
+    try {
+      const query =
+        "SELECT id, base_currency, payment_currency FROM currencies WHERE property_id = ? LIMIT 1";
+      const params = [propertyId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result[0] || [];
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property currencies. Error: ${e.message}`
+      );
+    }
+  }
 }

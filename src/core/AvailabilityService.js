@@ -49,6 +49,11 @@ export class AvailabilityService {
           checkOut
         );
 
+      const currencies =
+        await this.availabilityTransactionManagerPort.getPropertyCurrencies(
+          propertyId
+        );
+
       let roomList = [];
 
       const totalNights = (checkOut - checkIn) / (1000 * 3600 * 24);
@@ -61,17 +66,12 @@ export class AvailabilityService {
           ...roomType,
           availability,
           avgRate,
+          totalNights,
         };
 
         const filteredRatesByRoom = ratesAndAvailabilityRanges.filter(
           r => r.room_type_id === roomType.id
         );
-
-        avgRate =
-          filteredRatesByRoom.reduce(
-            (acc, rates) => acc + rates.custom_rate,
-            0
-          ) / filteredRatesByRoom.length;
 
         const filteredReservations = reservations.filter(
           r => r.room_type_id === roomType.id
@@ -116,11 +116,15 @@ export class AvailabilityService {
           }
         }
 
-        room.avgRate = Math.round((accRate / totalNights) * 100) / 100;
+        room.avgRate = Math.round(accRate * 100) / 100;
         roomList.push(room);
       }
 
-      return roomList;
+      return {
+        totalNights,
+        currencies,
+        roomList,
+      };
     } catch (e) {
       throw e;
     }
