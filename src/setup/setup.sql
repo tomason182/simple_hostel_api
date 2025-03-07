@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   payment_status ENUM('pending', 'canceled', 'refunded', 'paid', 'partial') NOT NULL,
   check_in DATE NOT NULL,
   check_out DATE NOT NULL,
+  number_of_guests INT NOT CHECK (number_of_guests > 0),
   special_request VARCHAR(500) DEFAULT NULL,
   created_by INT DEFAULT NULL,
   updated_by INT DEFAULT NULL,
@@ -153,7 +154,7 @@ CREATE TABLE IF NOT EXISTS reservation_rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
   reservation_id INT NOT NULL,
   room_type_id INT NOT NULL,
-  number_of_guests INT CHECK (number_of_guests > 0),
+  number_of_rooms INT CHECK (number_of_guests > 0),
   total_amount DECIMAL(10,2) CHECK (total_amount >= 0),
 
   FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,
