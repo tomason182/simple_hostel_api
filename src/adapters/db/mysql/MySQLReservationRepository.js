@@ -156,7 +156,7 @@ export class MySQLReservationRepository {
   async getReservationsByDateRange(propertyId, from, to) {
     try {
       const query =
-        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ?";
+        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ? AND reservations.reservation_status NOT IN ('canceled', 'no_show')";
       const params = [propertyId, to, from];
 
       const [result] = await this.mysqlPool.execute(query, params);
