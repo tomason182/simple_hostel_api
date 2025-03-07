@@ -66,7 +66,6 @@ export class AvailabilityService {
           ...roomType,
           availability,
           avgRate,
-          totalNights,
         };
 
         const filteredRatesByRoom = ratesAndAvailabilityRanges.filter(
