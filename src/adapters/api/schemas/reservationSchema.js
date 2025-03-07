@@ -168,6 +168,11 @@ export const reservationSchema = {
           if (obj.total_amount < 0) {
             throw new Error("total_amount must be a positive number");
           }
+
+          // Ensure number of guest is positive
+          if (obj.number_of_guests <= 0) {
+            throw new Error("Number of guest must be positive number");
+          }
         }
         return true;
       },
