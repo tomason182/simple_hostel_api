@@ -26,4 +26,12 @@ export class RatesAndAvailabilityInputPort {
       conn
     );
   }
+
+  getRatesByDateRange(propertyId, from, to) {
+    return this.ratesAndAvailabilityService.findByDateRange(
+      propertyId,
+      from,
+      to
+    );
+  }
 }

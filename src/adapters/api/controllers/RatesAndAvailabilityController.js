@@ -64,4 +64,34 @@ export class RatesAndAvailabilityController {
       next(e);
     }
   };
+
+  getRatesByDateRange = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const data = matchedData(req);
+
+      const fromDate = data.from;
+      const toDate = data.to;
+
+      if (fromDate > toDate) {
+        throw new Error("Invalid dates order");
+      }
+
+      const result =
+        await this.ratesAndAvailabilityInputPort.getRatesByDateRange(
+          propertyId,
+          fromDate,
+          toDate
+        );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

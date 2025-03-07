@@ -41,13 +41,15 @@ export class MySQLRatesAndAvailabilityRepository {
     }
   }
 
-  async getAllPropertyRanges(propertyId, checkIn, checkOut, conn = null) {
+  async getAllPropertyRanges(propertyId, startDate, endDate, conn = null) {
     try {
       const query =
         "SELECT * FROM rates_and_availability WHERE property_id = ? AND end_date >= ? AND start_date < ?";
-      const params = [propertyId, checkIn, checkOut];
+      const params = [propertyId, startDate, endDate];
 
-      const [result] = await (conn || this.mysqlPool).execute(query, params);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.mysqlPool.execute(query, params));
 
       return result;
     } catch (e) {

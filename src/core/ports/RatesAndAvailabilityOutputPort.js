@@ -9,6 +9,7 @@ export class RatesAndAvailabilityOutputPort {
     this.availabilityService = availabilityService;
   }
 
+  // Rate and availability services
   insertOrUpdateRange(
     roomTypeId,
     propertyId,
@@ -29,6 +30,15 @@ export class RatesAndAvailabilityOutputPort {
     );
   }
 
+  findByDateRange(propertyId, from, to) {
+    return this.ratesAndAvailabilityRepository.getAllPropertyRanges(
+      propertyId,
+      from,
+      to
+    );
+  }
+
+  // Room type services
   findRoomTypeById(roomTypeId, propertyId, conn = null) {
     return this.roomTypeRepository.findRoomTypeById(
       roomTypeId,
@@ -37,6 +47,7 @@ export class RatesAndAvailabilityOutputPort {
     );
   }
 
+  // availability Services
   checkCustomAvailability(
     roomType,
     startDate,
