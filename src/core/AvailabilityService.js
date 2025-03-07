@@ -97,15 +97,13 @@ export class AvailabilityService {
             r => r.check_in <= currentDate && r.check_out > currentDate
           );
 
-          let totalGuest =
-            roomType.type === "dorm"
-              ? overlappingReservations.reduce(
-                  (acc, reservation) => acc + reservation.number_of_guests,
-                  0
-                )
-              : overlappingReservations.length;
+          let totalRoomsOccupied = overlappingReservations.reduce(
+            (acc, reservation) => acc + reservation.number_of_rooms,
+            0
+          );
 
-          const availableBeds = hasRange.custom_availability - totalGuest;
+          const availableBeds =
+            hasRange.custom_availability - totalRoomsOccupied;
 
           accRate += Number(hasRange.custom_rate);
 
@@ -173,7 +171,7 @@ export class AvailabilityService {
           r => r.check_in <= currentDate && r.check_out > currentDate
         );
         const totalGuest = reservations.reduce(
-          (acc, value) => acc + value.number_of_guests
+          (acc, value) => acc + value.number_of_rooms
         );
 
         if (customAvailability > maxCapacity - totalGuest) {
@@ -260,17 +258,14 @@ export class AvailabilityService {
 
           filteredReservations.push(room);
 
-          let totalGuest =
-            roomType.type === "dorm"
-              ? filteredReservations.reduce(
-                  (acc, reservation) => acc + reservation.number_of_guests,
-                  0
-                )
-              : filteredReservations.length;
+          let totalRoomsOccupied = filteredReservations.reduce(
+            (acc, reservation) => acc + reservation.number_of_rooms,
+            0
+          );
 
           const availability = hasRange.custom_availability;
 
-          if (totalGuest > availability) {
+          if (totalRoomsOccupied > availability) {
             return false;
           }
         }
@@ -285,7 +280,7 @@ export class AvailabilityService {
           id: -1,
           check_in: reservation.getCheckIn(),
           check_out: reservation.getCheckOut(),
-          number_of_guests: reservation.getNumberOfGuest(room.room_type_id),
+          number_of_rooms: reservation.getNumberOfRooms(room.room_type_id),
           room_type_id: room.room_type_id,
           assigned_beds: {},
         };
@@ -439,15 +434,13 @@ class BedAssignment {
       bed => !assignedBeds.has(bed)
     );
 
-    const numberOfGuest = reservation.number_of_guests;
+    const numberOfRoomsNeeded = reservation.number_of_rooms;
 
-    const bedsNeeded = this.roomType.type === "dorm" ? numberOfGuest : 1;
-
-    if (freeBeds.length < bedsNeeded) {
+    if (freeBeds.length < numberOfRoomsNeeded) {
       return false;
     }
 
-    const bedsToAssign = freeBeds.slice(0, bedsNeeded);
+    const bedsToAssign = freeBeds.slice(0, numberOfRoomsNeeded);
 
     if (Object.keys(currentReservationBeds).length > 0) {
       Object.keys(currentReservationBeds).forEach((key, index) => {

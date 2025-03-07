@@ -9,6 +9,7 @@ export class Reservation {
     payment_status,
     check_in,
     check_out,
+    number_of_guests,
     special_request,
     created_by,
     updated_by,
@@ -24,6 +25,7 @@ export class Reservation {
     this.payment_status = payment_status;
     this.check_in = check_in;
     this.check_out = check_out;
+    this.number_of_guests = number_of_guests;
     this.special_request = special_request;
     this.created_by = created_by;
     this.updated_by = updated_by;
@@ -52,11 +54,11 @@ export class Reservation {
   }
 
   // Getter for number of guest
-  getNumberOfGuest(roomId) {
+  getNumberOfRooms(roomId) {
     const selectedRooms = this.selected_rooms;
     const room = selectedRooms.find(r => r.room_type_id === roomId);
 
-    return room.number_of_guests;
+    return room.number_of_rooms;
   }
 
   // Setter and Getter for ID
@@ -133,6 +135,15 @@ export class Reservation {
   setCheckOut(checkOut) {
     const date = formatDate(checkOut);
     this.check_out = date;
+  }
+
+  // Getter and setter for number of guest
+  getNumberOfGuest() {
+    return this.number_of_guests;
+  }
+
+  setNumberOfGuest(num) {
+    this.number_of_guests = num;
   }
 
   // Getter and Setter for special request

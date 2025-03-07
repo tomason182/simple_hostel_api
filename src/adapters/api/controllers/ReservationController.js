@@ -41,6 +41,7 @@ export class ReservationController {
         payment_status: data.paymentStatus,
         check_in: data.checkIn,
         check_out: data.checkOut,
+        number_of_guests: data.number_of_guests,
         special_request: data.specialRequest || null,
         selected_rooms: data.selectedRooms,
         created_by: user,

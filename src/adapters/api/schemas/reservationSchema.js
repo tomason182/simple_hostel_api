@@ -135,7 +135,7 @@ export const reservationSchema = {
           throw new Error("Selected rooms array cannot be empty");
         }
 
-        const validKeys = ["room_type_id", "number_of_guests", "total_amount"];
+        const validKeys = ["room_type_id", "number_of_rooms", "total_amount"];
 
         // Ensure each value of the array is an object
         for (const obj of values) {
@@ -154,9 +154,9 @@ export const reservationSchema = {
             throw new Error("room_type_id must be an integer");
           }
 
-          // Ensure number_of_guests is an integer.
-          if (!Number.isInteger(obj.number_of_guests)) {
-            throw new Error("number_of_guests must be an integer");
+          // Ensure number_of_rooms is an integer.
+          if (!Number.isInteger(obj.number_of_rooms)) {
+            throw new Error("number_of_rooms must be an integer");
           }
 
           // Ensure total_amount is valid number.
@@ -170,7 +170,7 @@ export const reservationSchema = {
           }
 
           // Ensure number of guest is positive
-          if (obj.number_of_guests <= 0) {
+          if (obj.number_of_rooms <= 0) {
             throw new Error("Number of guest must be positive number");
           }
         }
@@ -216,6 +216,17 @@ export const reservationSchema = {
     },
     customSanitizer: {
       options: value => new Date(value),
+    },
+  },
+  number_of_guests: {
+    in: ["body"],
+    exists: {
+      bail: true,
+    },
+    isInt: {
+      option: { min: 1 },
+      bail: true,
+      errorMessage: "Number of guest must be an integer greater that 0",
     },
   },
   currency: {

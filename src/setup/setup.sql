@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS reservation_rooms (
   id INT AUTO_INCREMENT PRIMARY KEY,
   reservation_id INT NOT NULL,
   room_type_id INT NOT NULL,
-  number_of_rooms INT CHECK (number_of_guests > 0),
+  number_of_rooms INT CHECK (number_of_rooms > 0),
   total_amount DECIMAL(10,2) CHECK (total_amount >= 0),
 
   FOREIGN KEY (reservation_id) REFERENCES reservations(id) ON DELETE CASCADE,

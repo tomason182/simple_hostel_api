@@ -7,7 +7,7 @@ export class MySQLReservationRepository {
     try {
       await conn.beginTransaction();
       const query =
-        "INSERT INTO reservations (guest_id, property_id, booking_source, currency, reservation_status, payment_status, check_in, check_out, special_request, created_by) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        "INSERT INTO reservations (guest_id, property_id, booking_source, currency, reservation_status, payment_status, check_in, check_out, number_of_guest ,special_request, created_by) VALUES(?,?,?,?,?,?,?,?,?,?)";
       const params = [
         reservation.getGuestId(),
         reservation.getPropertyId(),
@@ -17,6 +17,7 @@ export class MySQLReservationRepository {
         reservation.getPaymentStatus(),
         reservation.getCheckIn(),
         reservation.getCheckOut(),
+        reservation.getNumberOfGuest(),
         reservation.getSpecialRequest(),
         reservation.getCreatedBy(),
       ];
@@ -28,12 +29,12 @@ export class MySQLReservationRepository {
       reservation.setId(result.insertId);
 
       const setRoomsQuery =
-        "INSERT INTO reservation_rooms (reservation_id, room_type_id, number_of_guests, total_amount) VALUES (?,?,?,?)";
+        "INSERT INTO reservation_rooms (reservation_id, room_type_id, number_of_rooms, total_amount) VALUES (?,?,?,?)";
       for (const room of reservation.getSelectedRooms()) {
         const roomParams = [
           reservation.getId(),
           room.room_type_id,
-          room.number_of_guests,
+          room.number_of_rooms,
           room.total_amount,
         ];
 
@@ -65,7 +66,7 @@ export class MySQLReservationRepository {
   ) {
     try {
       const query =
-        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservation_rooms.room_type_id, reservation_rooms.number_of_guests FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
+        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservation_rooms.room_type_id, reservation_rooms.number_of_rooms FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in <= ? AND reservations.check_out > ?";
       const params = [propertyId, endDate, startDate];
 
       const [result] = await this.mysqlPool.execute(query, params);
@@ -86,7 +87,7 @@ export class MySQLReservationRepository {
   ) {
     try {
       const query =
-        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_guests, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in < ? AND reservations.check_out > ?";
+        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_rooms, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in < ? AND reservations.check_out > ?";
       const params = [roomTypeId, endDate, startDate];
 
       const [result] = await (conn
@@ -104,7 +105,7 @@ export class MySQLReservationRepository {
   async getReservationsListLimit(roomTypeId, from, conn = null) {
     try {
       const query =
-        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_guests, reservation_rooms.room_type_id, JSON_OBJECTAGG (assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_guests, reservation_rooms.room_type_id  LIMIT 500";
+        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id, JSON_OBJECTAGG (assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id  LIMIT 500";
       const params = [roomTypeId, from];
 
       const [result] = await (conn
