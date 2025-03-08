@@ -65,7 +65,7 @@ export class MySQLRatesAndAvailabilityRepository {
     startDate,
     endDate,
     customRate,
-    customAvailability,
+    roomsToSell,
     conn = null
   ) {
     try {
@@ -76,7 +76,7 @@ export class MySQLRatesAndAvailabilityRepository {
         startDate,
         endDate,
         customRate,
-        customAvailability,
+        roomsToSell,
       ];
 
       const [result] = await (conn || this.mysqlPool).execute(query, params);

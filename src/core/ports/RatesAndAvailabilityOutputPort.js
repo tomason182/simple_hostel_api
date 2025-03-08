@@ -16,7 +16,7 @@ export class RatesAndAvailabilityOutputPort {
     startDate,
     endDate,
     customRate,
-    customAvailability,
+    roomsToSell,
     conn = null
   ) {
     return this.ratesAndAvailabilityRepository.insertOrUpdateRange(
@@ -25,7 +25,7 @@ export class RatesAndAvailabilityOutputPort {
       startDate,
       endDate,
       customRate,
-      customAvailability,
+      roomsToSell,
       conn
     );
   }
