@@ -60,6 +60,49 @@ export class ReservationController {
     }
   };
 
+  // @desc Find reservations by date range and name.
+  // @route POST /api/v2/reservations/find-by-date-and-name
+  // @access Private
+  findReservationsByDatesRangeAndName = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(req);
+      }
+
+      const propertyId = req.user.property_id;
+      // return undefined if not provided (optionals)
+      const { from, until, name } = matchedData(req);
+
+      if (from === undefined && until === undefined && name === undefined) {
+        res.status(400);
+        throw new Error("Any field provided");
+      }
+
+      if (
+        (from === undefined && until !== undefined) ||
+        (from !== undefined && until === undefined)
+      ) {
+        res.status(400);
+        throw new Error("Both dates must be provided for the range");
+      }
+
+      const result =
+        await this.reservationInputPort.findReservationsByDateRangeAndName(
+          propertyId,
+          from,
+          until,
+          name
+        );
+
+      console.log(name);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   findByDate = async (req, res, next) => {
     try {
       const errors = validationResult(req);

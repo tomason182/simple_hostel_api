@@ -2,7 +2,10 @@ import express from "express";
 import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
-import { reservationSchema } from "../schemas/reservationSchema.js";
+import {
+  reservationSchema,
+  findReservationsByDatesAndName,
+} from "../schemas/reservationSchema.js";
 
 export function createReservationRoutes(services) {
   const router = express.Router();
@@ -74,6 +77,16 @@ export function createReservationRoutes(services) {
         return new Date(`${year}-${month}-${day}`);
       }),
     reservationController.findByDateRange
+  );
+
+  // @desc find reservations by date range and name (if provided)
+  // @route POST /api/v2/reservations/find-by-date-and-name
+  // @access Private
+  router.post(
+    "/find-by-dates-and-name",
+    authMiddleware(tokenService),
+    checkSchema(findReservationsByDatesAndName),
+    reservationController.findReservationsByDatesRangeAndName
   );
 
   // @desc check property availability

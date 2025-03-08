@@ -29,6 +29,15 @@ export class ReservationInputPort {
     );
   }
 
+  findReservationsByDateRangeAndName(propertyId, from, to, name) {
+    return this.reservationService.findReservationsByDateRangeAndName(
+      propertyId,
+      from,
+      to,
+      name
+    );
+  }
+
   checkAvailability(propertyId, check_in, check_out) {
     return this.availabilityService.checkAvailabilityForProperty(
       propertyId,

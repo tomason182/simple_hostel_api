@@ -26,4 +26,11 @@ export class ReservationOutputPort {
       conn
     );
   }
+  // Find reservation by guest name
+  findReservationByGuestName(propertyId, name) {
+    return this.reservationRepository.findReservationsByGuestName(
+      propertyId,
+      name
+    );
+  }
 }

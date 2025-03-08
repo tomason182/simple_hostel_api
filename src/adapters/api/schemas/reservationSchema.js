@@ -1,3 +1,5 @@
+import { escape } from "mysql2";
+
 export const reservationSchema = {
   firstName: {
     in: ["body"],
@@ -275,5 +277,37 @@ export const reservationSchema = {
       },
       errorMessage: "Special request maximum length is 500 characters",
     },
+  },
+};
+
+export const findReservationsByDatesAndName = {
+  from: {
+    in: ["body"],
+    trim: true,
+    optional: true,
+    isISO8601: {
+      strict: true,
+      errorMessage: "Invalid date format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
+  },
+  until: {
+    in: ["body"],
+    optional: true,
+    isISO8601: {
+      strict: true,
+      errorMessage: "Check-in date mus be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
+  },
+  name: {
+    in: ["body"],
+    trim: true,
+    escape: true,
+    optional: true,
   },
 };

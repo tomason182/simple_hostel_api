@@ -168,4 +168,19 @@ export class MySQLReservationRepository {
       );
     }
   }
+
+  async findReservationsByGuestName(propertyId, name) {
+    try {
+      const query = `SELECT r.*, g.* FROM reservations r JOIN guests g ON r.guest_id = g.id WHERE r.property_Id = ? AND MATCH(g.first_name, g.last_name) AGAINST (? IN NATURAL LANGUAGE MODE)`;
+      const params = [propertyId, name];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to find reservations by guest name. Error: ${e.message}`
+      );
+    }
+  }
 }

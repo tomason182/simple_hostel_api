@@ -20,8 +20,6 @@ export class ReservationService {
   async findReservationsByDateRange(propertyId, from, to) {
     try {
       // Check dates.
-      console.log("from: ", from);
-      console.log("to: ", to);
       if (from > to) {
         throw new Error("Dates are in invert order. From greater that to");
       }
@@ -63,6 +61,32 @@ export class ReservationService {
       return reservations;
     } catch (e) {
       throw e;
+    }
+  }
+  async findReservationsByDateRangeAndName(propertyId, from, until, name) {
+    if (from > until) {
+      throw new Error("Dates are in invert order. From greater that to");
+    }
+
+    if (from === undefined && until === undefined) {
+      const searchResult =
+        await this.reservationOutport.findReservationByGuestName(
+          propertyId,
+          name
+        );
+
+      return searchResult;
+    }
+
+    const reservationsList =
+      await this.reservationOutport.searchForReservations(
+        propertyId,
+        from,
+        until
+      );
+
+    if (name) {
+      // filter reservation list by name
     }
   }
 }
