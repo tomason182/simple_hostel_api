@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS rates_and_availability(
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   custom_rate DECIMAL(10, 2) NOT NULL CHECK (custom_rate >= 0),
-  custom_availability  INT NOT NULL CHECK (custom_availability >= 0),
+  rooms_to_sell  INT NOT NULL CHECK (rooms_to_sell >= 0),
   created_by INT DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -218,14 +218,14 @@ CREATE PROCEDURE InsertOrUpdateRate(
   IN p_start_date DATE,
   IN p_end_date DATE,
   IN p_custom_rate DECIMAL(10,2),
-  IN p_custom_availability INT
+  IN p_rooms_to_sell INT
 )
 BEGIN
   -- Declare necessary variables
   DECLARE id_var INT;
   DECLARE start_date_var, end_date_var DATE;
   DECLARE custom_rate_var DECIMAL(10,2);
-  DECLARE custom_availability_var INT;
+  DECLARE rooms_to_sell_var INT;
   DECLARE existing_records INT DEFAULT 0;
   DECLARE exit_handler INT DEFAULT 0; -- Error flag
 
@@ -254,8 +254,8 @@ BEGIN
     AND end_date >= p_start_date;
 
   IF existing_records > 0 THEN
-    SELECT id, start_date, end_date, custom_rate, custom_availability
-    INTO id_var, start_date_var, end_date_var, custom_rate_var, custom_availability_var
+    SELECT id, start_date, end_date, custom_rate, rooms_to_sell
+    INTO id_var, start_date_var, end_date_var, custom_rate_var, rooms_to_sell_var
     FROM rates_and_availability
     WHERE room_type_id = p_room_type_id
       AND start_date < p_start_date
@@ -264,12 +264,12 @@ BEGIN
 
     IF start_date_var IS NOT NULL AND end_date_var IS NOT NULL THEN
       -- Insert first half before the new range
-      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, custom_availability)
-      VALUES (p_room_type_id, p_property_id, start_date_var, DATE_SUB(p_start_date, INTERVAL 1 day), custom_rate_var, custom_availability_var);
+      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, rooms_to_sell)
+      VALUES (p_room_type_id, p_property_id, start_date_var, DATE_SUB(p_start_date, INTERVAL 1 day), custom_rate_var, rooms_to_sell_var);
 
       -- Insert second half after the new range
-      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, custom_availability)
-      VALUES (p_room_type_id, p_property_id, DATE_ADD(p_end_date, INTERVAL 1 DAY), end_date_var, custom_rate_var, custom_availability_var);
+      INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, rooms_to_sell)
+      VALUES (p_room_type_id, p_property_id, DATE_ADD(p_end_date, INTERVAL 1 DAY), end_date_var, custom_rate_var, rooms_to_sell_var);
 
       -- Delete the original overlapping record
       DELETE FROM rates_and_availability
@@ -294,8 +294,8 @@ BEGIN
   END IF;
 
   -- Insert new rate
-  INSERT INTO rates_and_availability (room_type_id, property_id,start_date, end_date, custom_rate, custom_availability)
-  VALUES (p_room_type_id, p_property_id, p_start_date, p_end_date, p_custom_rate, p_custom_availability);
+  INSERT INTO rates_and_availability (room_type_id, property_id,start_date, end_date, custom_rate, rooms_to_sell)
+  VALUES (p_room_type_id, p_property_id, p_start_date, p_end_date, p_custom_rate, p_rooms_to_sell);
 
   IF exit_handler = 0 THEN
     COMMIT;

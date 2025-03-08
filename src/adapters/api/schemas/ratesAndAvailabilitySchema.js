@@ -64,7 +64,7 @@ export const ratesAndAvailabilitySchema = {
       },
     },
   },
-  customAvailability: {
+  roomsToSell: {
     in: ["body"],
     trim: true,
     exists: {
@@ -77,12 +77,12 @@ export const ratesAndAvailabilitySchema = {
     },
     customSanitizer: {
       options: value => {
-        const availability = parseInt(value, 10);
-        if (isNaN(availability) || availability < 0) {
-          throw new Error("Invalid availability provided");
+        const roomsToSell = parseInt(value, 10);
+        if (isNaN(roomsToSell) || roomsToSell < 0) {
+          throw new Error("Invalid rooms to sell provided");
         }
 
-        return availability;
+        return roomsToSell;
       },
     },
   },

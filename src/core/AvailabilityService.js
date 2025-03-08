@@ -102,8 +102,7 @@ export class AvailabilityService {
             0
           );
 
-          const availableBeds =
-            hasRange.custom_availability - totalRoomsOccupied;
+          const availableBeds = hasRange.rooms_to_sell - totalRoomsOccupied;
 
           accRate += Number(hasRange.custom_rate);
 
@@ -121,75 +120,6 @@ export class AvailabilityService {
         totalNights,
         currencies,
         roomList,
-      };
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  async checkCustomAvailability(
-    roomType,
-    startDate,
-    endDate,
-    customAvailability,
-    conn = null
-  ) {
-    try {
-      // Get the reservations for the current range start date - end date.
-      const reservationList =
-        await this.availabilityTransactionManagerPort.getOverlappingReservations(
-          roomType.getId(),
-          startDate,
-          endDate,
-          conn
-        );
-
-      const maxCapacity = roomType.getInventory() * roomType.getMaxOccupancy();
-
-      if (customAvailability > maxCapacity) {
-        return {
-          status: false,
-          maxAvailability: maxCapacity,
-        };
-      }
-
-      if (reservationList.length === 0) {
-        return {
-          status: true,
-          maxAvailability: maxCapacity,
-        };
-      }
-
-      let maxAvailability = 0;
-      for (
-        let date = new Date(startDate);
-        date <= endDate;
-        date.setDate(date.getDate() + 1)
-      ) {
-        const currentDate = date;
-        const reservations = reservationList.filter(
-          r => r.check_in <= currentDate && r.check_out > currentDate
-        );
-        const totalGuest = reservations.reduce(
-          (acc, value) => acc + value.number_of_rooms
-        );
-
-        if (customAvailability > maxCapacity - totalGuest) {
-          return {
-            status: false,
-            maxAvailability: maxCapacity - totalGuest,
-          };
-        }
-
-        maxAvailability =
-          maxAvailability > maxCapacity - totalGuest
-            ? maxCapacity - totalGuest
-            : maxAvailability;
-      }
-
-      return {
-        status: true,
-        maxAvailability,
       };
     } catch (e) {
       throw e;
@@ -263,7 +193,7 @@ export class AvailabilityService {
             0
           );
 
-          const availability = hasRange.custom_availability;
+          const availability = hasRange.rooms_to_sell;
 
           if (totalRoomsOccupied > availability) {
             return false;

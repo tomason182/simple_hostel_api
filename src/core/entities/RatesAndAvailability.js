@@ -6,7 +6,7 @@ export class RateAndAvailability {
     start_date,
     end_date,
     custom_rate,
-    custom_availability,
+    rooms_to_sell,
     created_by,
     created_at,
   }) {
@@ -15,7 +15,7 @@ export class RateAndAvailability {
     (this.property_id = property_id), (this.start_date = start_date);
     this.end_date = end_date;
     this.custom_rate = custom_rate;
-    this.custom_availability = custom_availability;
+    this.rooms_to_sell = rooms_to_sell;
     this.created_by = created_by;
     this.created_at = created_at;
   }
@@ -55,12 +55,12 @@ export class RateAndAvailability {
   }
 
   // Getter and Setter for custom availability
-  getCustomAvailability() {
-    return this.custom_availability;
+  getRoomsToSell() {
+    return this.rooms_to_sell;
   }
 
-  setCustomAvailability(availability) {
-    this.custom_availability = availability;
+  setRoomsToSell(rooms) {
+    this.rooms_to_sell = rooms;
   }
 
   // Getter and Setter for custom rate

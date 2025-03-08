@@ -42,19 +42,17 @@ export class RatesAndAvailabilityService {
 
       const roomType = new RoomType(roomTypeData);
 
-      // Check if custom availability > availability - total guest;
-      const isCustomAvailabilityValid =
-        await this.ratesAndAvailabilityOutputPort.checkCustomAvailability(
-          roomType,
-          startDate,
-          endDate,
-          rateAndAvailability.getCustomAvailability()
-        );
+      // CUSTOM AVAILABILITY ES ROOMS TO SELL. LA CANTIDAD DE CUARTO A LA VENTA - TOTAL RESERVAS = DISPONIBILIDAD.
+      // EL USUSARIO NO SETEA LA DISPONIBILIDAD. SINO LOS CUARTOS A LA VENTA.
 
-      if (isCustomAvailabilityValid.status === false) {
-        throw new Error(
-          `Minimum availability to set is ${isCustomAvailabilityValid.maxAvailability}`
-        );
+      const totalInventory =
+        roomType.getType() === "dorm"
+          ? roomType.getMaxOccupancy() * roomType.getInventory()
+          : roomType.getInventory;
+
+      // Check if rooms to sell is > 0 & <= rooms max occupancy;
+      if (rateAndAvailability.getRoomsToSell() > totalInventory) {
+        `Maximum rooms to sell is ${totalInventory}`;
       }
 
       const result =
@@ -64,7 +62,7 @@ export class RatesAndAvailabilityService {
           rateAndAvailability.getStartDate(),
           rateAndAvailability.getEndDate(),
           rateAndAvailability.getCustomRate(),
-          rateAndAvailability.getCustomAvailability()
+          rateAndAvailability.getRoomsToSell()
         );
 
       return result;

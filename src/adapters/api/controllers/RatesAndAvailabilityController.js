@@ -24,7 +24,7 @@ export class RatesAndAvailabilityController {
         start_date: data.startDate,
         end_date: data.endDate,
         custom_rate: data.customRate,
-        custom_availability: data.customAvailability,
+        rooms_to_sell: data.roomsToSell,
       };
 
       const result =
