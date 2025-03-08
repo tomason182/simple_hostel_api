@@ -52,7 +52,7 @@ export class RatesAndAvailabilityService {
 
       // Check if rooms to sell is > 0 & <= rooms max occupancy;
       if (rateAndAvailability.getRoomsToSell() > totalInventory) {
-        `Maximum rooms to sell is ${totalInventory}`;
+        throw new Error(`Maximum rooms to sell is ${totalInventory}`);
       }
 
       const result =
