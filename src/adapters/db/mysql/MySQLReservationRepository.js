@@ -5,7 +5,6 @@ export class MySQLReservationRepository {
 
   async save(reservation, conn = null) {
     try {
-      await conn.beginTransaction();
       const query =
         "INSERT INTO reservations (guest_id, property_id, booking_source, currency, reservation_status, payment_status, check_in, check_out, number_of_guest ,special_request, created_by) VALUES(?,?,?,?,?,?,?,?,?,?)";
       const params = [
