@@ -84,6 +84,20 @@ export class User {
     }
   }
 
+  // Generate random pass
+  generateRandomPassword() {
+    const symbols =
+      "zxcvbnmasdfghjklqwertyuiop1234567890!#$%&/()=ZXCVBNMASDFGHJKLQWERTYUIOP";
+
+    let pass = "";
+    for (let i = 0; i < 12; i++) {
+      const char = symbols[Math.floor(Math.random() * 100) % symbols.length];
+      pass += char;
+    }
+
+    return pass;
+  }
+
   // GetUserProfile
   getUserProfile() {
     return {

@@ -114,7 +114,7 @@ export class UserController {
     }
   };
 
-  // @desc    Create a new user for existing property
+  // @desc    Create a new user for existing property or edit user
   // @route   POST /api/v2/users/create
   // @access  Private
   createUser = async (req, res, next) => {
@@ -126,14 +126,13 @@ export class UserController {
 
       const property_id = req.user.property_id;
 
-      const { username, password, firstName, lastName, role } =
-        matchedData(req);
+      const { id, username, first_name, last_name, role } = matchedData(req);
 
       const userData = {
+        id,
         username,
-        password,
-        first_name: firstName,
-        last_name: lastName || null,
+        first_name: first_name,
+        last_name: last_name || null,
         role,
       };
 
@@ -141,7 +140,7 @@ export class UserController {
         throw new Error("Admin user can not be created");
       }
 
-      const result = await this.userInputPort.addUserToProperty(
+      const result = await this.userInputPort.addOrEditUser(
         property_id,
         userData
       );

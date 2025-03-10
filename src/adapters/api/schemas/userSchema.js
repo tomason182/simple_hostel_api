@@ -96,7 +96,26 @@ export const userLoginSchema = {
 };
 
 export const userUpdateSchema = {
-  firstName: {
+  id: {
+    in: ["body"],
+    trim: true,
+    escape: true,
+    isInt: {
+      bail: true,
+      options: { min: -1 },
+    },
+    toInt: true,
+  },
+  username: {
+    in: ["body"],
+    trim: true,
+    isEmail: {
+      bail: true,
+      errorMessage: "Username is not a valid email",
+    },
+    normalizeEmail: true,
+  },
+  first_name: {
     in: ["body"],
     notEmpty: {
       bail: true,
@@ -105,7 +124,7 @@ export const userUpdateSchema = {
     trim: true,
     escape: true,
   },
-  lastName: {
+  last_name: {
     in: ["body"],
     optional: true,
     trim: true,

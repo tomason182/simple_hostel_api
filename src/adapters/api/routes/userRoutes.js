@@ -50,7 +50,7 @@ export function createUserRoutes(services) {
   router.post(
     "/create",
     authMiddleware(tokenService),
-    checkSchema(userRegistrationSchema),
+    checkSchema(userUpdateSchema),
     body("role")
       .trim()
       .isIn(["admin", "manager", "employee"])
@@ -60,12 +60,17 @@ export function createUserRoutes(services) {
     userController.createUser
   );
 
+  // Edit user profile
+  router.put(
+    "/profile/create",
+    authMiddleware(tokenService),
+    checkSchema(userUpdateSchema),
+    param("id").trim().isInt().withMessage("Not a valid ID"),
+    userController.editUserProfile
+  );
+
   // Authenticate a user
   router.post("/auth", checkSchema(userLoginSchema), userController.authUser);
-
-  // Validate a user
-  // Esta ruta creo que esta al pedo. Se valida con el authmiddelware.
-  //router.get("/validate", userController.validateUser);
 
   // logout a user
   router.get("/logout", userController.logoutUser);
@@ -83,15 +88,6 @@ export function createUserRoutes(services) {
     authMiddleware(tokenService),
     checkSchema(userUpdateSchema),
     userController.updateUserProfile
-  );
-
-  // Edit user profile
-  router.put(
-    "/profile/edit/:id",
-    authMiddleware(tokenService),
-    checkSchema(userUpdateSchema),
-    param("id").trim().isInt().withMessage("Not a valid ID"),
-    userController.editUserProfile
   );
 
   // Delete user profile

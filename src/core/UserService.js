@@ -35,6 +35,68 @@ export class UserService {
     }
   }
 
+  async addOrEditUser(propertyId, userData) {
+    try {
+      // Check if user exist.
+      let userExist = null;
+      const userId = userData.id > 0 ? userData.id : null;
+      const user = new User({
+        id: userId,
+        username: userData.username,
+        first_name: userData.first_name,
+        last_name: userData.last_name || null,
+        role: userData.role,
+      });
+      user.setLastResendEmail();
+
+      if (userId !== null) {
+        userExist = await this.userOutputPort.findUserByIdAndPropertyId(
+          userId,
+          propertyId
+        );
+
+        if (userExist === null) {
+          throw new Error(
+            "Sorry, we could no find the user ID in this property"
+          );
+        }
+
+        if (userExist !== null && userExist.username !== userData.username) {
+          throw new Error("User email can not be change");
+        }
+
+        if (userExist.role === "admin" && user.getRole() !== "admin") {
+          throw new Error("Admin users role can not be modify");
+        }
+
+        const result = await this.userOutputPort.editUser(propertyId, user);
+
+        return { msg: "User Updated successfully" };
+      }
+
+      userExist = await this.userOutputPort.findUserByUsername(
+        userData.username
+      );
+
+      if (userExist !== null) {
+        throw new Error(`User with email ${userData.username} already exists.`);
+      }
+
+      // Generate random password
+      const pass = user.generateRandomPassword();
+      await user.setPasswordHash(pass);
+
+      const result = await this.userOutputPort.addUser(propertyId, user);
+
+      // SEND EMAIL TO USER TO VALIDATE EMAIL AND CREATE PASSWORD.
+      return {
+        msg: "Email sent to user to create a password and validate the account",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async validateEmail(token) {
     try {
       const decoded = await this.userOutputPort.verifyToken(token);

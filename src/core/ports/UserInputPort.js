@@ -7,8 +7,8 @@ export class UserInputPort {
   }
 
   // Composite services
-  addUserToProperty(propertyId, userData) {
-    return this.userCompositeService.addUserToProperty(propertyId, userData);
+  addOrEditUser(propertyId, userData) {
+    return this.userService.addOrEditUser(propertyId, userData);
   }
 
   createUserWithProperty(userData, propertyData) {

@@ -16,7 +16,9 @@ export class MySQLUserRepository {
         user.getLastResendEmail(),
       ];
 
-      const [result] = await (connection || this.pool).execute(query, params);
+      const [result] = await (connection
+        ? connection.execute(query, params)
+        : this.pool.execute(query, params));
 
       user.setId(result.insertId);
 
@@ -118,6 +120,76 @@ export class MySQLUserRepository {
       throw new Error(
         `An error occurred when trying to update the user: ${e.message}`
       );
+    }
+  }
+
+  async addUser(propertyId, user) {
+    const conn = await this.pool.getConnection();
+    try {
+      await conn.beginTransaction();
+      const query =
+        "INSERT INTO users (username, first_name, last_name, password_hash ,is_valid_email, last_resend_email) VALUES (?,?,?,?,?,?)";
+      const userParams = [
+        user.getUsername(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getPasswordHash(),
+        user.getIsValidEmail(),
+        user.getLastResendEmail(),
+      ];
+
+      const [userResult] = await conn.execute(query, userParams);
+
+      user.setId(userResult.insertId);
+
+      const accessControlQuery =
+        "INSERT INTO access_control (user_id, property_id, role) VALUES(?,?,?)";
+      const params = [user.getId(), propertyId, user.getRole()];
+
+      await conn.execute(accessControlQuery, params);
+
+      await conn.commit();
+      return user;
+    } catch (e) {
+      await conn.rollback();
+      throw new Error(
+        `An error occurred trying to add user to property. Error: ${e.message}`
+      );
+    } finally {
+      await conn.release();
+    }
+  }
+
+  async editUser(propertyId, user) {
+    const conn = await this.pool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      const userQuery =
+        "UPDATE users SET first_name = ?, last_name = ? WHERE id = ?";
+      const userParams = [
+        user.getFirstName(),
+        user.getLastName(),
+        user.getId(),
+      ];
+
+      await conn.execute(userQuery, userParams);
+
+      const accessControlQuery =
+        "UPDATE access_control SET role = ? WHERE property_id = ? AND user_id = ?";
+      const accessControlParams = [user.getRole(), propertyId, user.getId()];
+
+      await conn.execute(accessControlQuery, accessControlParams);
+
+      await conn.commit();
+      return user;
+    } catch (e) {
+      await conn.rollback();
+      throw new Error(
+        `An error occurred trying to edit user. Error: ${e.message}`
+      );
+    } finally {
+      await conn.release();
     }
   }
 

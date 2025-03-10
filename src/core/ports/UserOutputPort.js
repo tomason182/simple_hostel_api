@@ -53,6 +53,16 @@ export class UserOutputPort {
     return this.userRepository.deleteUser(userId, conn);
   }
 
+  addUser(propertyId, user) {
+    return this.userRepository.addUser(propertyId, user);
+  }
+
+  editUser(propertyId, user) {
+    {
+      return this.userRepository.editUser(propertyId, user);
+    }
+  }
+
   // Access control service
   findUserAccessControl(userId) {
     return this.accessControlService.find(userId);
