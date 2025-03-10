@@ -75,4 +75,8 @@ export class UserOutputPort {
   sendEmail(to, subject, body, from) {
     return this.emailService.sendEmail(to, subject, body, from);
   }
+
+  getAllPropertyUsers(propertyId) {
+    return this.userRepository.getAllPropertyUsers(propertyId);
+  }
 }

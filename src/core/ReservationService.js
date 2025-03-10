@@ -65,124 +65,132 @@ export class ReservationService {
     }
   }
   async findReservationsByDateRangeAndName(propertyId, from, until, name) {
-    if (from > until) {
-      throw new Error("Dates are in invert order. From greater that to");
-    }
-
-    let searchResult = [];
-
-    if (from === undefined && until === undefined && name !== undefined) {
-      searchResult = await this.reservationOutport.findReservationByGuestName(
-        propertyId,
-        name
-      );
-    }
-
-    if (from !== undefined && until !== undefined && name !== undefined) {
-      searchResult =
-        await this.reservationOutport.findReservationByGuestNameAndDates(
-          propertyId,
-          from,
-          until,
-          name
-        );
-    }
-
-    if (from !== undefined && until !== undefined && name === undefined) {
-      searchResult =
-        await this.reservationOutport.searchReservationsByDateRange(
-          propertyId,
-          from,
-          until
-        );
-    }
-
-    let reservations = [];
-
-    for (const element of searchResult) {
-      let reservation = {
-        reservation_id: null,
-        currency: null,
-        reservation_status: null,
-        check_in: null,
-        check_out: null,
-        first_name: null,
-        last_name: null,
-        selected_rooms: [],
-      };
-
-      const storedReservation = reservations.find(
-        r => r.reservation_id === element.reservation_id
-      );
-
-      if (storedReservation === undefined) {
-        reservation.reservation_id = element.reservation_id;
-        reservation.reservation_status = element.reservation_status;
-        reservation.currency = element.currency;
-        reservation.check_in = element.check_in;
-        reservation.check_out = element.check_out;
-        reservation.first_name = element.first_name;
-        reservation.last_name = element.last_name;
-        reservation.selected_rooms = [
-          {
-            room_type_id: element.room_type_id,
-            number_of_rooms: element.number_of_rooms,
-            total_amount: element.total_amount,
-          },
-        ];
-        reservations.push(reservation);
-        continue;
+    try {
+      if (from > until) {
+        throw new Error("Dates are in invert order. From greater that to");
       }
 
-      const room = {
-        room_type_id: element.room_type_id,
-        number_of_rooms: element.number_of_rooms,
-        total_amount: element.total_amount,
-      };
+      let searchResult = [];
 
-      storedReservation.selected_rooms.push(room);
+      if (from === undefined && until === undefined && name !== undefined) {
+        searchResult = await this.reservationOutport.findReservationByGuestName(
+          propertyId,
+          name
+        );
+      }
+
+      if (from !== undefined && until !== undefined && name !== undefined) {
+        searchResult =
+          await this.reservationOutport.findReservationByGuestNameAndDates(
+            propertyId,
+            from,
+            until,
+            name
+          );
+      }
+
+      if (from !== undefined && until !== undefined && name === undefined) {
+        searchResult =
+          await this.reservationOutport.searchReservationsByDateRange(
+            propertyId,
+            from,
+            until
+          );
+      }
+
+      let reservations = [];
+
+      for (const element of searchResult) {
+        let reservation = {
+          reservation_id: null,
+          currency: null,
+          reservation_status: null,
+          check_in: null,
+          check_out: null,
+          first_name: null,
+          last_name: null,
+          selected_rooms: [],
+        };
+
+        const storedReservation = reservations.find(
+          r => r.reservation_id === element.reservation_id
+        );
+
+        if (storedReservation === undefined) {
+          reservation.reservation_id = element.reservation_id;
+          reservation.reservation_status = element.reservation_status;
+          reservation.currency = element.currency;
+          reservation.check_in = element.check_in;
+          reservation.check_out = element.check_out;
+          reservation.first_name = element.first_name;
+          reservation.last_name = element.last_name;
+          reservation.selected_rooms = [
+            {
+              room_type_id: element.room_type_id,
+              number_of_rooms: element.number_of_rooms,
+              total_amount: element.total_amount,
+            },
+          ];
+          reservations.push(reservation);
+          continue;
+        }
+
+        const room = {
+          room_type_id: element.room_type_id,
+          number_of_rooms: element.number_of_rooms,
+          total_amount: element.total_amount,
+        };
+
+        storedReservation.selected_rooms.push(room);
+      }
+
+      return reservations;
+    } catch (e) {
+      throw e;
     }
-
-    return reservations;
   }
 
   async findReservationById(propertyId, reservationId) {
-    const reservationList = await this.reservationOutport.findReservationById(
-      propertyId,
-      reservationId
-    );
-
-    if (reservationList.length === 0) {
-      throw new Error("Reservation ID not found");
-    }
-
-    // Select the first reservation
-    const r = reservationList[0];
-
-    const reservation = new Reservation(r);
-    const guest = new Guest({
-      id: r.guest_id,
-      first_name: r.first_name,
-      last_name: r.last_name,
-      email: r.email,
-      phone_number: r.phone_number,
-      street: r.street,
-      city: r.city,
-      country_code: r.country_code,
-      postal_code: r.postal_code,
-    });
-
-    for (const element of reservationList) {
-      reservation.setNumberOfRooms(
-        element.room_type_id,
-        element.number_of_rooms,
-        element.total_amount
+    try {
+      const reservationList = await this.reservationOutport.findReservationById(
+        propertyId,
+        reservationId
       );
-    }
 
-    return {
-      reservation,
-      guest,
-    };
+      if (reservationList.length === 0) {
+        throw new Error("Reservation ID not found");
+      }
+
+      // Select the first reservation
+      const r = reservationList[0];
+
+      const reservation = new Reservation(r);
+      const guest = new Guest({
+        id: r.guest_id,
+        first_name: r.first_name,
+        last_name: r.last_name,
+        email: r.email,
+        phone_number: r.phone_number,
+        street: r.street,
+        city: r.city,
+        country_code: r.country_code,
+        postal_code: r.postal_code,
+      });
+
+      for (const element of reservationList) {
+        reservation.setNumberOfRooms(
+          element.room_type_id,
+          element.number_of_rooms,
+          element.total_amount
+        );
+      }
+
+      return {
+        reservation,
+        guest,
+      };
+    } catch (e) {
+      throw e;
+    }
   }
 }

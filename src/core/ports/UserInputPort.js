@@ -76,4 +76,9 @@ export class UserInputPort {
   verifyToken(token) {
     return this.tokenService.verifyToken(token);
   }
+
+  // Get all property users
+  getAllPropertyUsers(propertyId) {
+    return this.userService.getAllPropertyUsers(propertyId);
+  }
 }

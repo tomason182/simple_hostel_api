@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 
 export class User {
   #password_hash;
+  #is_valid_email;
+  #last_resend_email;
   constructor({
     id = null,
     username,
@@ -19,8 +21,8 @@ export class User {
     this.first_name = first_name;
     this.last_name = last_name;
     this.#password_hash = password_hash;
-    this.is_valid_email = is_valid_email;
-    this.last_resend_email = last_resend_email;
+    this.#is_valid_email = is_valid_email;
+    this.#last_resend_email = last_resend_email;
     this.role = role;
     this.created_at = created_at;
     this.updated_at = updated_at;
@@ -94,11 +96,11 @@ export class User {
 
   // Set last resend email
   setLastResendEmail() {
-    this.last_resend_email = Date.now();
+    this.#last_resend_email = Date.now();
   }
 
   getLastResendEmail() {
-    return this.last_resend_email;
+    return this.#last_resend_email;
   }
 
   // Set waiting period for resend email
@@ -108,12 +110,12 @@ export class User {
 
   // Setter for valid email
   setValidEmail(is_valid) {
-    this.is_valid_email = is_valid;
+    this.#is_valid_email = is_valid;
   }
 
   // Getter for valid email
   getIsValidEmail() {
-    return this.is_valid_email;
+    return this.#is_valid_email;
   }
 
   // Getter and Setter for role

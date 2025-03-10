@@ -422,6 +422,11 @@ export class UserController {
   // @access Private
   getAllPropertyUsers = async (req, res, next) => {
     try {
+      const propertyId = req.user.property_id;
+
+      const result = await this.userInputPort.getAllPropertyUsers(propertyId);
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

@@ -152,4 +152,20 @@ export class MySQLUserRepository {
       );
     }
   }
+
+  async getAllPropertyUsers(propertyId) {
+    try {
+      const query =
+        "SELECT * FROM users JOIN access_control WHERE property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get all property users. Error: ${e.message}`
+      );
+    }
+  }
 }

@@ -131,5 +131,12 @@ export function createUserRoutes(services) {
     userController.resetUserPasswordLastStep
   );
 
+  // @desc get all property users
+  router.get(
+    "/all",
+    authMiddleware(tokenService),
+    userController.getAllPropertyUsers
+  );
+
   return router;
 }

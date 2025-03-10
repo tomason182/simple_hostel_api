@@ -299,4 +299,24 @@ export class UserService {
       throw e;
     }
   }
+
+  async getAllPropertyUsers(propertyId) {
+    try {
+      const usersList = await this.userOutputPort.getAllPropertyUsers(
+        propertyId
+      );
+
+      const users = [];
+
+      for (const element of usersList) {
+        const user = new User(element);
+
+        users.push(user);
+      }
+
+      return users;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
