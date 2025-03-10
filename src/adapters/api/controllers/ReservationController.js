@@ -95,7 +95,29 @@ export class ReservationController {
           name
         );
 
-      console.log(name);
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Find reservation by id
+  // @route GET /api/v2/reservations/find-by-id/:id
+  // @access Private
+  findReservationById = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { id } = matchedData(req);
+
+      const result = await this.reservationInputPort.findReservationById(
+        propertyId,
+        id
+      );
 
       return res.status(200).json(result);
     } catch (e) {

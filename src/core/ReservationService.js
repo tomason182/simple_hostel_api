@@ -1,4 +1,5 @@
 import { Reservation } from "./entities/Reservation.js";
+import { Guest } from "./entities/Guest.js";
 
 export class ReservationService {
   constructor(reservationOutport) {
@@ -146,11 +147,42 @@ export class ReservationService {
   }
 
   async findReservationById(propertyId, reservationId) {
-    const reservation = await this.reservationOutport.findReservationById(
+    const reservationList = await this.reservationOutport.findReservationById(
       propertyId,
       reservationId
     );
 
-    return reservation;
+    if (reservationList.length === 0) {
+      throw new Error("Reservation ID not found");
+    }
+
+    // Select the first reservation
+    const r = reservationList[0];
+
+    const reservation = new Reservation(r);
+    const guest = new Guest({
+      id: r.guest_id,
+      first_name: r.first_name,
+      last_name: r.last_name,
+      email: r.email,
+      phone_number: r.phone_number,
+      street: r.street,
+      city: r.city,
+      country_code: r.country_code,
+      postal_code: r.postal_code,
+    });
+
+    for (const element of reservationList) {
+      reservation.setNumberOfRooms(
+        element.room_type_id,
+        element.number_of_rooms,
+        element.total_amount
+      );
+    }
+
+    return {
+      reservation,
+      guest,
+    };
   }
 }

@@ -33,4 +33,28 @@ export class ReservationOutputPort {
       name
     );
   }
+
+  findReservationByGuestNameAndDates(propertyId, from, until, name) {
+    return this.reservationRepository.findReservationByGuestNameAndDates(
+      propertyId,
+      from,
+      until,
+      name
+    );
+  }
+
+  searchReservationsByDateRange(propertyId, from, until) {
+    return this.reservationRepository.searchReservationsByDateRange(
+      propertyId,
+      from,
+      until
+    );
+  }
+
+  findReservationById(propertyId, reservationId) {
+    return this.reservationRepository.findReservationById(
+      propertyId,
+      reservationId
+    );
+  }
 }

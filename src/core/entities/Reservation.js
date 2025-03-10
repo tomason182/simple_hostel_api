@@ -61,6 +61,14 @@ export class Reservation {
     return room.number_of_rooms;
   }
 
+  setNumberOfRooms(room_type_id, number_of_rooms, total_amount) {
+    this.selected_rooms.push({
+      room_type_id,
+      number_of_rooms,
+      total_amount,
+    });
+  }
+
   // Setter and Getter for ID
   getId() {
     return this.id;

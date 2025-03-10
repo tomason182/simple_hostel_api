@@ -169,9 +169,18 @@ export class MySQLReservationRepository {
     }
   }
 
+  async findReservationById(propertyId, reservationId) {
+    const query = `SELECT r.id AS id, r.booking_source, r.currency, r.reservation_status, r.payment_status, r.check_in, r.check_out, r.number_of_guests, g.id AS guest_id, g.first_name, g.last_name, g.id_number, g.email, g.phone_number, g.city, g.street, g.postal_code, g.country_code, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount, rt.description FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND r.id = ?`;
+    const params = [propertyId, reservationId];
+
+    const [result] = await this.mysqlPool.execute(query, params);
+
+    return result;
+  }
+
   async findReservationsByGuestName(propertyId, name) {
     try {
-      const query = `SELECT r.*, g.* FROM reservations r JOIN guests g ON r.guest_id = g.id WHERE r.property_Id = ? AND MATCH(g.first_name, g.last_name) AGAINST (? IN NATURAL LANGUAGE MODE)`;
+      const query = `SELECT r.id AS reservation_id, r.currency, r.reservation_status, r.check_in, r.check_out, g.first_name, g.last_name, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND MATCH(g.first_name, g.last_name) AGAINST (? IN NATURAL LANGUAGE MODE)`;
       const params = [propertyId, name];
 
       const [result] = await this.mysqlPool.execute(query, params);
@@ -180,6 +189,36 @@ export class MySQLReservationRepository {
     } catch (e) {
       throw new Error(
         `An error occurred trying to find reservations by guest name. Error: ${e.message}`
+      );
+    }
+  }
+
+  async findReservationByGuestNameAndDates(propertyId, from, until, name) {
+    try {
+      const query = `SELECT r.id AS reservation_id, r.currency, r.reservation_status, r.check_in, r.check_out, g.first_name, g.last_name, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND MATCH(g.first_name, g.last_name) AGAINST (? IN NATURAL LANGUAGE MODE) AND r.check_in >= ? AND r.check_in <= ?`;
+      const params = [propertyId, name, from, until];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to find reservations by guest name and date range`
+      );
+    }
+  }
+
+  async searchReservationsByDateRange(propertyId, from, until) {
+    try {
+      const query = `SELECT r.id AS reservation_id, r.currency, r.reservation_status, r.check_in, r.check_out, g.first_name, g.last_name, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND r.check_in >= ? AND r.check_in <= ?`;
+      const params = [propertyId, from, until];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to find reservations by dates range`
       );
     }
   }

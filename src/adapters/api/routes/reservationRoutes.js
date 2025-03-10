@@ -89,6 +89,21 @@ export function createReservationRoutes(services) {
     reservationController.findReservationsByDatesRangeAndName
   );
 
+  // @desc find reservations by date range and name (if provided)
+  // @route POST /api/v2/reservations/find-by-date-and-name
+  // @access Private
+  router.get(
+    "/find-by-id/:id",
+    param("id")
+      .trim()
+      .escape()
+      .isInt()
+      .withMessage("Invalid ID format")
+      .customSanitizer(value => parseInt(value)),
+    authMiddleware(tokenService),
+    reservationController.findReservationById
+  );
+
   // @desc check property availability
   // @route GET /api/v2/reservations/check-availability/:check_in-:check_out
   // @access Private

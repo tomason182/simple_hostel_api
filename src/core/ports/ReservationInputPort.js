@@ -38,6 +38,10 @@ export class ReservationInputPort {
     );
   }
 
+  findReservationById(propertyId, id) {
+    return this.reservationService.findReservationById(propertyId, id);
+  }
+
   checkAvailability(propertyId, check_in, check_out) {
     return this.availabilityService.checkAvailabilityForProperty(
       propertyId,
