@@ -156,7 +156,7 @@ export class MySQLUserRepository {
   async getAllPropertyUsers(propertyId) {
     try {
       const query =
-        "SELECT * FROM users JOIN access_control WHERE property_id = ?";
+        "SELECT access_control.id AS access_control_id, access_control.role, users.id AS id, users.username, users.first_name, users.last_name, access_control.role FROM access_control JOIN users ON users.id = access_control.user_id WHERE property_id = ?";
       const params = [propertyId];
 
       const [result] = await this.pool.execute(query, params);
