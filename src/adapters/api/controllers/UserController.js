@@ -117,7 +117,7 @@ export class UserController {
   // @desc    Create a new user for existing property or edit user
   // @route   POST /api/v2/users/create
   // @access  Private
-  createUser = async (req, res, next) => {
+  createOrUpdateUser = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -190,21 +190,6 @@ export class UserController {
     }
   };
 
-  // @desc    Validate log in
-  // @route   GET /api/v2/users/validate
-  // @access  Private
-  validateUser = (req, res, next) => {
-    try {
-      const signedCookie = req.signedCookies["jwt"];
-
-      const decoded = this.userInputPort.verifyToken(signedCookie);
-
-      return res.status(200).json({ userInfo: decoded.sub });
-    } catch (e) {
-      next(e);
-    }
-  };
-
   // @desc    Logout a user
   // @route   GET /api/v1/users/logout
   // @access  Private
@@ -255,38 +240,6 @@ export class UserController {
       };
 
       const result = await this.userInputPort.updateUserProfile(userData);
-
-      return res.status(200).json(result);
-    } catch (e) {
-      next(e);
-    }
-  };
-
-  // @desc Edit users info
-  // @route PUT /api/v1/users/profile/:id
-  // @access Private
-  editUserProfile = async (req, res, next) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json(errors.array());
-      }
-
-      const propertyId = req.user.property_id;
-      console.log("propertyId:", propertyId);
-      const { firstName, lastName, role, id } = matchedData(req);
-
-      const userData = {
-        id,
-        first_name: firstName,
-        last_name: lastName || null,
-        role,
-      };
-
-      const result = await this.userInputPort.editUserProfile(
-        propertyId,
-        userData
-      );
 
       return res.status(200).json(result);
     } catch (e) {

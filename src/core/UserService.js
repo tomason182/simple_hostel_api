@@ -231,10 +231,12 @@ export class UserService {
         propertyId
       );
 
-      console.log("User: ", userExist);
-
       if (userExist === null) {
         throw new Error("User not found");
+      }
+
+      if (userExist?.role === "admin") {
+        throw new Error("Admin user can not be deleted");
       }
 
       const deletedUser = await this.userOutputPort.deleteUser(userId);

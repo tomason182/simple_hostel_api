@@ -57,16 +57,7 @@ export function createUserRoutes(services) {
       .withMessage(
         "Role must be one of the following: admin, manager, employee"
       ),
-    userController.createUser
-  );
-
-  // Edit user profile
-  router.put(
-    "/profile/create",
-    authMiddleware(tokenService),
-    checkSchema(userUpdateSchema),
-    param("id").trim().isInt().withMessage("Not a valid ID"),
-    userController.editUserProfile
+    userController.createOrUpdateUser
   );
 
   // Authenticate a user

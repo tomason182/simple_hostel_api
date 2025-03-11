@@ -215,8 +215,9 @@ export class MySQLUserRepository {
       const query = "DELETE from users WHERE id = ?";
       const params = [userId];
 
-      const [result] = await (conn || this.pool).execute(query, params);
-      console.log("Deleted result: ", result);
+      const [result] = await (conn
+        ? conn.execute(query, params)
+        : this.pool.execute(query, params));
       return result;
     } catch (e) {
       throw new Error(
