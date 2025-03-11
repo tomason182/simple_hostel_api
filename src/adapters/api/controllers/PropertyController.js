@@ -25,6 +25,31 @@ export class PropertyController {
     }
   };
 
+  // @desc    Update property contact details
+  // @route   PUT /api/v2/properties/update/contact-details
+  // @access  Private
+  updateContactInfo = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const data = matchedData(req);
+
+      const propertyId = req.user.property_id;
+
+      const result = await this.propertyInputPort.updateContactInfo(
+        propertyId,
+        data
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   // @desc    Update a property details
   // @route   PUT /api/v1/properties/update
   // @access  Private

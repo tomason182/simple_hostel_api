@@ -77,11 +77,32 @@ export class MySQLPropertyRepository {
       const query = "SELECT * FROM access_control WHERE property_id = ?";
       const params = [propertyId];
 
-      const [result] = await (connection || this.pool).execute(query, params);
+      const [result] = await (connection
+        ? connection.execute(query, params)
+        : this.pool.execute(query, params));
       return result || null;
     } catch (e) {
       throw new Error(
         `An error occurred trying to get all properties users. Error: ${e.message}`
+      );
+    }
+  }
+
+  async updateContactInfo(propertyId, data) {
+    try {
+      const query =
+        "UPDATE contacts_info SET phone_number = ?, email = ? WHERE property_id = ?";
+      const params = [data.phoneNumber, data.email, propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update property contact info`
       );
     }
   }

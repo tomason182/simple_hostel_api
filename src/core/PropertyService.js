@@ -35,6 +35,19 @@ export class PropertyService {
     }
   }
 
+  async updateContactInfo(propertyId, data) {
+    try {
+      const result = await this.propertyOutputPort.updateContactInfo(
+        propertyId,
+        data
+      );
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async updatePropertyDetails(propertyId, propertyDetails) {
     const conn = await this.pool.getConnection();
     try {

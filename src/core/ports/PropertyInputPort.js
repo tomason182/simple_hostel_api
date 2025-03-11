@@ -10,4 +10,8 @@ export class PropertyInputPort {
   updatePropertyDetails(propertyId, propertyData) {
     return this.propertyService.updatePropertyDetails(propertyId, propertyData);
   }
+
+  updateContactInfo(propertyId, data) {
+    return this.propertyService.updateContactInfo(propertyId, data);
+  }
 }
