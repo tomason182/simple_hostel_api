@@ -148,3 +148,26 @@ export const propertyPoliciesSchema = {
     },
   },
 };
+
+export const contactDetailsSchema = {
+  phoneNumber: {
+    in: ["body"],
+    optional: true,
+    isMobilePhone: {
+      options: "any",
+      errorMessage: "Invalid phone number",
+    },
+  },
+  email: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "Email must not be empty",
+    },
+    isEmail: {
+      bail: true,
+      errorMessage: "Invalid email address",
+    },
+    normalizeEmail: true,
+  },
+};
