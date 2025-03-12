@@ -91,8 +91,13 @@ export class MySQLPropertyRepository {
   async updateContactInfo(propertyId, data) {
     try {
       const query =
-        "UPDATE contacts_info SET phone_number = ?, email = ? WHERE property_id = ?";
-      const params = [data.phoneNumber, data.email, propertyId];
+        "UPDATE contacts_info SET phone_number = ?, country_code = ? ,email = ? WHERE property_id = ?";
+      const params = [
+        data.phoneNumber,
+        data.countryCode,
+        data.email,
+        propertyId,
+      ];
 
       const [result] = await this.pool.execute(query, params);
 

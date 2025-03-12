@@ -1,3 +1,5 @@
+import { countryCodes } from "../../../utils/country_codes.js";
+
 export const propertySchema = {
   propertyName: {
     in: ["body"],
@@ -152,10 +154,25 @@ export const propertyPoliciesSchema = {
 export const contactDetailsSchema = {
   phoneNumber: {
     in: ["body"],
-    optional: true,
+    notEmpty: {
+      bail: true,
+      errorMessage: "Phone number must not be empty",
+    },
     isMobilePhone: {
       options: "any",
       errorMessage: "Invalid phone number",
+    },
+  },
+  countryCode: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "Country code must be provided",
+    },
+    custom: {
+      options: value => {
+        return countryCodes.includes(value);
+      },
     },
   },
   email: {
