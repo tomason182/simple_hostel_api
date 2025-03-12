@@ -188,3 +188,70 @@ export const contactDetailsSchema = {
     normalizeEmail: true,
   },
 };
+
+export const propertyInfoSchema = {
+  alpha_2_code: {
+    in: ["body"],
+    trim: true,
+    isISO31661Alpha2: {
+      strict: true,
+      errorMessage: "Invalid country ISO 31661 code",
+    },
+  },
+  street: {
+    in: ["body"],
+    optional: true,
+    trim: true,
+    escape: true,
+    isLength: {
+      options: {
+        min: 1,
+        max: 255,
+      },
+      errorMessage: "Street maximum length is 100 characters",
+    },
+  },
+  city: {
+    in: ["body"],
+    optional: true,
+    trim: true,
+    escape: true,
+    isLength: {
+      options: {
+        min: 1,
+        max: 255,
+      },
+      errorMonitor: "City name maximum length is 100 characters",
+    },
+  },
+  postal_code: {
+    in: ["body"],
+    optional: true,
+    isPostalCode: {
+      options: "any",
+      errorMessage: "Invalid postal code",
+    },
+  },
+  base_currency: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "Currency must not be empty",
+    },
+    isISO4217: {
+      bail: true,
+      errorMessage: "Currency must be ISO 4217",
+    },
+  },
+  payment_currency: {
+    in: ["body"],
+    notEmpty: {
+      bail: true,
+      errorMessage: "Currency must not be empty",
+    },
+    isISO4217: {
+      bail: true,
+      errorMessage: "Currency must be ISO 4217",
+    },
+  },
+};

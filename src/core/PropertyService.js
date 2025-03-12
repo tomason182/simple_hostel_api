@@ -49,39 +49,17 @@ export class PropertyService {
   }
 
   async updatePropertyDetails(propertyId, propertyDetails) {
-    const conn = await this.pool.getConnection();
     try {
-      await conn.beginTransaction();
-      const propertyExist = await this.propertyOutputPort.findPropertyDetails(
-        propertyId,
-        conn
-      );
-      if (propertyExist === null) {
-        throw Error("Property not found");
-      }
-
-      const property = new Property(propertyExist);
-      property.setPropertyName(propertyDetails.property_name);
-      property.setStreet(propertyDetails.street);
-      property.setCity(propertyDetails.city);
-      property.setPostalCode(propertyDetails.postal_code);
-      property.setCountryCode(propertyDetails.country_code);
-      property.setEmail(propertyDetails.email);
-      property.setPhoneNumber(propertyDetails.phone_number);
-      property.setBaseCurrency(propertyDetails.base_currency);
+      const property = new Property(propertyDetails);
+      property.setId(propertyId);
 
       const result = await this.propertyOutputPort.updatePropertyDetails(
-        property,
-        conn
+        property
       );
 
-      await conn.commit();
       return result;
     } catch (e) {
-      await conn.rollback();
       throw e;
-    } finally {
-      await conn.release();
     }
   }
 }

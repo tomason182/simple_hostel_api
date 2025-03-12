@@ -4,7 +4,7 @@ import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
   contactDetailsSchema,
-  propertySchema,
+  propertyInfoSchema,
 } from "../schemas/propertySchema.js";
 
 export function createPropertyRoutes(services) {
@@ -22,9 +22,9 @@ export function createPropertyRoutes(services) {
 
   // Update property details
   router.put(
-    "/update",
+    "/update/property-info",
     authMiddleware(tokenService),
-    checkSchema(propertySchema),
+    checkSchema(propertyInfoSchema),
     propertyController.updatePropertyDetails
   );
 

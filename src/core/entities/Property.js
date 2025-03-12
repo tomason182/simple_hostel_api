@@ -1,10 +1,11 @@
 export class Property {
   constructor({
     id = null,
-    property_name,
+    property_name = null,
     street = null,
     city = null,
     postal_code = null,
+    alpha_2_code = null,
     country_code = null,
     phone_number = null,
     email = null,
@@ -19,10 +20,11 @@ export class Property {
       street,
       city,
       postal_code,
-      country_code,
+      alpha_2_code,
     };
     this.contact_info = {
       phone_number,
+      country_code,
       email,
     };
     this.currencies = {
@@ -72,6 +74,11 @@ export class Property {
 
   getPropertyName() {
     return this.property_name;
+  }
+
+  // Getter and Setter for alpha code
+  getAlpha2Code() {
+    return this.address.alpha_2_code;
   }
 
   // Getter and Setter phone number

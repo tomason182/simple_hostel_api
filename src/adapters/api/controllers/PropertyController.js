@@ -64,14 +64,12 @@ export class PropertyController {
       const propertyId = req.user.property_id;
 
       const propertyData = {
-        property_name: data.propertyName,
         street: data.street || null,
         city: data.city || null,
-        postal_code: data.postalCode || null,
-        country_code: data.country_code || null,
-        phone_number: data.phoneNumber || null,
-        email: data.email,
-        base_currency: data.baseCurrency,
+        postal_code: data.postal_code || null,
+        alpha_2_code: data.alpha_2_code || null,
+        base_currency: data.base_currency,
+        payment_currency: data.payment_currency || null,
       };
 
       const result = await this.propertyInputPort.updatePropertyDetails(
