@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS addresses (
   street VARCHAR(255),
   city VARCHAR(255),
   postal_code INT(20),
-  country_code VARCHAR(2),
+  alfa_2_code VARCHAR(2),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS contacts_info (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
   phone_number VARCHAR(30),
+  country_code VARCHAR(5),
   email VARCHAR(255),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
