@@ -14,7 +14,8 @@ export class DataProviderService {
 
       const { country_code } = matchedData(req);
 
-      const query = "SELECT id, city FROM worldcities WHERE iso2 = ?";
+      const query =
+        "SELECT id, city FROM worldcities WHERE iso2 = ? ORDER BY city ASC";
       const params = [country_code];
 
       const [result] = await this.mysqlPool.execute(query, params);
