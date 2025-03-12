@@ -42,6 +42,9 @@ import { UserTransactionManagerPort } from "../core/ports/UserTransactionManager
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
 import { createTokenService } from "../adapters/config/tokenConfig.js";
 
+// import data provider
+import { DataProviderService } from "../adapters/dataProvider/DataProviderService.js";
+
 // Import controllers
 import { UserController } from "../adapters/api/controllers/UserController.js";
 import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
@@ -66,6 +69,8 @@ export default function initializeServices() {
   // INITIALIZE EXTRA SERVICES.
   const emailService = createEmailNotification();
   const tokenService = createTokenService();
+
+  const dataProviderService = new DataProviderService(mysqlPool);
 
   const availabilityTransactionManagerPort =
     new AvailabilityTransactionManagerPort(
@@ -183,5 +188,6 @@ export default function initializeServices() {
     ratesAndAvailabilityController,
     reservationController,
     roomTypeController,
+    dataProviderService,
   };
 }

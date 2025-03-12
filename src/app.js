@@ -29,6 +29,7 @@ import {
   errorLog,
   errorHandler,
 } from "./middleware/errorMiddleware.js";
+import { fetchDataProvider } from "./adapters/api/routes/dataProviderRoutes.js";
 
 // Define a stream object with a write function for morgan to use
 const stream = {
@@ -90,6 +91,7 @@ export async function createApp(services) {
     createRatesAndAvailabilityRoutes(services)
   );
   app.use("/api/v2/reservations", createReservationRoutes(services));
+  app.use("/api/v2/data-provider", fetchDataProvider(services));
 
   // Use error middleware
   app.use(notFound);
