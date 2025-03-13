@@ -14,7 +14,10 @@ export class RoomTypeService {
         );
 
       if (roomTypeExist !== null) {
-        throw new Error("Room Type name already exist");
+        return {
+          status: "error",
+          msg: "Room Type name already exist",
+        };
       }
 
       // Limit roomType creation
@@ -32,18 +35,22 @@ export class RoomTypeService {
       const totalBeds = beds.length + newBeds;
 
       if (totalBeds > 50) {
-        throw new Error(
-          "Maximum number of beds reached. You can not create more than 50 beds"
-        );
+        return {
+          status: "error",
+          msg: "Maximum number of beds reached. You can not create more than 50 beds",
+        };
       }
 
       roomType.setPropertyId(propertyId);
       roomType.setProducts();
 
       // Add room type to room type table and get back the ID.
-      const result = await this.roomTypeOutputPort.save(roomType);
+      await this.roomTypeOutputPort.save(roomType);
 
-      return result;
+      return {
+        status: "success",
+        msg: "Room type created successfully",
+      };
     } catch (e) {
       throw e;
     }
@@ -141,10 +148,23 @@ export class RoomTypeService {
     }
   }
 
-  async deleteRoomTypeById(id) {
+  async deleteRoomTypeById(id, propertyId) {
     try {
+      // Check if room type has upcoming reservations
+      const today = new Date();
+      const hasReservation =
+        await this.roomTypeOutputPort.getUpcomingReservations(id, today);
+
+      if (hasReservation.length > 0) {
+        return {
+          status: "error",
+          msg: "The are upcoming reservations for the room type you want to delete",
+        };
+      }
+
       const roomTypeDeleted = await this.roomTypeOutputPort.deleteRoomTypeById(
-        id
+        id,
+        propertyId
       );
 
       if (roomTypeDeleted === null) {

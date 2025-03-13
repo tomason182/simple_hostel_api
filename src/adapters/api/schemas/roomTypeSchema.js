@@ -10,9 +10,9 @@ export const roomTypeSchema = {
     isLength: {
       options: {
         min: 1,
-        max: 100,
+        max: 255,
       },
-      errorMessage: "Description must be between 1 and 100 characters",
+      errorMessage: "Description must be between 1 and 255 characters",
     },
   },
   type: {

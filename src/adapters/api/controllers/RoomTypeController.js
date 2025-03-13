@@ -123,11 +123,15 @@ export class RoomTypeController {
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
+      const propertyId = req.user.property_id;
 
       // Extract req values
       const { id } = matchedData(req);
 
-      const result = await this.roomTypeInputPort.deleteRoomTypeById(id);
+      const result = await this.roomTypeInputPort.deleteRoomTypeById(
+        id,
+        propertyId
+      );
 
       return res.status(200).json(result);
     } catch (err) {

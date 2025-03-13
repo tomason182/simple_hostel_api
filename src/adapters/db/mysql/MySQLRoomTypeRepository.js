@@ -161,4 +161,38 @@ export class MySQLRoomTypeRepository {
       );
     }
   }
+
+  async deleteRoomTypeById(id, propertyId) {
+    try {
+      const query = "DELETE FROM room_types WHERE id = ? AND property_id = ?";
+      const params = [id, propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to delete room type. Error: ${e.message}`
+      );
+    }
+  }
+
+  async getUpcomingReservations(roomTypeId, checkIn) {
+    try {
+      const query =
+        "SELECT reservation_rooms.id, reservation_rooms.reservation_id FROM reservation_rooms JOIN reservations ON reservations.id = reservation_rooms.reservation_id WHERE reservations.check_in >= ? AND reservation_rooms.room_type_id = ?";
+      const params = [checkIn, roomTypeId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get room types upcoming reservations. Error: ${e.message}`
+      );
+    }
+  }
 }

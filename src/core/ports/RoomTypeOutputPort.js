@@ -31,7 +31,11 @@ export class RoomTypeOutputPort {
     return this.roomTypeRepository.updateRoomTypeById(roomTypeData, conn);
   }
 
-  deleteRoomTypeById(id, conn = null) {
-    return this.roomTypeRepository.deleteRoomTypeById(id, conn);
+  deleteRoomTypeById(id, propertyId, conn = null) {
+    return this.roomTypeRepository.deleteRoomTypeById(id, propertyId, conn);
+  }
+
+  getUpcomingReservations(id, checkIn) {
+    return this.roomTypeRepository.getUpcomingReservations(id, checkIn);
   }
 }

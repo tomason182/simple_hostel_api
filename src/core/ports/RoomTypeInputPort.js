@@ -20,7 +20,7 @@ export class RoomTypeInputPort {
     return this.roomTypeService.updateRoomTypeById(roomTypeData);
   }
 
-  deleteRoomTypeById(id) {
-    return this.roomTypeService.deleteRoomTypeById(id);
+  deleteRoomTypeById(id, propertyId) {
+    return this.roomTypeService.deleteRoomTypeById(id, propertyId);
   }
 }
