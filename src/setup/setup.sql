@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS property_payment_methods (
 );
 
 -- Create join table for online payment methods
-CREATE TABLE IF NOT EXISTS property_online_payments_methods (
+CREATE TABLE IF NOT EXISTS property_online_payment_methods (
   property_id INT NOT NULL,
   online_payment_method_id INT NOT NULL,
   PRIMARY KEY (property_id, online_payment_method_id),

@@ -82,4 +82,30 @@ export class PropertyController {
       next(e);
     }
   };
+
+  // @desc    Insert or Update property reservations policies
+  // @route   PUT /api/v1/properties/update/reservations-policies
+  // @access  Private
+  reservationsPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+
+      const data = matchedData(req);
+
+      const result =
+        await this.propertyInputPort.insertOrUpdateReservationsPolicies(
+          propertyId,
+          data
+        );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

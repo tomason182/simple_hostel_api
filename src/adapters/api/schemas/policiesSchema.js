@@ -1,5 +1,5 @@
 export const reservationPoliciesSchema = {
-  min_length_of_stay: {
+  min_length_stay: {
     in: ["body"],
     trim: true,
     isInt: {
@@ -9,7 +9,7 @@ export const reservationPoliciesSchema = {
     },
     toInt: true,
   },
-  max_length_of_stay: {
+  max_length_stay: {
     in: ["body"],
     trim: true,
     isInt: {
@@ -57,7 +57,7 @@ export const reservationPoliciesSchema = {
     in: ["body"],
     isArray: {
       bail: true,
-      errorMessage: "Payment methods must be an arrya",
+      errorMessage: "Payment methods must be an array",
     },
     custom: {
       options: values => {

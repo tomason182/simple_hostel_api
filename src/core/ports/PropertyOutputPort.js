@@ -18,4 +18,21 @@ export class PropertyOutputPort {
   updatePropertyDetails(propertyDetails, conn = null) {
     return this.propertyRepository.updatePropertyDetails(propertyDetails, conn);
   }
+
+  // Property Payment methods
+  getPropertyPaymentMethods(propertyId) {
+    return this.propertyRepository.getPaymentMethods(propertyId);
+  }
+
+  getPropertyOnlinePayments(propertyId) {
+    return this.propertyRepository.getOnlinePaymentMethods(propertyId);
+  }
+
+  updatePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
+    return this.propertyRepository.updatePaymentMethods(
+      propertyId,
+      methodsToRemove,
+      methodsToAdd
+    );
+  }
 }

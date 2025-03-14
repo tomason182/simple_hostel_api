@@ -14,4 +14,11 @@ export class PropertyInputPort {
   updateContactInfo(propertyId, data) {
     return this.propertyService.updateContactInfo(propertyId, data);
   }
+
+  insertOrUpdateReservationsPolicies(propertyId, policiesData) {
+    return this.propertyService.insertOrUpdateReservationsPolicies(
+      propertyId,
+      policiesData
+    );
+  }
 }

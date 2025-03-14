@@ -6,6 +6,12 @@ import {
   contactDetailsSchema,
   propertyInfoSchema,
 } from "../schemas/propertySchema.js";
+import {
+  reservationPoliciesSchema,
+  advancePaymentAndCancellationPoliciesSchema,
+  childrenPoliciesSchema,
+  otherPoliciesSchema,
+} from "../schemas/policiesSchema.js";
 
 export function createPropertyRoutes(services) {
   const router = express.Router();
@@ -34,6 +40,14 @@ export function createPropertyRoutes(services) {
     checkSchema(contactDetailsSchema),
     authMiddleware(tokenService),
     propertyController.updateContactInfo
+  );
+
+  // Insert or update reservations policies
+  router.post(
+    "/update/reservations-policies",
+    checkSchema(reservationPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.reservationsPolicies
   );
 
   return router;

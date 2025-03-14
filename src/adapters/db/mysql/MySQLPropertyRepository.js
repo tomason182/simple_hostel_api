@@ -168,4 +168,74 @@ export class MySQLPropertyRepository {
       );
     }
   }
+
+  // Property Policies
+  async getPaymentMethods(propertyId) {
+    try {
+      const query =
+        "SELECT pm.id FROM payment_methods pm JOIN property_payment_methods ppm ON ppm.payment_method_id = pm.id AND ppm.property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An Error occurred trying to get property payment methods. Error: ${e.message}`
+      );
+    }
+  }
+
+  async getOnlinePaymentMethods(propertyId) {
+    try {
+      const query =
+        "SELECT opm.id FROM online_payment_methods opm JOIN property_online_payment_methods popm ON popm.online_payment_method_id = opm.id AND popm.property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property online payment methods. Error: ${e.message}`
+      );
+    }
+  }
+
+  async updatePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
+    const conn = await this.pool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      if (methodsToRemove.length > 0) {
+        const deletePlaceholders = methodsToRemove.map(() => "?").join(", ");
+
+        const deleteQuery = `DELETE FROM property_payment_methods WHERE property_id = ? AND payment_method_id IN (${deletePlaceholders})`;
+        const params = [propertyId, ...methodsToRemove];
+
+        await conn.execute(deleteQuery, params);
+      }
+
+      if (methodsToAdd.length > 0) {
+        const insertPlaceholders = methodsToAdd.map(() => "(?, ?)").join(", ");
+        const insertParams = methodsToAdd.flatMap(method => [
+          propertyId,
+          method,
+        ]);
+
+        const insertQuery = `INSERT INTO property_payment_methods (property_id, payment_method_id) VALUES ${insertPlaceholders}`;
+
+        await conn.execute(insertQuery, insertParams);
+      }
+
+      await conn.commit();
+    } catch (e) {
+      await conn.rollback();
+      throw new Error(
+        `An error occurred trying to update property payment methods. Error: ${e.message}`
+      );
+    } finally {
+      await conn.release();
+    }
+  }
 }
