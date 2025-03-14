@@ -55,25 +55,46 @@ export const reservationPoliciesSchema = {
   },
   payment_methods_accepted: {
     in: ["body"],
-    trim: true,
-    isIn: {
-      options: [["credit_debit", "cash", "bank_transfer"]],
+    isArray: {
+      bail: true,
+      errorMessage: "Payment methods must be an arrya",
+    },
+    custom: {
+      options: values => {
+        const allowed = ["credit_debit", "cash", "bank_transfer"];
+
+        if (values.length > allowed.length) {
+          return false;
+        }
+
+        return values.every(value => allowed.includes(value));
+      },
       errorMessage:
         "Payment method must be one of credit_debit,cash or bank_transfer",
     },
   },
   online_payment_methods_accepted: {
     in: ["body"],
-    trim: true,
-    isIn: {
-      options: [["paypal", "mercado_pago", "bitcoin"]],
+    isArray: {
+      bail: true,
+      errorMessage: "Online payment methods must be an array",
+    },
+    custom: {
+      options: values => {
+        const allowed = ["paypal", "mercado_pago", "bitcoin"];
+        if (values.length > allowed.length) {
+          return false;
+        }
+
+        return values.every(value => allowed.includes(value));
+      },
       errorMessage:
-        "Online Payment method must be one of paypal, mercado_pago or bitcoin",
+        "Each online payment method must be one of: paypal, mercado_pago, or bitcoin",
     },
   },
 };
 
-export const advance_payment_and_cancellation_policies = {
+export const advancePaymentAndCancellationPoliciesSchema = {
   advance_payment_required: {
     in: ["body"],
     trim: true,
@@ -122,7 +143,7 @@ export const advance_payment_and_cancellation_policies = {
   },
 };
 
-export const children_policies = {
+export const childrenPoliciesSchema = {
   allow_children: {
     in: ["body"],
     isBoolean: {
