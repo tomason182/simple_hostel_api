@@ -68,8 +68,7 @@ CREATE TABLE IF NOT EXISTS currencies (
 
 -- Create reservation policies table
 CREATE TABLE IF NOT EXISTS reservation_policies (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL UNIQUE,
+  property_id INT PRIMARY KEY,
   min_length_of_stay INT NOT NULL,
   max_length_of_stay INT NOT NULL,
   min_advance_booking INT NOT NULL,
@@ -84,8 +83,7 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
 
 -- Create advance payment policies table
 CREATE TABLE IF NOT EXISTS advance_payment_and_cancellation_policies (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL UNIQUE,
+  property_id INT PRIMARY KEY,
   advance_payment_required BOOLEAN DEFAULT false,
   deposit_amount DECIMAL(3,2) DEFAULT 0.00,
   cancellation_type ENUM('strict', 'flexible'),
@@ -97,8 +95,7 @@ CREATE TABLE IF NOT EXISTS advance_payment_and_cancellation_policies (
 
 -- Create children policies table
 CREATE TABLE IF NOT EXISTS children_policies (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL UNIQUE,
+  property_id INT PRIMARY KEY,
   allow_children BOOLEAN DEFAULT false,
   children_min_age INT NOT NULL,
   minors_room_types ENUM('all_rooms', 'only_private', 'only_dorms'),
@@ -107,8 +104,7 @@ CREATE TABLE IF NOT EXISTS children_policies (
 
 -- Create other policies table
 CREATE TABLE IF NOT EXISTS other_policies (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL UNIQUE,
+  property_id INT PRIMARY KEY,
   quite_hours_from TIME,
   quite_hours_to TIME,
   smoking_areas BOOLEAN DEFAULT false,
