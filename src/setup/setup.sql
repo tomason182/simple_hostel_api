@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
   min_length_of_stay INT NOT NULL,
   max_length_of_stay INT NOT NULL,
   min_advance_booking INT NOT NULL,
-  allow_same_day_reservation BOOLEAN DEFAULT false,
   check_in_from TIME,
   check_in_to TIME,
   check_out_until TIME,
