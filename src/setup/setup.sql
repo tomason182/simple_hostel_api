@@ -83,13 +83,13 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
 );
 
 -- Create advance payment policies table
-CREATE TABLE IF NOT EXISTS advance_payment_policies (
+CREATE TABLE IF NOT EXISTS advance_payment_and_cancellation_policies (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL UNIQUE,
-  require_advance_payment BOOLEAN DEFAULT false,
+  advance_payment_required BOOLEAN DEFAULT false,
   deposit_amount DECIMAL(3,2) DEFAULT 0.00,
   cancellation_type ENUM('strict', 'flexible'),
-  dates_before_arrival INT NOT NULL,
+  days_before_arrival INT NOT NULL,
   amount_refound DECIMAL(3,2) DEFAULT 0.00,
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
