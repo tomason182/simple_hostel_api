@@ -66,30 +66,55 @@ CREATE TABLE IF NOT EXISTS currencies (
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
--- Create policies table
-CREATE TABLE IF NOT EXISTS policies (
+-- Create reservation policies table
+CREATE TABLE IF NOT EXISTS reservation_policies (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL,
+  property_id INT NOT NULL UNIQUE,
+  min_length_of_stay INT NOT NULL,
+  max_length_of_stay INT NOT NULL,
+  min_advance_booking INT NOT NULL,
+  allow_same_day_reservation BOOLEAN DEFAULT false,
   check_in_from TIME,
   check_in_to TIME,
-  check_out_from TIME,
-  check_out_to TIME,
+  check_out_until TIME,
+  payment_methods_accepted ENUM('credit_debit', 'cash', 'bank_transfer'),
+  online_payments_accepted ENUM('paypal', 'mercado_pago', 'bitcoin')
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+);
+
+-- Create advance payment policies table
+CREATE TABLE IF NOT EXISTS advance_payment_policies (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL UNIQUE,
+  require_advance_payment BOOLEAN DEFAULT false,
   deposit_amount DECIMAL(3,2) DEFAULT 0.00,
-  allow_cancellation BOOLEAN DEFAULT false,
-  allow_pets BOOLEAN DEFAULT false,
-  allow_minors BOOLEAN DEFAULT false,
-  minors_room_types ENUM('all_rooms', 'only_private_rooms'),
-  description TEXT, 
+  cancellation_type ENUM('strict', 'flexible'),
+  dates_before_arrival INT NOT NULL,
+  amount_refound DECIMAL(3,2) DEFAULT 0.00,
+
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
--- Create cancellation policies table.
-CREATE TABLE IF NOT EXISTS cancellation_policies (
+-- Create children policies table
+CREATE TABLE IF NOT EXISTS children_policies (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL,
-  days_before_check_in INT,
-  amount_refound DECIMAL(3,2),
-  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+  property_id INT NOT NULL UNIQUE,
+  allow_children BOOLEAN DEFAULT false,
+  children_min_age INT NOT NULL,
+  minors_room_types ENUM('all_rooms', 'only_private', 'only_dorms'),
+  free_stay_age INT DEFAULT 0,
+);
+
+-- Create other policies table
+CREATE TABLE IF NOT EXISTS other_policies (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL UNIQUE,
+  quite_hours_from TIME,
+  quite_hours_to TIME,
+  smoking_areas BOOLEAN DEFAULT false,
+  external_guest_allowed BOOLEAN DEFAULT false,
+  pets_allowed BOOLEAN DEFAULT false,
 );
 
 -- Create guest table
