@@ -6,6 +6,8 @@ export class Policies {
     check_in_from = null,
     check_in_to = null,
     check_out_until = null,
+    advance_payment_required = false,
+    deposit_amount = 0,
   }) {
     this.reservationPolicies = {
       min_length_stay: min_length_stay,
@@ -17,6 +19,33 @@ export class Policies {
       payment_methods_accepted: [],
       online_payment_methods_accepted: [],
     };
+    this.advancePaymentPolicies = {
+      advance_payment_required,
+      deposit_amount,
+    };
+    this.cancellationPolicies = [];
+  }
+
+  // Setter and Getter for cancellation policies
+  setCancellationPolicies(policies) {
+    if (!Array.isArray(policies))
+      throw new Error("Cancellation policies must be an array");
+
+    for (const policy of policies) {
+      this.cancellationPolicies.push({
+        days_before_arrival: policy.days_before_arrival,
+        amount_refund: policy.amount_refund,
+      });
+    }
+  }
+
+  // Getter for advance payment and cancellation policies
+  getAdvancePaymentRequired() {
+    return this.advancePaymentPolicies.advance_payment_required;
+  }
+
+  getDepositAmount() {
+    return this.advancePaymentPolicies.deposit_amount;
   }
 
   // Getter for payment methods accepted

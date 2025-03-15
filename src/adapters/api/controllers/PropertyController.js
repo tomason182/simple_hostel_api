@@ -108,4 +108,57 @@ export class PropertyController {
       next(e);
     }
   };
+
+  // @desc    Insert or Update advance payment and cancellation policies
+  // @route   PUT /api/v1/properties/update/advance-payment-and-cancellation-policies
+  // @access  Private
+  advancePaymentPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const data = matchedData(req);
+
+      console.log(data);
+
+      const result =
+        await this.propertyInputPort.insertOrUpdateAdvancePaymentPolicies(
+          propertyId,
+          data
+        );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Insert or Update property reservations policies
+  // @route   PUT /api/v1/properties/update/reservations-policies
+  // @access  Private
+  childrenPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+
+      const data = matchedData(req);
+
+      const result =
+        await this.propertyInputPort.insertOrUpdateChildrenPolicies(
+          propertyId,
+          data
+        );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

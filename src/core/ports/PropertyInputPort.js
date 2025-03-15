@@ -21,4 +21,11 @@ export class PropertyInputPort {
       policiesData
     );
   }
+
+  insertOrUpdateAdvancePaymentPolicies(propertyId, data) {
+    return this.propertyService.insertOrUpdateAdvancePaymentPolicies(
+      propertyId,
+      data
+    );
+  }
 }

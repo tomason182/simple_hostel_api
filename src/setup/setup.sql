@@ -115,7 +115,6 @@ CREATE TABLE IF NOT EXISTS advance_payment_policies (
   property_id INT PRIMARY KEY,
   advance_payment_required BOOLEAN DEFAULT false,
   deposit_amount DECIMAL(3,2) DEFAULT 0.00,
-  cancellation_type ENUM('strict', 'flexible'),
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -127,7 +126,7 @@ CREATE TABLE IF NOT EXISTS cancellation_policies (
   days_before_arrival INT NOT NULL,
   amount_refund DECIMAL(3,2) DEFAULT 0.00,
 
-  FOREIGN KEY (property_id) REFERENCES advance_payment_policies(property_id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create children policies table

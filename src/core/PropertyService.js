@@ -2,9 +2,8 @@ import { Property } from "./entities/Property.js";
 import { Policies } from "./entities/Policies.js";
 
 export class PropertyService {
-  constructor(propertyOutputPort, mysqlPool) {
+  constructor(propertyOutputPort) {
     this.propertyOutputPort = propertyOutputPort;
-    this.pool = mysqlPool;
   }
 
   async createProperty(propertyData, connection) {
@@ -130,6 +129,22 @@ export class PropertyService {
         propertyId,
         policies
       );
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async insertOrUpdateAdvancePaymentPolicies(propertyId, data) {
+    try {
+      const policies = new Policies(data);
+
+      const result =
+        await this.propertyOutputPort.insertOrUpdateAdvancePaymentPolicies(
+          propertyId,
+          policies
+        );
 
       return result;
     } catch (e) {

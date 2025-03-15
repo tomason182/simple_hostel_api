@@ -8,7 +8,8 @@ import {
 } from "../schemas/propertySchema.js";
 import {
   reservationPoliciesSchema,
-  advancePaymentAndCancellationPoliciesSchema,
+  advancePaymentPoliciesSchema,
+  cancellationPoliciesSchema,
   childrenPoliciesSchema,
   otherPoliciesSchema,
 } from "../schemas/policiesSchema.js";
@@ -48,6 +49,14 @@ export function createPropertyRoutes(services) {
     checkSchema(reservationPoliciesSchema),
     authMiddleware(tokenService),
     propertyController.reservationsPolicies
+  );
+
+  // Insert or update advance payment and cancellation policies
+  router.post(
+    "/update/advance-payment-policies",
+    checkSchema(advancePaymentPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.advancePaymentPolicies
   );
 
   return router;

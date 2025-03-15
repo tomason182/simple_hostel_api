@@ -302,4 +302,22 @@ export class MySQLPropertyRepository {
       );
     }
   }
+
+  async insertOrUpdateAdvancePaymentPolicies(propertyId, policies) {
+    try {
+      const query =
+        "INSERT INTO advance_payment_policies (property_id, advance_payment_required, deposit_amount) VALUES (?,?,?) ON DUPLICATE KEY UPDATE advance_payment_required = VALUES(advance_payment_required), deposit_amount = VALUES(deposit_amount)";
+      const params = [
+        propertyId,
+        policies.getAdvancePaymentRequired(),
+        policies.getDepositAmount(),
+      ];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error();
+    }
+  }
 }

@@ -50,4 +50,11 @@ export class PropertyOutputPort {
       policies
     );
   }
+
+  insertOrUpdateAdvancePaymentPolicies(propertyId, policies) {
+    return this.propertyRepository.insertOrUpdateAdvancePaymentPolicies(
+      propertyId,
+      policies
+    );
+  }
 }
