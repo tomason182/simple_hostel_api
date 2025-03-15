@@ -35,4 +35,11 @@ export class PropertyOutputPort {
       methodsToAdd
     );
   }
+
+  updateReservationPolicies(propertyId, policies) {
+    return this.propertyRepository.updateReservationPolicies(
+      propertyId,
+      policies
+    );
+  }
 }

@@ -117,6 +117,13 @@ export class PropertyService {
           onlineMethodsToAdd
         );
       }
+
+      const result = await this.propertyOutputPort.updateReservationPolicies(
+        propertyId,
+        policies
+      );
+
+      return result;
     } catch (e) {
       throw e;
     }

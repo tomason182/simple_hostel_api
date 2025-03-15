@@ -238,4 +238,31 @@ export class MySQLPropertyRepository {
       await conn.release();
     }
   }
+
+  async updateReservationPolicies(propertyId, policies) {
+    try {
+      const query =
+        "INSERT INTO reservation_policies (property_id, min_length_stay, max_length_stay, min_advance_booking, check_in_from, check_in_to, check_out_until) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE";
+      const params = [
+        propertyId,
+        policies.getMinLengthOfStay(),
+        policies.getMaxLengthOfStay(),
+        policies.getMinAdvanceBooking(),
+        policies.getCheckInFrom(),
+        policies.getCheckInTo(),
+        policies.getCheckOutUntil(),
+      ];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return {
+        insertedRows: result.insertedRows,
+        affectedRows: result.affectedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update reservations policies. Error: ${e.message}`
+      );
+    }
+  }
 }

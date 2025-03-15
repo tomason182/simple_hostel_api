@@ -81,14 +81,12 @@ CREATE TABLE IF NOT EXISTS online_payment_methods (
 -- Create reservation policies table
 CREATE TABLE IF NOT EXISTS reservation_policies (
   property_id INT PRIMARY KEY,
-  min_length_of_stay INT NOT NULL,
-  max_length_of_stay INT NOT NULL,
+  min_length_stay INT NOT NULL,
+  max_length_stay INT NOT NULL,
   min_advance_booking INT NOT NULL,
   check_in_from TIME,
   check_in_to TIME,
   check_out_until TIME,
-  payment_methods_accepted ENUM('credit_debit', 'cash', 'bank_transfer'),
-  online_payments_accepted ENUM('paypal', 'mercado_pago', 'bitcoin'),
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
 );
