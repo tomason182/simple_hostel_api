@@ -31,28 +31,6 @@ export class Property {
       base_currency,
       payment_currency,
     };
-    this.policies = {
-      payment_method: [],
-      deposit_amount: 0,
-      check_in: {
-        from: null,
-        to: null,
-      },
-      check_out: {
-        from: null,
-        to: null,
-      },
-      cancellation_policy: {
-        allow_cancellation: false,
-        policies: [],
-      },
-      allow_pets: false,
-      minors_policy: {
-        allow: false,
-        room_types: null, // all rooms | private rooms | null
-      },
-      description: null,
-    };
 
     this.created_at = created_at;
     this.updated_at = updated_at;
