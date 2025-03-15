@@ -61,16 +61,11 @@ export const reservationPoliciesSchema = {
     },
     custom: {
       options: values => {
-        const allowed = ["credit_debit", "cash", "bank_transfer"];
-
-        if (values.length > allowed.length) {
-          return false;
+        if (!values.every(value => Number.isInteger(value))) {
+          throw new Error("Each payment method must be an integer");
         }
-
-        return values.every(value => allowed.includes(value));
+        return true;
       },
-      errorMessage:
-        "Payment method must be one of credit_debit,cash or bank_transfer",
     },
   },
   online_payment_methods_accepted: {
@@ -81,15 +76,12 @@ export const reservationPoliciesSchema = {
     },
     custom: {
       options: values => {
-        const allowed = ["paypal", "mercado_pago", "bitcoin"];
-        if (values.length > allowed.length) {
-          return false;
+        if (!values.every(value => Number.isInteger(value))) {
+          throw new Error("Each online payment method must be an integer");
         }
 
-        return values.every(value => allowed.includes(value));
+        return true;
       },
-      errorMessage:
-        "Each online payment method must be one of: paypal, mercado_pago, or bitcoin",
     },
   },
 };
