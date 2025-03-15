@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
   check_in_to TIME,
   check_out_until TIME,
 
-  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create join table for payment methods
