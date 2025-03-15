@@ -239,14 +239,51 @@ export class MySQLPropertyRepository {
     }
   }
 
+  async updateOnlinePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
+    const conn = await this.pool.getConnection();
+    try {
+      await conn.beginTransaction();
+
+      if (methodsToRemove.length > 0) {
+        const deletePlaceholders = methodsToRemove.map(() => "?").join(", ");
+
+        const deleteQuery = `DELETE FROM property_online_payment_methods WHERE property_id = ? AND payment_method_id IN (${deletePlaceholders})`;
+        const params = [propertyId, ...methodsToRemove];
+
+        await conn.execute(deleteQuery, params);
+      }
+
+      if (methodsToAdd.length > 0) {
+        const insertPlaceholders = methodsToAdd.map(() => "(?, ?)").join(", ");
+        const insertParams = methodsToAdd.flatMap(method => [
+          propertyId,
+          method,
+        ]);
+
+        const insertQuery = `INSERT INTO property_online_payment_methods (property_id, online_payment_method_id) VALUES ${insertPlaceholders}`;
+
+        await conn.execute(insertQuery, insertParams);
+      }
+
+      await conn.commit();
+    } catch (e) {
+      await conn.rollback();
+      throw new Error(
+        `An error occurred trying to update the property online payment methods. Error: ${e.message}`
+      );
+    } finally {
+      await conn.release();
+    }
+  }
+
   async updateReservationPolicies(propertyId, policies) {
     try {
       const query =
-        "INSERT INTO reservation_policies (property_id, min_length_stay, max_length_stay, min_advance_booking, check_in_from, check_in_to, check_out_until) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE";
+        "INSERT INTO reservation_policies (property_id, min_length_stay, max_length_stay, min_advance_booking, check_in_from, check_in_to, check_out_until) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE min_length_stay = VALUES(min_length_stay), max_length_stay = VALUES(max_length_stay), min_advance_booking = VALUES(min_advance_booking), check_in_from = VALUES(check_in_from), check_in_to = VALUES(check_in_to), check_out_until = VALUES(check_out_until)";
       const params = [
         propertyId,
-        policies.getMinLengthOfStay(),
-        policies.getMaxLengthOfStay(),
+        policies.getMinLengthStay(),
+        policies.getMaxLengthStay(),
         policies.getMinAdvanceBooking(),
         policies.getCheckInFrom(),
         policies.getCheckInTo(),
