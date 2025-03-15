@@ -82,23 +82,31 @@ export class PropertyService {
       const onlinePaymentMethods =
         await this.propertyOutputPort.getPropertyOnlinePayments(propertyId);
 
-      // Convert methods to a Set for faster lookup
-      const paymentMethodsSet = new Set(paymentMethods);
-      const onlinePaymentMethodsSet = new Set(onlinePaymentMethods);
-      const newPaymentMethodsSet = new Set(newPaymentMethods);
-      const newOnlinePaymentMethodsSet = new Set(newOnlinePaymentMethods);
+      // Convert all method to flat list
+      const newPaymentMethodsFlat = newPaymentMethods.flatMap(p => p.id);
+      const newOnlinePaymentMethodsFlat = newOnlinePaymentMethods.flatMap(
+        p => p.id
+      );
+      const paymentMethodsFlat = paymentMethods.flatMap(p => p.id);
+      const onlinePaymentMethodsFlat = onlinePaymentMethods.flatMap(p => p.id);
 
-      let methodsToRemove = paymentMethods.filter(
+      // Convert methods to a Set for faster lookup
+      const paymentMethodsSet = new Set(paymentMethodsFlat);
+      const onlinePaymentMethodsSet = new Set(onlinePaymentMethodsFlat);
+      const newPaymentMethodsSet = new Set(newPaymentMethodsFlat);
+      const newOnlinePaymentMethodsSet = new Set(newOnlinePaymentMethodsFlat);
+
+      let methodsToRemove = paymentMethodsFlat.filter(
         p => !newPaymentMethodsSet.has(p)
       );
-      let methodsToAdd = newPaymentMethods.filter(
+      let methodsToAdd = newPaymentMethodsFlat.filter(
         np => !paymentMethodsSet.has(np)
       );
 
-      let onlineMethodsToRemove = onlinePaymentMethods.filter(
+      let onlineMethodsToRemove = onlinePaymentMethodsFlat.filter(
         op => !newOnlinePaymentMethodsSet.has(op)
       );
-      let onlineMethodsToAdd = newPaymentMethods.filter(
+      let onlineMethodsToAdd = newOnlinePaymentMethodsFlat.filter(
         np => !onlinePaymentMethodsSet.has(np)
       );
 

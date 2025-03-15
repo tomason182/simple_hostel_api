@@ -36,6 +36,14 @@ export class PropertyOutputPort {
     );
   }
 
+  updateOnlinePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
+    return this.propertyRepository.updateOnlinePaymentMethods(
+      propertyId,
+      methodsToRemove,
+      methodsToAdd
+    );
+  }
+
   updateReservationPolicies(propertyId, policies) {
     return this.propertyRepository.updateReservationPolicies(
       propertyId,

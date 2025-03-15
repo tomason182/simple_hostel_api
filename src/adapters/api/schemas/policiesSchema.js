@@ -61,9 +61,21 @@ export const reservationPoliciesSchema = {
     },
     custom: {
       options: values => {
-        if (!values.every(value => Number.isInteger(value))) {
-          throw new Error("Each payment method must be an integer");
+        if (
+          !values.every(
+            element =>
+              typeof element === "object" &&
+              element !== null &&
+              Number.isInteger(element.id)
+          )
+        ) {
+          throw new Error(
+            "Each payment method must be an object with a valid integer ID"
+          );
         }
+
+        return true;
+
         return true;
       },
     },
@@ -76,8 +88,17 @@ export const reservationPoliciesSchema = {
     },
     custom: {
       options: values => {
-        if (!values.every(value => Number.isInteger(value))) {
-          throw new Error("Each online payment method must be an integer");
+        if (
+          !values.every(
+            element =>
+              typeof element === "object" &&
+              element !== null &&
+              Number.isInteger(element.id)
+          )
+        ) {
+          throw new Error(
+            "Each payment method must be an object with a valid integer ID"
+          );
         }
 
         return true;

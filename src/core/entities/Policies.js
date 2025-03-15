@@ -46,11 +46,11 @@ export class Policies {
   }
 
   // getter and setter for min length of stay
-  getMinLengthOfStay() {
+  getMinLengthStay() {
     return this.reservationPolicies.min_length_stay;
   }
 
-  setMinLengthOfStay(nights) {
+  setMinLengthStay(nights) {
     this.reservationPolicies.min_length_stay = nights;
   }
 
@@ -59,7 +59,7 @@ export class Policies {
     return this.reservationPolicies.max_length_stay;
   }
 
-  setMaxLengthOfStay(nights) {
+  setMaxLengthStay(nights) {
     this.reservationPolicies.max_length_stay = nights;
   }
 
