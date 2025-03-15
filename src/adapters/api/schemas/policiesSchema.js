@@ -120,10 +120,10 @@ export const advancePaymentAndCancellationPoliciesSchema = {
   deposit_amount: {
     in: ["body"],
     trim: true,
-    isDecimal: {
+    isFloat: {
       bail: true,
-      options: { decimal_digits: "3" },
-      errorMessage: "Deposit amount must contain 3 digits like 0.35",
+      options: { min: 0, max: 1 },
+      errorMessage: "Deposit amount must be a float number between 0 and 1",
     },
     toFloat: true,
   },
@@ -135,23 +135,47 @@ export const advancePaymentAndCancellationPoliciesSchema = {
       errorMessage: "Cancellation type must be one of strict or flexible",
     },
   },
-  days_before_arrival: {
+  cancellation_policies: {
     in: ["body"],
-    trim: true,
-    isInt: {
+    isArray: {
       bail: true,
-      options: { min: 0 },
-      errorMessage:
-        "Days before arrival to cancel must be greater or equal to zero",
+      errorMessage: "Cancellation policies must be and array",
     },
-  },
-  amount_refund: {
-    in: ["body"],
-    trim: true,
-    isDecimal: {
-      bail: true,
-      options: { decimal_digits: "3" },
-      errorMessage: "Amount refund must contain 3 digits like 0.35",
+    custom: {
+      options: policies => {
+        if (!Array.isArray(policies)) return false;
+
+        if ((policies.length = 0)) return true;
+
+        for (const policy of policies) {
+          if (typeof policy !== "object" || policy === null) return false;
+
+          if (
+            !("days_before_arrival" in policy) ||
+            !("amount_refund" in policy)
+          )
+            return false;
+
+          if (
+            !Number.isInteger(policy.days_before_arrival) ||
+            policy.days_before_arrival <= 0
+          ) {
+            return false;
+          }
+
+          if (
+            typeof policy.amount_refund !== "number" ||
+            policy.amount_refund < 0 ||
+            policy.amount_refund > 1
+          ) {
+            return false;
+          }
+        }
+
+        return true;
+      },
+      errorMessage:
+        "Each cancellation policy must be an object with a valid 'days_before_arrival' (integer > 0) and 'amount_refund' (float between 0 and 1)",
     },
   },
 };
