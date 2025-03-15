@@ -109,7 +109,7 @@ export default function initializeServices() {
   );
 
   // Initialize the core services
-  const propertyService = new PropertyService(propertyOutputPort, mysqlPool);
+  const propertyService = new PropertyService(propertyOutputPort);
   const userService = new UserService(userOutputPort);
   const guestService = new GuestService(guestOutputPort);
   const ratesAndAvailabilityService = new RatesAndAvailabilityService(
