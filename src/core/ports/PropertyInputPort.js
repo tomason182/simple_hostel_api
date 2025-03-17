@@ -28,4 +28,16 @@ export class PropertyInputPort {
       data
     );
   }
+
+  insertCancellationPolicies(propertyId, data) {
+    return this.propertyService.insertCancellationPolicies(propertyId, data);
+  }
+
+  updateCancellationPolicies(propertyId, data) {
+    return this.propertyService.updateCancellationPolicies(propertyId, data);
+  }
+
+  deleteCancellationPolicies(propertyId, data) {
+    return this.propertyService.deleteCancellationPolicies(propertyId, data);
+  }
 }

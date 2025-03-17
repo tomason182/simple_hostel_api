@@ -73,9 +73,6 @@ export const reservationPoliciesSchema = {
             "Each payment method must be an object with a valid integer ID"
           );
         }
-
-        return true;
-
         return true;
       },
     },
@@ -130,44 +127,25 @@ export const advancePaymentPoliciesSchema = {
 };
 
 export const cancellationPoliciesSchema = {
-  cancellation_policies: {
+  days_before_arrival: {
     in: ["body"],
-    isArray: {
+    trim: true,
+    isInt: {
       bail: true,
-      errorMessage: "Cancellation policies must be an array",
+      options: { min: 1 },
+      errorMessage: "Day before arrival must be an integer greater than 0",
     },
-    custom: {
-      options: policies => {
-        for (const policy of policies) {
-          if (typeof policy !== "object")
-            throw new Error("Policies must contains objects");
-
-          if (
-            !("days_before_arrival" in policy) ||
-            !("amount_refund" in policy)
-          )
-            throw new Error("Invalid Object keys");
-
-          if (
-            !Number.isInteger(policy.days_before_arrival) ||
-            policy.days_before_arrival <= 0
-          )
-            throw new Error(
-              "Days before arrival must be an integer greater than zero"
-            );
-
-          if (
-            typeof policy.amount_refund !== "number" ||
-            policy.amount_refund < 0 ||
-            policy.amount_refund > 1
-          ) {
-            throw new Error("Amount refund must be a number between 0 and 1");
-          }
-
-          return true;
-        }
-      },
+    toInt: true,
+  },
+  amount_refund: {
+    in: ["body"],
+    trim: true,
+    isFloat: {
+      bail: true,
+      options: { min: 0, max: 1 },
+      errorMessage: "amount refund must be a float number between 0 and 1",
     },
+    toFloat: true,
   },
 };
 

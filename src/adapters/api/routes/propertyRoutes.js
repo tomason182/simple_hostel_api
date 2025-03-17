@@ -1,5 +1,5 @@
 import express from "express";
-import { checkSchema } from "express-validator";
+import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
@@ -45,7 +45,7 @@ export function createPropertyRoutes(services) {
 
   // Insert or update reservations policies
   router.post(
-    "/update/reservations-policies",
+    "/policies/reservations-policies",
     checkSchema(reservationPoliciesSchema),
     authMiddleware(tokenService),
     propertyController.reservationsPolicies
@@ -53,10 +53,32 @@ export function createPropertyRoutes(services) {
 
   // Insert or update advance payment and cancellation policies
   router.post(
-    "/update/advance-payment-policies",
+    "/policies/advance-payment-policies",
     checkSchema(advancePaymentPoliciesSchema),
     authMiddleware(tokenService),
     propertyController.advancePaymentPolicies
+  );
+
+  router.post(
+    "/policies/cancellation-policies",
+    checkSchema(cancellationPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.cancellationPolicies
+  );
+
+  router.put(
+    "/policies/update-cancellation-policies/:id",
+    param("id").trim().isInt().withMessage("Invalid param ID").toInt(),
+    checkSchema(cancellationPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.updateCancellationPolicies
+  );
+
+  router.delete(
+    "/policies/delete-cancellation-policies/:id",
+    param("id").trim().isInt().withMessage("Invalid param ID").toInt(),
+    authMiddleware(tokenService),
+    propertyController.deleteCancellationPolicies
   );
 
   return router;

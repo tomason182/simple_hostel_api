@@ -151,4 +151,96 @@ export class PropertyService {
       throw e;
     }
   }
+
+  async insertCancellationPolicies(propertyId, data) {
+    try {
+      const propertyCancellationPolicies =
+        await this.propertyOutputPort.getPropertyCancellationPolicies(
+          propertyId
+        );
+
+      const daysBeforeArrival = data.days_before_arrival;
+      const amountRefund = data.amount_refund;
+
+      if (
+        !propertyCancellationPolicies.every(
+          policy => policy.days_before_arrival !== daysBeforeArrival
+        )
+      ) {
+        return {
+          status: "Error",
+          msg: `There is a policy setted up for ${data.days_before_arrival} days. Please, remove it or update it`,
+        };
+      }
+
+      await this.propertyOutputPort.insertCancellationPolicy(
+        propertyId,
+        daysBeforeArrival,
+        amountRefund
+      );
+
+      return {
+        status: "ok",
+        msg: "Cancellation Policy inserted successfully",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async updateCancellationPolicies(propertyId, data) {
+    try {
+      const propertyCancellationPolicies =
+        await this.propertyOutputPort.getPropertyCancellationPolicies(
+          propertyId
+        );
+
+      const id = data.id;
+      const daysBeforeArrival = data.days_before_arrival;
+      const amountRefund = data.amount_refund;
+
+      const filteredPolicies = propertyCancellationPolicies.filter(
+        policy => policy.id !== id
+      );
+
+      if (
+        !filteredPolicies.every(
+          policy => policy.days_before_arrival !== daysBeforeArrival
+        )
+      ) {
+        return {
+          status: "Error",
+          msg: `There is a policy setted up for ${data.days_before_arrival} days. Please, remove it or update it`,
+        };
+      }
+
+      await this.propertyOutputPort.updateCancellationPolicy(
+        id,
+        propertyId,
+        daysBeforeArrival,
+        amountRefund
+      );
+
+      return {
+        status: "ok",
+        msg: "Cancellation policy updated successfully",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteCancellationPolicies(propertyId, data) {
+    try {
+      const id = data.id;
+      await this.propertyOutputPort.deleteCancellationPolicy(id, propertyId);
+
+      return {
+        status: "ok",
+        msg: "Cancellation policy deleted successfully",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

@@ -27,17 +27,6 @@ export class Policies {
   }
 
   // Setter and Getter for cancellation policies
-  setCancellationPolicies(policies) {
-    if (!Array.isArray(policies))
-      throw new Error("Cancellation policies must be an array");
-
-    for (const policy of policies) {
-      this.cancellationPolicies.push({
-        days_before_arrival: policy.days_before_arrival,
-        amount_refund: policy.amount_refund,
-      });
-    }
-  }
 
   // Getter for advance payment and cancellation policies
   getAdvancePaymentRequired() {

@@ -57,4 +57,29 @@ export class PropertyOutputPort {
       policies
     );
   }
+
+  getPropertyCancellationPolicies(propertyId) {
+    return this.propertyRepository.getPropertyCancellationPolicies(propertyId);
+  }
+
+  insertCancellationPolicy(propertyId, daysBeforeArrival, amountRefund) {
+    return this.propertyRepository.insertCancellationPolicy(
+      propertyId,
+      daysBeforeArrival,
+      amountRefund
+    );
+  }
+
+  updateCancellationPolicy(id, propertyId, daysBeforeArrival, amountRefund) {
+    return this.propertyRepository.updateCancellationPolicy(
+      id,
+      propertyId,
+      daysBeforeArrival,
+      amountRefund
+    );
+  }
+
+  deleteCancellationPolicy(id, propertyId) {
+    return this.propertyRepository.deleteCancellationPolicy(id, propertyId);
+  }
 }

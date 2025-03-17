@@ -6,7 +6,7 @@ export class PropertyController {
   }
 
   // @desc    get a property details
-  // @route   GET /api/v1/property/
+  // @route   GET /api/v2/property/
   // @access  Private
   getPropertyDetails = async (req, res, next) => {
     try {
@@ -51,7 +51,7 @@ export class PropertyController {
   };
 
   // @desc    Update a property details
-  // @route   PUT /api/v1/properties/update
+  // @route   PUT /api/v2/properties/update
   // @access  Private
   updatePropertyDetails = async (req, res, next) => {
     try {
@@ -84,7 +84,7 @@ export class PropertyController {
   };
 
   // @desc    Insert or Update property reservations policies
-  // @route   PUT /api/v1/properties/update/reservations-policies
+  // @route   PUT /api/v2/properties/policies/reservations-policies
   // @access  Private
   reservationsPolicies = async (req, res, next) => {
     try {
@@ -109,8 +109,8 @@ export class PropertyController {
     }
   };
 
-  // @desc    Insert or Update advance payment and cancellation policies
-  // @route   PUT /api/v1/properties/update/advance-payment-and-cancellation-policies
+  // @desc    Insert or Update advance payment
+  // @route   PUT /api/v2/properties/policies/advance-payment-policies
   // @access  Private
   advancePaymentPolicies = async (req, res, next) => {
     try {
@@ -121,8 +121,6 @@ export class PropertyController {
 
       const propertyId = req.user.property_id;
       const data = matchedData(req);
-
-      console.log(data);
 
       const result =
         await this.propertyInputPort.insertOrUpdateAdvancePaymentPolicies(
@@ -136,8 +134,80 @@ export class PropertyController {
     }
   };
 
-  // @desc    Insert or Update property reservations policies
-  // @route   PUT /api/v1/properties/update/reservations-policies
+  // @desc    Insert cancellation Policies
+  // @route   POST /api/v2/properties/policies/cancellation-policies
+  // @access  Private
+  cancellationPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const data = matchedData(req);
+
+      const result = await this.propertyInputPort.insertCancellationPolicies(
+        propertyId,
+        data
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Update cancellation Policies
+  // @route   PUT /api/v2/properties/policies/cancellation-policies
+  // @access  Private
+  updateCancellationPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const data = matchedData(req);
+      const result = await this.propertyInputPort.updateCancellationPolicies(
+        propertyId,
+        data
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Delete cancellation Policies
+  // @route   DELETE /api/v2/properties/policies/delete-cancellation-policies
+  // @access  Private
+  deleteCancellationPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+
+      const data = matchedData(req);
+
+      const result = await this.propertyInputPort.deleteCancellationPolicies(
+        propertyId,
+        data
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Insert or Update children policies
+  // @route   PUT /api/v1/properties/update/children-policies
   // @access  Private
   childrenPolicies = async (req, res, next) => {
     try {

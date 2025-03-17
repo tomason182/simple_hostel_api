@@ -320,4 +320,72 @@ export class MySQLPropertyRepository {
       throw new Error();
     }
   }
+
+  async getPropertyCancellationPolicies(propertyId) {
+    try {
+      const query = "SELECT * FROM cancellation_policies WHERE property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property cancellation policies. Error: ${e.message}`
+      );
+    }
+  }
+
+  async insertCancellationPolicy(propertyId, daysBeforeArrival, amountRefund) {
+    try {
+      const query =
+        "INSERT INTO cancellation_policies (property_id, days_before_arrival, amount_refund) VALUES (?, ?, ?)";
+      const params = [propertyId, daysBeforeArrival, amountRefund];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to insert cancellation policy. Error: ${e.message}`
+      );
+    }
+  }
+
+  async updateCancellationPolicy(
+    id,
+    property_id,
+    daysBeforeArrival,
+    amountRefund
+  ) {
+    try {
+      const query =
+        "UPDATE cancellation_policies SET days_before_arrival = ?, amount_refund = ? WHERE id = ? AND property_id = ?";
+      const params = [daysBeforeArrival, amountRefund, id, property_id];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update cancellation policy. Error: ${e.message}`
+      );
+    }
+  }
+
+  async deleteCancellationPolicy(id, propertyId) {
+    try {
+      const query =
+        "DELETE FROM cancellation_policies WHERE id = ? AND property_id = ?";
+      const params = [id, propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to delete cancellation policy. Error: ${e.message}`
+      );
+    }
+  }
 }
