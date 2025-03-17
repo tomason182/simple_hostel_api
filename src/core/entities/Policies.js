@@ -26,7 +26,6 @@ export class Policies {
       check_in_to,
       check_out_until,
       payment_methods_accepted: [],
-      online_payment_methods_accepted: [],
     };
     this.advancePaymentPolicies = {
       advance_payment_required,
@@ -110,19 +109,6 @@ export class Policies {
 
     for (const id of methodsIds) {
       this.reservationPolicies.payment_methods_accepted.push(id);
-    }
-  }
-
-  // Getter and setter for online payment methods
-  getOnlinePaymentMethods() {
-    return this.reservationPolicies.online_payment_methods_accepted;
-  }
-
-  setOnlinePaymentMethods(methodsIds) {
-    if (!Array.isArray(methodsIds)) return false;
-
-    for (const id of methodsIds) {
-      this.reservationPolicies.online_payment_methods_accepted.push(id);
     }
   }
 

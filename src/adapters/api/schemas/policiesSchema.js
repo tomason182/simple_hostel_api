@@ -77,31 +77,6 @@ export const reservationPoliciesSchema = {
       },
     },
   },
-  online_payment_methods_accepted: {
-    in: ["body"],
-    isArray: {
-      bail: true,
-      errorMessage: "Online payment methods must be an array",
-    },
-    custom: {
-      options: values => {
-        if (
-          !values.every(
-            element =>
-              typeof element === "object" &&
-              element !== null &&
-              Number.isInteger(element.id)
-          )
-        ) {
-          throw new Error(
-            "Each payment method must be an object with a valid integer ID"
-          );
-        }
-
-        return true;
-      },
-    },
-  },
 };
 
 export const advancePaymentPoliciesSchema = {

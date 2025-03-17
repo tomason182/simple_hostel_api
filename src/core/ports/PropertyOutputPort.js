@@ -24,20 +24,8 @@ export class PropertyOutputPort {
     return this.propertyRepository.getPaymentMethods(propertyId);
   }
 
-  getPropertyOnlinePayments(propertyId) {
-    return this.propertyRepository.getOnlinePaymentMethods(propertyId);
-  }
-
   updatePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
     return this.propertyRepository.updatePaymentMethods(
-      propertyId,
-      methodsToRemove,
-      methodsToAdd
-    );
-  }
-
-  updateOnlinePaymentMethods(propertyId, methodsToRemove, methodsToAdd) {
-    return this.propertyRepository.updateOnlinePaymentMethods(
       propertyId,
       methodsToRemove,
       methodsToAdd

@@ -72,12 +72,6 @@ CREATE TABLE IF NOT EXISTS payment_methods (
   name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Create online payment methods table
-CREATE TABLE IF NOT EXISTS online_payment_methods (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL UNIQUE
-);
-
 -- Create reservation policies table
 CREATE TABLE IF NOT EXISTS reservation_policies (
   property_id INT PRIMARY KEY,
@@ -99,15 +93,6 @@ CREATE TABLE IF NOT EXISTS property_payment_methods (
   PRIMARY KEY (property_id, payment_method_id),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
   FOREIGN KEY (payment_method_id) REFERENCES payment_methods(id) ON DELETE CASCADE
-);
-
--- Create join table for online payment methods
-CREATE TABLE IF NOT EXISTS property_online_payment_methods (
-  property_id INT NOT NULL,
-  online_payment_method_id INT NOT NULL,
-  PRIMARY KEY (property_id, online_payment_method_id),
-  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
-  FOREIGN KEY (online_payment_method_id) REFERENCES online_payment_methods(id) ON DELETE CASCADE
 );
 
 -- Create advance payment policies table
