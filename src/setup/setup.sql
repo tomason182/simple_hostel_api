@@ -143,11 +143,13 @@ CREATE TABLE IF NOT EXISTS children_policies (
 -- Create other policies table
 CREATE TABLE IF NOT EXISTS other_policies (
   property_id INT PRIMARY KEY,
-  quite_hours_from TIME,
-  quite_hours_to TIME,
+  quiet_hours_from TIME,
+  quiet_hours_to TIME,
   smoking_areas BOOLEAN DEFAULT false,
   external_guest_allowed BOOLEAN DEFAULT false,
   pets_allowed BOOLEAN DEFAULT false,
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create guest table

@@ -44,6 +44,11 @@ export class PropertyOutputPort {
     );
   }
 
+  // Policies
+  getPropertyPolicies(propertyId) {
+    return this.propertyRepository.getPropertyPolicies(propertyId);
+  }
+
   updateReservationPolicies(propertyId, policies) {
     return this.propertyRepository.updateReservationPolicies(
       propertyId,
@@ -85,6 +90,13 @@ export class PropertyOutputPort {
 
   insertOrUpdateChildrenPolicies(propertyId, policies) {
     return this.propertyRepository.insertOrUpdateChildrenPolicies(
+      propertyId,
+      policies
+    );
+  }
+
+  insertOrUpdateOtherPolicies(propertyId, policies) {
+    return this.propertyRepository.insertOrUpdateOtherPolicies(
       propertyId,
       policies
     );

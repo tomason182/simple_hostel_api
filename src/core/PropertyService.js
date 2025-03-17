@@ -63,6 +63,25 @@ export class PropertyService {
     }
   }
 
+  async getPropertyPolicies(propertyId) {
+    try {
+      const policiesResult = await this.propertyOutputPort.getPropertyPolicies(
+        propertyId
+      );
+
+      const policies = new Policies(policiesResult.policies);
+      policies.setCancellationPolicies(
+        policiesResult.policies.cancellation_policies
+      );
+
+      /* console.log(policies); */
+
+      return policies;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async insertOrUpdateReservationsPolicies(propertyId, policiesData) {
     try {
       const policies = new Policies(policiesData);
@@ -248,8 +267,6 @@ export class PropertyService {
     try {
       const policies = new Policies(data);
 
-      console.log(policies);
-
       await this.propertyOutputPort.insertOrUpdateChildrenPolicies(
         propertyId,
         policies
@@ -258,6 +275,24 @@ export class PropertyService {
       return {
         status: "ok",
         msg: "Children policy inserted or updated successfully",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async insertOrUpdateOtherPolicies(propertyId, data) {
+    try {
+      const policies = new Policies(data);
+
+      await this.propertyOutputPort.insertOrUpdateOtherPolicies(
+        propertyId,
+        policies
+      );
+
+      return {
+        status: "ok",
+        msg: "Other policies inserted or updated successfully",
       };
     } catch (e) {
       throw e;

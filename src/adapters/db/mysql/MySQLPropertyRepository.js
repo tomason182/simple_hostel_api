@@ -276,6 +276,27 @@ export class MySQLPropertyRepository {
     }
   }
 
+  // Policies
+
+  async getPropertyPolicies(propertyId) {
+    try {
+      const query =
+        "SELECT rp.*, app.*, chp.*, op.*, COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'days_before_arrival', cp.days_before_arrival, 'amount_refund', cp.amount_refund)), JSON_ARRAY()) AS cancellation_policies FROM reservation_policies rp JOIN advance_payment_policies app ON rp.property_id = app.property_id JOIN children_policies chp ON rp.property_id = chp.property_id JOIN other_policies op ON rp.property_id = op.property_id LEFT JOIN cancellation_policies cp ON rp.property_id = cp.property_id WHERE rp.property_id = ? GROUP BY rp.property_id";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      const paymentQuery =
+        "SELECT pm.* FROM payment_methods pm JOIN property_payment_methods ppm ON ppm.payment_method_id = pm.id AND ppm.property_id = ?";
+
+      const [paymentResult] = await this.pool.execute(paymentQuery, params);
+
+      return { policies: result[0] || [], payment_methods: paymentResult };
+    } catch (e) {
+      `An error occurred trying to get property policies. Error: ${e.message}`;
+    }
+  }
+
   async updateReservationPolicies(propertyId, policies) {
     try {
       const query =
@@ -317,7 +338,9 @@ export class MySQLPropertyRepository {
 
       return result;
     } catch (e) {
-      throw new Error();
+      throw new Error(
+        `An error occurred trying to insert or update advance payment policies. Error: ${e.message}`
+      );
     }
   }
 
@@ -407,6 +430,29 @@ export class MySQLPropertyRepository {
     } catch (e) {
       throw new Error(
         `An error occurred trying to insert or update children policies. Error: ${e.message}`
+      );
+    }
+  }
+
+  async insertOrUpdateOtherPolicies(propertyId, policies) {
+    try {
+      const query =
+        "INSERT INTO other_policies (property_id, quiet_hours_from, quiet_hours_to, smoking_areas, external_guest_allowed, pets_allowed) VALUES (? ,? ,? ,? ,? ,?) ON DUPLICATE KEY UPDATE quiet_hours_from = VALUES (quiet_hours_from), quiet_hours_to = VALUES (quiet_hours_to), smoking_areas = VALUES (smoking_areas), external_guest_allowed = VALUES (external_guest_allowed), pets_allowed = VALUES (pets_allowed)";
+      const params = [
+        propertyId,
+        policies.getQuietHoursFrom(),
+        policies.getQuietHoursTo(),
+        policies.getSmokingAreas(),
+        policies.getExternalGuestAllowed(),
+        policies.getPetsAllowed(),
+      ];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to insert or update other policies. Error: ${e.message}`
       );
     }
   }

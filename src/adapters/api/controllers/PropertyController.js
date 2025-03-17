@@ -83,6 +83,23 @@ export class PropertyController {
     }
   };
 
+  // @desc    get property policies
+  // @route   GET /api/v2/properties/policies/
+  // @access  Private
+  getPropertyPolicies = async (req, res, next) => {
+    try {
+      const propertyId = req.user.property_id;
+
+      const result = await this.propertyInputPort.getPropertyPolicies(
+        propertyId
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   // @desc    Insert or Update property reservations policies
   // @route   PUT /api/v2/properties/policies/reservations-policies
   // @access  Private
@@ -225,6 +242,31 @@ export class PropertyController {
           propertyId,
           data
         );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Insert or Update other policies
+  // @route   PUT /api/v1/properties/update/other-policies
+  // @access  Private
+  otherPolicies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+
+      const data = matchedData(req);
+
+      const result = await this.propertyInputPort.insertOrUpdateOtherPolicies(
+        propertyId,
+        data
+      );
 
       return res.status(200).json(result);
     } catch (e) {

@@ -15,6 +15,10 @@ export class PropertyInputPort {
     return this.propertyService.updateContactInfo(propertyId, data);
   }
 
+  getPropertyPolicies(propertyId) {
+    return this.propertyService.getPropertyPolicies(propertyId);
+  }
+
   insertOrUpdateReservationsPolicies(propertyId, policiesData) {
     return this.propertyService.insertOrUpdateReservationsPolicies(
       propertyId,
@@ -46,5 +50,9 @@ export class PropertyInputPort {
       propertyId,
       data
     );
+  }
+
+  insertOrUpdateOtherPolicies(propertyId, data) {
+    return this.propertyService.insertOrUpdateOtherPolicies(propertyId, data);
   }
 }

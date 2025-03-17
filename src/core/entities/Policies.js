@@ -12,6 +12,11 @@ export class Policies {
     children_min_age = null,
     minors_room_types = null,
     free_stay_age = 0,
+    quiet_hours_from = null,
+    quiet_hours_to = null,
+    smoking_areas = null,
+    external_guest_allowed = null,
+    pets_allowed = null,
   }) {
     this.reservationPolicies = {
       min_length_stay,
@@ -34,6 +39,39 @@ export class Policies {
       minors_room_types,
       free_stay_age,
     };
+    this.otherPolicies = {
+      quiet_hours_from,
+      quiet_hours_to,
+      smoking_areas,
+      external_guest_allowed,
+      pets_allowed,
+    };
+  }
+
+  // Setter and getter for cancellation policies
+  setCancellationPolicies(policies) {
+    this.cancellationPolicies = policies;
+  }
+
+  // Setter and getter for other policies
+  getQuietHoursFrom() {
+    return this.otherPolicies.quiet_hours_from;
+  }
+
+  getQuietHoursTo() {
+    return this.otherPolicies.quiet_hours_to;
+  }
+
+  getSmokingAreas() {
+    return this.otherPolicies.smoking_areas;
+  }
+
+  getExternalGuestAllowed() {
+    return this.otherPolicies.external_guest_allowed;
+  }
+
+  getPetsAllowed() {
+    return this.otherPolicies.pets_allowed;
   }
 
   // Setter and Getter for children policies

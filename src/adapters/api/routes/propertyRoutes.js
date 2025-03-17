@@ -43,6 +43,13 @@ export function createPropertyRoutes(services) {
     propertyController.updateContactInfo
   );
 
+  // Get Property policies
+  router.get(
+    "/policies",
+    authMiddleware(tokenService),
+    propertyController.getPropertyPolicies
+  );
+
   // Insert or update reservations policies
   router.post(
     "/policies/reservations-policies",
@@ -86,6 +93,13 @@ export function createPropertyRoutes(services) {
     checkSchema(childrenPoliciesSchema),
     authMiddleware(tokenService),
     propertyController.childrenPolicies
+  );
+
+  router.post(
+    "/policies/other-policies",
+    checkSchema(otherPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.otherPolicies
   );
 
   return router;

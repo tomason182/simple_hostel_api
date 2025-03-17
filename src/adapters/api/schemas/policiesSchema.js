@@ -187,7 +187,7 @@ export const childrenPoliciesSchema = {
 };
 
 export const otherPoliciesSchema = {
-  quite_hours_from: {
+  quiet_hours_from: {
     in: ["body"],
     trim: true,
     matches: {
@@ -195,7 +195,7 @@ export const otherPoliciesSchema = {
       errorMessage: "Quiet hours from must be in HH:mm format",
     },
   },
-  quite_hours_to: {
+  quiet_hours_to: {
     in: ["body"],
     trim: true,
     matches: {
