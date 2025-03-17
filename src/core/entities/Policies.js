@@ -104,11 +104,11 @@ export class Policies {
     return this.reservationPolicies.payment_methods_accepted;
   }
 
-  setPaymentMethods(methodsIds) {
-    if (!Array.isArray(methodsIds)) return false;
+  setPaymentMethods(methods) {
+    if (!Array.isArray(methods)) return false;
 
-    for (const id of methodsIds) {
-      this.reservationPolicies.payment_methods_accepted.push(id);
+    for (const method of methods) {
+      this.reservationPolicies.payment_methods_accepted.push(method.name);
     }
   }
 

@@ -73,8 +73,7 @@ export class PropertyService {
       policies.setCancellationPolicies(
         policiesResult.policies.cancellation_policies
       );
-
-      /* console.log(policies); */
+      policies.setPaymentMethods(policiesResult.payment_methods);
 
       return policies;
     } catch (e) {
