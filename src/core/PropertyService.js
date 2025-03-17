@@ -243,4 +243,24 @@ export class PropertyService {
       throw e;
     }
   }
+
+  async insertOrUpdateChildrenPolicies(propertyId, data) {
+    try {
+      const policies = new Policies(data);
+
+      console.log(policies);
+
+      await this.propertyOutputPort.insertOrUpdateChildrenPolicies(
+        propertyId,
+        policies
+      );
+
+      return {
+        status: "ok",
+        msg: "Children policy inserted or updated successfully",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

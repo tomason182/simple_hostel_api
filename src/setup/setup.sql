@@ -136,6 +136,8 @@ CREATE TABLE IF NOT EXISTS children_policies (
   children_min_age INT NOT NULL,
   minors_room_types ENUM('all_rooms', 'only_private', 'only_dorms'),
   free_stay_age INT DEFAULT 0,
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create other policies table

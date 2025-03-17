@@ -388,4 +388,26 @@ export class MySQLPropertyRepository {
       );
     }
   }
+
+  async insertOrUpdateChildrenPolicies(propertyId, policies) {
+    try {
+      const query =
+        "INSERT INTO children_policies (property_id, allow_children, children_min_age, minors_room_types, free_stay_age) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE allow_children = VALUES (allow_children), children_min_age = VALUES (children_min_age), minors_room_types = VALUES (minors_room_types), free_stay_age = VALUES(free_stay_age)";
+      const params = [
+        propertyId,
+        policies.getAllowChildren(),
+        policies.getChildrenMinAge(),
+        policies.getMinorsRoomTypes(),
+        policies.getMinorsFreeStayAge(),
+      ];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to insert or update children policies. Error: ${e.message}`
+      );
+    }
+  }
 }

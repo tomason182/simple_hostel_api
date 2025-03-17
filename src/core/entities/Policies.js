@@ -8,14 +8,18 @@ export class Policies {
     check_out_until = null,
     advance_payment_required = false,
     deposit_amount = 0,
+    allow_children = false,
+    children_min_age = null,
+    minors_room_types = null,
+    free_stay_age = 0,
   }) {
     this.reservationPolicies = {
-      min_length_stay: min_length_stay,
-      max_length_stay: max_length_stay,
-      min_advance_booking: min_advance_booking,
-      check_in_from: check_in_from,
-      check_in_to: check_in_to,
-      check_out_until: check_out_until,
+      min_length_stay,
+      max_length_stay,
+      min_advance_booking,
+      check_in_from,
+      check_in_to,
+      check_out_until,
       payment_methods_accepted: [],
       online_payment_methods_accepted: [],
     };
@@ -24,9 +28,30 @@ export class Policies {
       deposit_amount,
     };
     this.cancellationPolicies = [];
+    this.childrenPolicies = {
+      allow_children,
+      children_min_age,
+      minors_room_types,
+      free_stay_age,
+    };
   }
 
-  // Setter and Getter for cancellation policies
+  // Setter and Getter for children policies
+  getAllowChildren() {
+    return this.childrenPolicies.allow_children;
+  }
+
+  getChildrenMinAge() {
+    return this.childrenPolicies.children_min_age;
+  }
+
+  getMinorsRoomTypes() {
+    return this.childrenPolicies.minors_room_types;
+  }
+
+  getMinorsFreeStayAge() {
+    return this.childrenPolicies.free_stay_age;
+  }
 
   // Getter for advance payment and cancellation policies
   getAdvancePaymentRequired() {

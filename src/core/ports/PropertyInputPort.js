@@ -40,4 +40,11 @@ export class PropertyInputPort {
   deleteCancellationPolicies(propertyId, data) {
     return this.propertyService.deleteCancellationPolicies(propertyId, data);
   }
+
+  insertOrUpdateChildrenPolicies(propertyId, data) {
+    return this.propertyService.insertOrUpdateChildrenPolicies(
+      propertyId,
+      data
+    );
+  }
 }

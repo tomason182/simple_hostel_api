@@ -82,4 +82,11 @@ export class PropertyOutputPort {
   deleteCancellationPolicy(id, propertyId) {
     return this.propertyRepository.deleteCancellationPolicy(id, propertyId);
   }
+
+  insertOrUpdateChildrenPolicies(propertyId, policies) {
+    return this.propertyRepository.insertOrUpdateChildrenPolicies(
+      propertyId,
+      policies
+    );
+  }
 }

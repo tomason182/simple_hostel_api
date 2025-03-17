@@ -81,5 +81,12 @@ export function createPropertyRoutes(services) {
     propertyController.deleteCancellationPolicies
   );
 
+  router.post(
+    "/policies/children-policies",
+    checkSchema(childrenPoliciesSchema),
+    authMiddleware(tokenService),
+    propertyController.childrenPolicies
+  );
+
   return router;
 }
