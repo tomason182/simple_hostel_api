@@ -72,9 +72,9 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
   min_length_stay INT NOT NULL,
   max_length_stay INT NOT NULL,
   min_advance_booking INT NOT NULL,
-  check_in_from TIME,
-  check_in_to TIME,
-  check_out_until TIME,
+  check_in_from VARCHAR(5),
+  check_in_to VARCHAR(5),
+  check_out_until VARCHAR(5),
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -121,8 +121,8 @@ CREATE TABLE IF NOT EXISTS children_policies (
 -- Create other policies table
 CREATE TABLE IF NOT EXISTS other_policies (
   property_id INT PRIMARY KEY,
-  quiet_hours_from TIME,
-  quiet_hours_to TIME,
+  quiet_hours_from VARCHAR(5),
+  quiet_hours_to VARCHAR(5),
   smoking_areas BOOLEAN DEFAULT false,
   external_guest_allowed BOOLEAN DEFAULT false,
   pets_allowed BOOLEAN DEFAULT false,
