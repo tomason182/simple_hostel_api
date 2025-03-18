@@ -228,7 +228,7 @@ export class MySQLPropertyRepository {
   async getPropertyPolicies(propertyId) {
     try {
       const query =
-        "SELECT rp.*, app.*, chp.*, op.*, COALESCE(JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'days_before_arrival', cp.days_before_arrival, 'amount_refund', cp.amount_refund)), JSON_ARRAY()) AS cancellation_policies FROM reservation_policies rp JOIN advance_payment_policies app ON rp.property_id = app.property_id JOIN children_policies chp ON rp.property_id = chp.property_id JOIN other_policies op ON rp.property_id = op.property_id LEFT JOIN cancellation_policies cp ON rp.property_id = cp.property_id WHERE rp.property_id = ? GROUP BY rp.property_id";
+        "SELECT p.id, rp.*, app.*, chp.*, op.*, COALESCE( JSON_ARRAYAGG( CASE WHEN cp.id IS NOT NULL THEN JSON_OBJECT('id', cp.id, 'days_before_arrival', cp.days_before_arrival, 'amount_refund', cp.amount_refund ) ELSE NULL END ), JSON_ARRAY()) AS cancellation_policies FROM properties p LEFT JOIN reservation_policies rp ON p.id = rp.property_id LEFT JOIN advance_payment_policies app ON p.id = app.property_id LEFT JOIN children_policies chp ON p.id = chp.property_id LEFT JOIN other_policies op ON p.id = op.property_id LEFT JOIN cancellation_policies cp ON p.id = cp.property_id WHERE p.id = ? GROUP BY p.id, rp.property_id, app.property_id, chp.property_id, op.property_id";
       const params = [propertyId];
 
       const [result] = await this.pool.execute(query, params);

@@ -6,7 +6,7 @@ export class Policies {
     check_in_from = null,
     check_in_to = null,
     check_out_until = null,
-    advance_payment_required = false,
+    advance_payment_required = null,
     deposit_amount = 0,
     allow_children = false,
     children_min_age = null,

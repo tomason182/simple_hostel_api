@@ -148,8 +148,13 @@ export class PropertyService {
           propertyId
         );
 
+      console.log(propertyCancellationPolicies);
+
       const daysBeforeArrival = data.days_before_arrival;
       const amountRefund = data.amount_refund;
+
+      console.log(daysBeforeArrival);
+      console.log(amountRefund);
 
       if (
         !propertyCancellationPolicies.every(
@@ -157,8 +162,21 @@ export class PropertyService {
         )
       ) {
         return {
-          status: "Error",
+          status: "error",
           msg: `There is a policy setted up for ${data.days_before_arrival} days. Please, remove it or update it`,
+        };
+      }
+
+      if (
+        !propertyCancellationPolicies.every(
+          policy => parseFloat(policy.amount_refund) !== amountRefund
+        )
+      ) {
+        return {
+          status: "error",
+          msg: `There is a policy setted up for ${
+            amountRefund * 100
+          }%. Please, remove it or update it`,
         };
       }
 
