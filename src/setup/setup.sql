@@ -66,12 +66,6 @@ CREATE TABLE IF NOT EXISTS currencies (
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
--- Create payment methods table
-CREATE TABLE IF NOT EXISTS payment_methods (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL UNIQUE
-);
-
 -- Create reservation policies table
 CREATE TABLE IF NOT EXISTS reservation_policies (
   property_id INT PRIMARY KEY,
@@ -87,12 +81,11 @@ CREATE TABLE IF NOT EXISTS reservation_policies (
 
 -- Create join table for payment methods
 CREATE TABLE IF NOT EXISTS property_payment_methods (
+  id INT PRIMARY KEY AUTO_INCREMENT,
   property_id INT NOT NULL,
-  payment_method_id INT NOT NULL,
+  payment_method VARCHAR(75) NOT NULL,
 
-  PRIMARY KEY (property_id, payment_method_id),
-  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
-  FOREIGN KEY (payment_method_id) REFERENCES payment_methods(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create advance payment policies table

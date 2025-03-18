@@ -90,23 +90,24 @@ export class PropertyService {
       const newPaymentMethods = policies.getPaymentMethods() || [];
 
       // Get property selected payment methods
-      const paymentMethods =
+      const oldPaymentMethods =
         await this.propertyOutputPort.getPropertyPaymentMethods(propertyId);
 
-      // Convert all method to flat list
-      const newPaymentMethodsFlat = newPaymentMethods.flatMap(p => p.id);
-      const paymentMethodsFlat = paymentMethods.flatMap(p => p.id);
-
-      // Convert methods to a Set for faster lookup
-      const paymentMethodsSet = new Set(paymentMethodsFlat);
-      const newPaymentMethodsSet = new Set(newPaymentMethodsFlat);
-
-      let methodsToRemove = paymentMethodsFlat.filter(
-        p => !newPaymentMethodsSet.has(p)
+      const oldPaymentMethodsFlat = oldPaymentMethods.flatMap(
+        p => p.payment_method
       );
-      let methodsToAdd = newPaymentMethodsFlat.filter(
-        np => !paymentMethodsSet.has(np)
+
+      let methodsToRemove = oldPaymentMethodsFlat.filter(
+        oldMethod =>
+          !newPaymentMethods.some(newMethod => newMethod === oldMethod)
       );
+      let methodsToAdd = newPaymentMethods.filter(
+        newMethod =>
+          !oldPaymentMethodsFlat.some(oldMethod => oldMethod === newMethod)
+      );
+
+      console.log("method to add: ", methodsToAdd);
+      console.log("method to remove: ", methodsToRemove);
 
       if (methodsToRemove.length > 0 || methodsToAdd.length > 0) {
         await this.propertyOutputPort.updatePaymentMethods(

@@ -173,7 +173,7 @@ export class MySQLPropertyRepository {
   async getPaymentMethods(propertyId) {
     try {
       const query =
-        "SELECT pm.id FROM payment_methods pm JOIN property_payment_methods ppm ON ppm.payment_method_id = pm.id AND ppm.property_id = ?";
+        "SELECT payment_method FROM property_payment_methods WHERE property_id = ?";
       const params = [propertyId];
 
       const [result] = await this.pool.execute(query, params);
@@ -194,7 +194,7 @@ export class MySQLPropertyRepository {
       if (methodsToRemove.length > 0) {
         const deletePlaceholders = methodsToRemove.map(() => "?").join(", ");
 
-        const deleteQuery = `DELETE FROM property_payment_methods WHERE property_id = ? AND payment_method_id IN (${deletePlaceholders})`;
+        const deleteQuery = `DELETE FROM property_payment_methods WHERE property_id = ? AND payment_method IN (${deletePlaceholders})`;
         const params = [propertyId, ...methodsToRemove];
 
         await conn.execute(deleteQuery, params);
@@ -207,7 +207,7 @@ export class MySQLPropertyRepository {
           method,
         ]);
 
-        const insertQuery = `INSERT INTO property_payment_methods (property_id, payment_method_id) VALUES ${insertPlaceholders}`;
+        const insertQuery = `INSERT INTO property_payment_methods (property_id, payment_method) VALUES ${insertPlaceholders}`;
 
         await conn.execute(insertQuery, insertParams);
       }
@@ -234,7 +234,7 @@ export class MySQLPropertyRepository {
       const [result] = await this.pool.execute(query, params);
 
       const paymentQuery =
-        "SELECT pm.* FROM payment_methods pm JOIN property_payment_methods ppm ON ppm.payment_method_id = pm.id AND ppm.property_id = ?";
+        "SELECT ppm.* FROM property_payment_methods ppm WHERE ppm.property_id = ?";
 
       const [paymentResult] = await this.pool.execute(paymentQuery, params);
 

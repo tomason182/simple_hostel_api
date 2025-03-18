@@ -25,4 +25,16 @@ export class DataProviderService {
       next(e);
     }
   };
+
+  fetchPaymentMethods = async (req, res, next) => {
+    try {
+      const query = "SELECT * FROM payment_methods";
+
+      const [result] = await this.mysqlPool.execute(query);
+
+      return res.status(200).json(result);
+    } catch {
+      next(e);
+    }
+  };
 }

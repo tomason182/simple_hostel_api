@@ -108,7 +108,7 @@ export class Policies {
     if (!Array.isArray(methods)) return false;
 
     for (const method of methods) {
-      this.reservationPolicies.payment_methods_accepted.push(method.name);
+      this.reservationPolicies.payment_methods_accepted.push(method);
     }
   }
 

@@ -54,27 +54,26 @@ export const reservationPoliciesSchema = {
     },
   },
   payment_methods_accepted: {
-    in: ["body"],
-    isArray: {
-      bail: true,
-      errorMessage: "Payment methods must be an array",
-    },
-    custom: {
-      options: values => {
-        if (
-          !values.every(
-            element =>
-              typeof element === "object" &&
-              element !== null &&
-              Number.isInteger(element.id)
-          )
-        ) {
-          throw new Error(
-            "Each payment method must be an object with a valid integer ID"
+    paymentMethod: {
+      in: ["body"],
+      custom: {
+        options: values => {
+          if (!Array.isArray(values)) {
+            throw new Error("Payment method should be an array");
+          }
+          const validPaymentMethods = ["bank_transfer", "cash", "debit_credit"];
+
+          const invalidMethods = values.filter(
+            value => !validPaymentMethods.includes(value)
           );
-        }
-        return true;
+
+          if (invalidMethods.length > 0) {
+            throw new Error("Invalid payment method found");
+          }
+          return true;
+        },
       },
+      errorMessage: "Invalid payment methods. Please review your inputs.",
     },
   },
 };
