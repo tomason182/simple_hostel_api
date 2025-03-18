@@ -4,8 +4,8 @@ export const reservationPoliciesSchema = {
     trim: true,
     isInt: {
       bail: true,
-      options: { min: 0 },
-      errorMessage: "Minimum length of stay must be greater or equals to zero",
+      options: { min: 1 },
+      errorMessage: "Minimum length of stay must be greater than zero",
     },
     toInt: true,
   },

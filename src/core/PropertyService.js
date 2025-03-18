@@ -106,9 +106,6 @@ export class PropertyService {
           !oldPaymentMethodsFlat.some(oldMethod => oldMethod === newMethod)
       );
 
-      console.log("method to add: ", methodsToAdd);
-      console.log("method to remove: ", methodsToRemove);
-
       if (methodsToRemove.length > 0 || methodsToAdd.length > 0) {
         await this.propertyOutputPort.updatePaymentMethods(
           propertyId,
