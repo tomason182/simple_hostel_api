@@ -78,6 +78,10 @@ export class Policies {
     return this.childrenPolicies.allow_children;
   }
 
+  setAllowChildren(value) {
+    this.cancellationPolicies.allow_children = Boolean(value);
+  }
+
   getChildrenMinAge() {
     return this.childrenPolicies.children_min_age;
   }
@@ -93,6 +97,10 @@ export class Policies {
   // Getter for advance payment and cancellation policies
   getAdvancePaymentRequired() {
     return this.advancePaymentPolicies.advance_payment_required;
+  }
+
+  setAdvancePaymentRequired(value) {
+    this.advancePaymentPolicies.advance_payment_required = Boolean(value);
   }
 
   getDepositAmount() {

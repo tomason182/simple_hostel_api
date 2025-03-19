@@ -74,6 +74,10 @@ export class PropertyService {
         policiesResult.policies.cancellation_policies
       );
       policies.setPaymentMethods(policiesResult.payment_methods);
+      policies.setAdvancePaymentRequired(
+        policiesResult.policies.advance_payment_required
+      );
+      policies.setAllowChildren(policiesResult.policies.allow_children);
 
       return policies;
     } catch (e) {
