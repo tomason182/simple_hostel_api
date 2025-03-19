@@ -65,12 +65,24 @@ export class Policies {
     return this.otherPolicies.smoking_areas;
   }
 
+  setSmokingAreas(value) {
+    this.otherPolicies.smoking_areas = Boolean(value);
+  }
+
   getExternalGuestAllowed() {
     return this.otherPolicies.external_guest_allowed;
   }
 
+  setExternalGuestAllowed(value) {
+    this.otherPolicies.external_guest_allowed = Boolean(value);
+  }
+
   getPetsAllowed() {
     return this.otherPolicies.pets_allowed;
+  }
+
+  setPetsAllowed(value) {
+    this.otherPolicies.pets_allowed = Boolean(value);
   }
 
   // Setter and Getter for children policies

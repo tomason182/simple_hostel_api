@@ -78,6 +78,11 @@ export class PropertyService {
         policiesResult.policies.advance_payment_required
       );
       policies.setAllowChildren(policiesResult.policies.allow_children);
+      policies.setSmokingAreas(policiesResult.policies.smoking_areas);
+      policies.setExternalGuestAllowed(
+        policiesResult.policies.external_guest_allowed
+      );
+      policies.setPetsAllowed(policiesResult.policies.pets_allowed);
 
       return policies;
     } catch (e) {
