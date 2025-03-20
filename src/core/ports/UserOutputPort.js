@@ -28,7 +28,6 @@ export class UserOutputPort {
     );
   }
 
-  // Borrar
   validateUserEmail(userId) {
     return this.userRepository.validateUserEmail(userId);
   }
@@ -88,5 +87,9 @@ export class UserOutputPort {
 
   getAllPropertyUsers(propertyId) {
     return this.userRepository.getAllPropertyUsers(propertyId);
+  }
+
+  getPropertyName(propertyId) {
+    return this.userRepository.getPropertyName(propertyId);
   }
 }

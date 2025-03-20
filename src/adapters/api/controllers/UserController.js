@@ -87,8 +87,6 @@ export class UserController {
 
       const result = await this.userInputPort.validateEmail(token);
 
-      console.log(result);
-
       return res.status(200).json(result);
     } catch (e) {
       next(e);
@@ -182,9 +180,7 @@ export class UserController {
         maxAge: 3600 * 8 * 1000, // 8hs in milliseconds.
       });
 
-      return res
-        .status(200)
-        .json({ username: result.username, firstName: result.first_name });
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }
@@ -212,7 +208,11 @@ export class UserController {
   getUserProfile = async (req, res, next) => {
     try {
       const userId = req.user._id;
-      const userProfile = await this.userInputPort.getUserProfile(userId);
+      const property_id = req.user.property_id;
+      const userProfile = await this.userInputPort.getUserProfile(
+        userId,
+        property_id
+      );
 
       return res.status(200).json(userProfile);
     } catch (e) {

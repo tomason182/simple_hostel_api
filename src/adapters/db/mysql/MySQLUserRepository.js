@@ -241,4 +241,19 @@ export class MySQLUserRepository {
       );
     }
   }
+
+  async getPropertyName(propertyId) {
+    try {
+      const query = "SELECT property_name FROM properties WHERE id = ? LIMIT 1";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result[0];
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property name. Error: ${e.message}`
+      );
+    }
+  }
 }

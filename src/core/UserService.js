@@ -160,15 +160,17 @@ export class UserService {
       const userData = await this.userOutputPort.findUserByUsername(username);
 
       if (userData === null) {
-        throw new Error(
-          "We couldn't sign you in. Please check your username, password or verify your email"
-        );
+        return {
+          status: "error",
+          msg: "invalid credentials",
+        };
       }
 
       if (userData.is_valid_email === 0) {
-        throw new Error(
-          "We couldn't sign you in. Please check your username, password or verify your email"
-        );
+        return {
+          status: "error",
+          msg: "invalid credentials",
+        };
       }
 
       const user = new User(userData);
@@ -176,9 +178,10 @@ export class UserService {
       const isValidPassword = await user.comparePasswords(password);
 
       if (!isValidPassword) {
-        throw new Error(
-          "We couldn't sign you in. Please check your username, password or verify your email"
-        );
+        return {
+          status: "error",
+          msg: "invalid credentials",
+        };
       }
 
       // Get user access control
@@ -193,6 +196,7 @@ export class UserService {
       };
 
       const token = this.userOutputPort.generateToken(userAccessData, "8h");
+
       return {
         username: userData.username,
         first_name: userData.first_name,
@@ -204,19 +208,26 @@ export class UserService {
   }
 
   // Get user Profile
-  async getUserProfile(userId) {
+  async getUserProfile(userId, propertyId) {
     try {
       const userData = await this.userOutputPort.findUserById(userId);
 
+      const propertyName = await this.userOutputPort.getPropertyName(
+        propertyId
+      );
+
       if (!userData) {
-        throw new Error("User not found");
+        return {
+          status: "error",
+          msg: "User not found",
+        };
       }
 
       const user = new User(userData);
 
       const userProfile = user.getUserProfile();
 
-      return userProfile;
+      return { ...userProfile, property_name: propertyName.property_name };
     } catch (e) {
       throw e;
     }

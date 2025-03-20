@@ -39,8 +39,8 @@ export class UserInputPort {
     return this.userService.authUser(username, password);
   }
 
-  getUserProfile(userId) {
-    return this.userService.getUserProfile(userId);
+  getUserProfile(userId, propertyId) {
+    return this.userService.getUserProfile(userId, propertyId);
   }
 
   updateUserProfile(userData) {
