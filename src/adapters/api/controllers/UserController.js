@@ -231,11 +231,11 @@ export class UserController {
       }
 
       const userId = req.user._id;
-      const { firstName, lastName, role } = matchedData(req);
-      userData = {
-        first_name: firstName,
-        last_name: lastName || null,
-        role,
+      const { first_name, last_name } = matchedData(req);
+
+      const userData = {
+        first_name,
+        last_name: last_name || null,
         id: userId,
       };
 

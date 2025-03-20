@@ -50,7 +50,7 @@ export function createUserRoutes(services) {
   router.post(
     "/create",
     authMiddleware(tokenService),
-    checkSchema(userUpdateSchema),
+    checkSchema(userUpdateSchema), // CAMBIAR ESTE SCHEMA PORQUE LO MODIFIQUE PARA USER UPDATE USAR USER EDIT SCHEMA.
     body("role")
       .trim()
       .isIn(["admin", "manager", "employee"])
@@ -73,9 +73,9 @@ export function createUserRoutes(services) {
     userController.getUserProfile
   );
 
-  // update user profile
+  // update user account
   router.put(
-    "/profile/",
+    "/profile",
     authMiddleware(tokenService),
     checkSchema(userUpdateSchema),
     userController.updateUserProfile

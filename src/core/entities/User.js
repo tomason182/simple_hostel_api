@@ -6,8 +6,8 @@ export class User {
   #last_resend_email;
   constructor({
     id = null,
-    username,
-    first_name,
+    username = null,
+    first_name = null,
     last_name = null,
     password_hash = null,
     is_valid_email = false,
