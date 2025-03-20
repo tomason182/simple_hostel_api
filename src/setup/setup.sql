@@ -247,6 +247,34 @@ CREATE TABLE IF NOT EXISTS rates_and_availability(
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
   );
 
+-- Create amenities table
+CREATE TABLE IF NOT EXISTS amenities (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) UNIQUE
+);
+
+-- Create amenities translations table
+CREATE TABLE IF NOT EXISTS amenities_translations (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  amenity_id INT,
+  language_code VARCHAR(5),
+  name VARCHAR(100),
+
+  FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE,
+  UNIQUE (amenity_id, language_code)
+);
+
+-- Create room type amenities table
+CREATE TABLE IF NOT EXISTS room_type_amenities (
+  room_type_id INT,
+  amenity_id INT,
+
+  PRIMARY KEY (room_type_id, amenity_id),
+
+  FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
+  FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;

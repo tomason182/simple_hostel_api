@@ -105,20 +105,6 @@ export class RoomTypeService {
     }
   }
 
-  async findRoomTypeById(id) {
-    try {
-      const roomType = await this.roomTypeOutputPort.findRoomTypeById(id);
-
-      if (roomType === null) {
-        throw new Error("No room types found that belong to this ID");
-      }
-
-      return roomType;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async updateRoomTypeById(roomTypeData, propertyId) {
     try {
       // Check if new description is unique
@@ -172,6 +158,65 @@ export class RoomTypeService {
       }
 
       return roomTypeDeleted;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  // Amenities
+
+  async addOrUpdateRoomTypesAmenities(propertyId, data) {
+    try {
+      // Chequear que el id del room type corresponde con la propiedad.
+      const roomTypeId = data.id;
+      const amenitiesIds = data.amenities;
+
+      const roomType = await this.roomTypeOutputPort.findRoomTypeById(
+        roomTypeId,
+        propertyId
+      );
+
+      if (roomType === null) {
+        throw new Error("Room type do not match property");
+      }
+
+      // Validate amenities id
+      const validIds = await this.roomTypeOutputPort.getValidAmenities(
+        amenitiesIds
+      );
+
+      if (validIds.length === 0) {
+        return {
+          status: "error",
+          msg: "Invalid amenities ID",
+        };
+      }
+
+      const validAmenities = validIds.flatMap(item => item.id);
+
+      const oldAmenities = await this.roomTypeOutputPort.getRoomTypesAmenities(
+        roomTypeId
+      );
+
+      const oldAmenitiesFlat = oldAmenities.flatMap(
+        amenity => amenity.amenity_id
+      );
+
+      const amenitiesToRemove = oldAmenitiesFlat.filter(
+        oldAmenity => !validAmenities.some(amenity => amenity === oldAmenity)
+      );
+      const amenitiesToAdd = validAmenities.filter(
+        amenity => !oldAmenitiesFlat.some(oldAmenity => oldAmenity === amenity)
+      );
+
+      const result =
+        await this.roomTypeOutputPort.insertOrUpdateRoomTypeAmenities(
+          roomTypeId,
+          amenitiesToAdd,
+          amenitiesToRemove
+        );
+
+      return result;
     } catch (e) {
       throw e;
     }

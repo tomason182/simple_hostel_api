@@ -9,6 +9,7 @@ import { MySQLAccessControlRepository } from "../adapters/db/mysql/MySQLAccessCo
 import { MySQLGuestRepository } from "../adapters/db/mysql/MySQLGuestRepository.js";
 import { MySQLReservationRepository } from "../adapters/db/mysql/MySQLReservationRepository.js";
 import { MySQLRatesAndAvailabilityRepository } from "../adapters/db/mysql/MySQLRatesAndAvailabilityRepository.js";
+import { MySQLAmenitiesRepository } from "../adapters/db/mysql/MySQLAmenitiesRepository.js";
 
 // SERVICES
 import { AvailabilityService } from "../core/AvailabilityService.js";
@@ -65,6 +66,7 @@ export default function initializeServices() {
   const reservationRepository = new MySQLReservationRepository(mysqlPool);
   const ratesAndAvailabilityRepository =
     new MySQLRatesAndAvailabilityRepository(mysqlPool);
+  const amenitiesRepository = new MySQLAmenitiesRepository(mysqlPool);
 
   // INITIALIZE EXTRA SERVICES.
   const emailService = createEmailNotification();
@@ -92,7 +94,10 @@ export default function initializeServices() {
     emailService
   );
   const propertyOutputPort = new PropertyOutputPort(propertyRepository);
-  const roomTypeOutputPort = new RoomTypeOutputPort(roomTypeRepository);
+  const roomTypeOutputPort = new RoomTypeOutputPort(
+    roomTypeRepository,
+    amenitiesRepository
+  );
   const guestOutputPort = new GuestOutputPort(
     guestRepository,
     propertyRepository

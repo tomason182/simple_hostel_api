@@ -1,6 +1,7 @@
 export class RoomTypeOutputPort {
-  constructor(roomTypeRepository) {
+  constructor(roomTypeRepository, amenitiesRepository) {
     this.roomTypeRepository = roomTypeRepository;
+    this.amenitiesRepository = amenitiesRepository;
   }
 
   save(roomType) {
@@ -23,8 +24,8 @@ export class RoomTypeOutputPort {
     return this.roomTypeRepository.findAllPropertyRoomTypes(propertyId, conn);
   }
 
-  findRoomTypeById(id, conn = null) {
-    return this.roomTypeRepository.findRoomTypeById(id, conn);
+  findRoomTypeById(id, propertyId, conn = null) {
+    return this.roomTypeRepository.findRoomTypeById(id, propertyId, conn);
   }
 
   updateRoomTypeById(roomTypeData, conn = null) {
@@ -37,5 +38,26 @@ export class RoomTypeOutputPort {
 
   getUpcomingReservations(id, checkIn) {
     return this.roomTypeRepository.getUpcomingReservations(id, checkIn);
+  }
+
+  // Amenities
+  getValidAmenities(amenitiesList) {
+    return this.amenitiesRepository.getValidAmenities(amenitiesList);
+  }
+
+  getRoomTypesAmenities(roomId) {
+    return this.amenitiesRepository.getRoomTypesAmenities(roomId);
+  }
+
+  insertOrUpdateRoomTypeAmenities(
+    roomTypeId,
+    amenitiesToAdd,
+    amenitiesToRemove
+  ) {
+    return this.amenitiesRepository.insertOrUpdateRoomTypeAmenities(
+      roomTypeId,
+      amenitiesToAdd,
+      amenitiesToRemove
+    );
   }
 }

@@ -1,7 +1,6 @@
 export class RoomTypeInputPort {
-  constructor(roomTypeService, roomTypeRepository) {
+  constructor(roomTypeService) {
     this.roomTypeService = roomTypeService;
-    this.roomTypeRepository = roomTypeRepository;
   }
 
   createRoomType(propertyId, roomTypeData) {
@@ -22,5 +21,9 @@ export class RoomTypeInputPort {
 
   deleteRoomTypeById(id, propertyId) {
     return this.roomTypeService.deleteRoomTypeById(id, propertyId);
+  }
+
+  addOrUpdateRoomTypesAmenities(propertyId, data) {
+    return this.roomTypeService.addOrUpdateRoomTypesAmenities(propertyId, data);
   }
 }

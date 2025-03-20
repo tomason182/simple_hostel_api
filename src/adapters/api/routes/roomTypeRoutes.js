@@ -6,6 +6,7 @@ import {
   roomTypeSchema,
   updateRoomTypeSchema,
 } from "../schemas/roomTypeSchema.js";
+import { amenitiesSchema } from "../schemas/amenitiesSchema.js";
 
 export function createRoomTypeRoutes(services) {
   const router = express.Router();
@@ -52,6 +53,15 @@ export function createRoomTypeRoutes(services) {
     authMiddleware(tokenService),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     roomTypeController.roomTypeDelete
+  );
+
+  // Add or edit amenities
+  router.post(
+    "/amenities/:id",
+    checkSchema(amenitiesSchema),
+    param("id").trim().isInt().withMessage("Not a valid ID"),
+    authMiddleware(tokenService),
+    roomTypeController.addAmenities
   );
 
   return router;
