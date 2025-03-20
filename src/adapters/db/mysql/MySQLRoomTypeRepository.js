@@ -90,7 +90,6 @@ export class MySQLRoomTypeRepository {
     }
   }
 
-  // Find all room types by property ID. ESTA MAL. DEVUELVE REPETIDO.
   async findAllPropertyRoomTypes(propertyId, conn = null) {
     try {
       const query =

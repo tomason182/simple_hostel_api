@@ -22,7 +22,7 @@ export class MySQLAmenitiesRepository {
     }
   }
 
-  async getRoomTypesAmenities(roomId) {
+  async getRoomTypeAmenities(roomId) {
     try {
       const query = "SELECT * FROM room_type_amenities WHERE room_type_id = ?";
       const params = [roomId];

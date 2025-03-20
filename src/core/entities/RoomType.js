@@ -8,10 +8,7 @@ export class RoomType {
     max_occupancy,
     inventory,
     products = [],
-    basic_amenities = [],
-    comfort_amenities = [],
-    hygiene_and_extras_amenities = [],
-    additional_amenities = [],
+    amenities = [],
     created_at = null,
     updated_at = null,
   }) {
@@ -23,10 +20,7 @@ export class RoomType {
     this.max_occupancy = max_occupancy;
     this.inventory = inventory;
     this.products = products;
-    this.basic_amenities = basic_amenities;
-    this.comfort_amenities = comfort_amenities;
-    this.hygiene_and_extras_amenities = hygiene_and_extras_amenities;
-    this.additional_amenities = additional_amenities;
+    this.amenities = amenities;
     this.created_at = created_at;
     this.updated_at = updated_at;
   }
@@ -121,5 +115,14 @@ export class RoomType {
 
   getProducts() {
     return this.products;
+  }
+
+  // Getter and setter for amenities
+  setAmenities(amenitiesList) {
+    if (Array.isArray(amenitiesList)) {
+      for (const amenity of amenitiesList) {
+        this.amenities.push(amenity.amenity_id);
+      }
+    }
   }
 }

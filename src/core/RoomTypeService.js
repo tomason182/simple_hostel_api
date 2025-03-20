@@ -66,7 +66,8 @@ export class RoomTypeService {
         );
 
       let roomTypes = [];
-      roomTypesByProperty.forEach(element => {
+
+      for (const element of roomTypesByProperty) {
         let roomType = roomTypes.find(r => r.getId() === element.id);
 
         if (!roomType) {
@@ -79,6 +80,12 @@ export class RoomTypeService {
             max_occupancy: element.max_occupancy,
             inventory: element.inventory,
           });
+
+          const amenities = await this.roomTypeOutputPort.getRoomTypeAmenities(
+            roomType.getId()
+          );
+
+          roomType.setAmenities(amenities);
 
           roomTypes.push(roomType);
         }
@@ -97,7 +104,7 @@ export class RoomTypeService {
         } else {
           product.beds.push(element.bed_id);
         }
-      });
+      }
 
       return roomTypes;
     } catch (e) {
@@ -194,7 +201,7 @@ export class RoomTypeService {
 
       const validAmenities = validIds.flatMap(item => item.id);
 
-      const oldAmenities = await this.roomTypeOutputPort.getRoomTypesAmenities(
+      const oldAmenities = await this.roomTypeOutputPort.getRoomTypeAmenities(
         roomTypeId
       );
 

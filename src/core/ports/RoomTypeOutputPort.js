@@ -45,8 +45,8 @@ export class RoomTypeOutputPort {
     return this.amenitiesRepository.getValidAmenities(amenitiesList);
   }
 
-  getRoomTypesAmenities(roomId) {
-    return this.amenitiesRepository.getRoomTypesAmenities(roomId);
+  getRoomTypeAmenities(roomId) {
+    return this.amenitiesRepository.getRoomTypeAmenities(roomId);
   }
 
   insertOrUpdateRoomTypeAmenities(
