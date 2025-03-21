@@ -37,6 +37,15 @@ export function createReservationRoutes(services) {
     reservationController.findByDate
   );
 
+  // @desc Find latest reservations
+  // @route GET /api/v2/reservations/find/latest
+  // @access Private
+  router.get(
+    "/latest",
+    authMiddleware(tokenService),
+    reservationController.findLatestReservations
+  );
+
   // @desc Find reservation by date range
   // @route GET /api/v2/reservations/find/:from-:to
   // @access Private

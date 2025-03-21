@@ -12,6 +12,19 @@ export class ReservationService {
         propertyId,
         date
       );
+
+      return reservations;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async findLatestReservations(propertyId) {
+    try {
+      const reservations = await this.reservationOutport.findLatestReservations(
+        propertyId
+      );
+
       return reservations;
     } catch (e) {
       throw e;

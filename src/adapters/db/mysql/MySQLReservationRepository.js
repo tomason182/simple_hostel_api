@@ -152,6 +152,20 @@ export class MySQLReservationRepository {
     }
   }
 
+  async findLatestReservations(propertyId) {
+    try {
+      const query =
+        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservations.reservation_status ,guests.first_name, guests.last_name FROM reservations JOIN guests ON guests.id = reservations.guest_id WHERE reservations.property_id = ? ORDER BY reservations.created_at DESC LIMIT 10";
+      const params = [propertyId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(`An error occurred trying the get latest reservations`);
+    }
+  }
+
   async getReservationsByDateRange(propertyId, from, to) {
     try {
       const query =

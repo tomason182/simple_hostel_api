@@ -146,6 +146,25 @@ export class ReservationController {
     }
   };
 
+  findLatestReservations = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+
+      const result = await this.reservationInputPort.findLatestReservations(
+        propertyId
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   findByDateRange = async (req, res, next) => {
     try {
       const errors = validationResult(req);

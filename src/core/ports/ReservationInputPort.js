@@ -21,6 +21,10 @@ export class ReservationInputPort {
     return this.reservationService.findReservationsByDate(propertyId, date);
   }
 
+  findLatestReservations(propertyId) {
+    return this.reservationService.findLatestReservations(propertyId);
+  }
+
   findReservationsByDateRange(propertyId, from, to) {
     return this.reservationService.findReservationsByDateRange(
       propertyId,
