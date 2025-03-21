@@ -294,18 +294,24 @@ export class UserService {
       const checkPass = await user.comparePasswords(oldPassword);
 
       if (checkPass === false) {
-        throw new Error("Invalid password");
+        return {
+          status: "error",
+          msg: "Invalid password",
+        };
       }
 
       if (newPassword !== repeatNewPassword) {
-        throw new Error("Password does not match");
+        return {
+          status: "error",
+          msg: "Password does not match",
+        };
       }
 
       await user.setPasswordHash(newPassword);
 
       const result = await this.userOutputPort.updatePassword(user);
 
-      return result;
+      return { status: "ok", result };
     } catch (e) {
       throw e;
     }

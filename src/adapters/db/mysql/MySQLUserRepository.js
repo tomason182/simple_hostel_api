@@ -45,7 +45,7 @@ export class MySQLUserRepository {
   async findUserById(userId) {
     try {
       const query =
-        "SELECT users.id, users.username, users.first_name, users.last_name, access_control.role FROM users JOIN access_control ON users.id=access_control.user_id WHERE users.id = ? LIMIT 1";
+        "SELECT users.id, users.username, users.first_name, users.last_name, users.password_hash, access_control.role FROM users JOIN access_control ON users.id=access_control.user_id WHERE users.id = ? LIMIT 1";
       const params = [userId];
 
       const [result] = await this.pool.execute(query, params);
