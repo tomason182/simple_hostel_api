@@ -15,14 +15,20 @@ export class AvailabilityService {
     try {
       // Check dates
       if (checkIn >= checkOut) {
-        throw new Error("Invalid dates order");
+        return {
+          status: "error",
+          msg: "Invalid dates order",
+        };
       }
 
       if (!checkIn instanceof Date || !checkOut instanceof Date) {
-        throw new Error("Invalid Date format");
+        return {
+          status: "error",
+          msg: "Invalid date format",
+        };
       }
 
-      // En realidad no necesitamos los room types sino lo rangos de rates and avaialbility seteados por el usuario.
+      // Obtenemos lo rangos de rates and avaialbility seteados por el usuario.
       const ratesAndAvailabilityRanges =
         await this.availabilityTransactionManagerPort.getPropertyRatesAndAvailabilityRanges(
           propertyId,
@@ -32,9 +38,10 @@ export class AvailabilityService {
         );
 
       if (ratesAndAvailabilityRanges.length === 0) {
-        throw new Error(
-          "There are no rates and availability created for this property"
-        );
+        return {
+          status: "error",
+          msg: "No rates and availabilities created",
+        };
       }
 
       const roomTypes =
@@ -61,11 +68,11 @@ export class AvailabilityService {
       for (const roomType of roomTypes) {
         let availability = roomType.max_occupancy * roomType.inventory;
         let accRate = 0;
-        let avgRate = 0;
+        let totalRate = 0;
         let room = {
           ...roomType,
           availability,
-          avgRate,
+          totalRate,
         };
 
         const filteredRatesByRoom = ratesAndAvailabilityRanges.filter(
@@ -89,7 +96,7 @@ export class AvailabilityService {
           // Check if there is a rates and availability range created for the current date.
           if (hasRange === undefined) {
             room.availability = 0;
-            room.avgRate = 0;
+            room.totalRate = 0;
             break;
           }
 
@@ -112,7 +119,7 @@ export class AvailabilityService {
           }
         }
 
-        room.avgRate = Math.round(accRate * 100) / 100;
+        room.totalRate = Math.round(accRate * 100) / 100;
         roomList.push(room);
       }
 
