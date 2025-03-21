@@ -119,8 +119,10 @@ export class AvailabilityService {
           }
         }
 
-        room.totalRate = Math.round(accRate * 100) / 100;
-        roomList.push(room);
+        if (room.availability > 0) {
+          room.totalRate = Math.round(accRate * 100) / 100;
+          roomList.push(room);
+        }
       }
 
       return {
