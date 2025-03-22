@@ -53,20 +53,10 @@ export class ReservationTransactionManagerPort {
 
   // AVAILABILITY SERVICE
   // Check Availability Service.
-  checkAvailabilityAndAssignBeds(
-    room,
-    ranges,
-    propertyId,
-    checkIn,
-    checkOut,
-    conn = null
-  ) {
+  checkAvailabilityAndAssignBeds(reservation, ranges, conn = null) {
     return this.availabilityService.checkAvailabilityAndAssignBeds(
-      room,
+      reservation,
       ranges,
-      propertyId,
-      checkIn,
-      checkOut,
       conn
     );
   }

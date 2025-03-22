@@ -220,17 +220,6 @@ export const reservationSchema = {
       options: value => new Date(value),
     },
   },
-  number_of_guests: {
-    in: ["body"],
-    exists: {
-      bail: true,
-    },
-    isInt: {
-      option: { min: 1 },
-      bail: true,
-      errorMessage: "Number of guest must be an integer greater that 0",
-    },
-  },
   currency: {
     in: ["body"],
     exists: {

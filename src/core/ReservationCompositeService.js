@@ -35,7 +35,10 @@ export class ReservationCompositeService {
       );
 
       if (ranges.length === 0) {
-        throw Error("No ranges found for the selected dates.");
+        return {
+          status: "error",
+          msg: "Property close for the selected rates.",
+        };
       }
 
       const bedsAssigned =
@@ -45,8 +48,11 @@ export class ReservationCompositeService {
           conn
         );
 
-      if (bedsAssigned === false) {
-        throw new Error("No beds available for the selected dates.");
+      if (bedsAssigned.status === "error") {
+        return {
+          status: "error",
+          msg: bedsAssigned.msg,
+        };
       }
 
       // Find if Guest already exist for the property
@@ -86,6 +92,8 @@ export class ReservationCompositeService {
       // Set get ID to reservation
       reservation.setGuestId(guest.getId());
       reservation.setBeds(bedsAssigned.bedsToAssign);
+
+      console.log(reservation);
 
       await this.reservationTransactionManagerPort.saveReservation(
         reservation,

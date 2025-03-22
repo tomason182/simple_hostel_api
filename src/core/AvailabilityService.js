@@ -149,9 +149,10 @@ export class AvailabilityService {
         );
 
         if (rangeList.length === 0) {
-          throw new Error(
-            `No rates and availability ranges created for room type ${room.room_type_id}.`
-          );
+          return {
+            status: "error",
+            msg: `No rates and availability ranges created for room type ${room.room_type_id}.`,
+          };
         }
 
         // Get the room type.
@@ -163,7 +164,10 @@ export class AvailabilityService {
           );
 
         if (!roomType) {
-          throw new Error("Unable to find the room type");
+          return {
+            status: "error",
+            msg: "Unable to find the room type",
+          };
         }
 
         // Brings the reservation_room table and the check-in, check-out from the reservation table.
@@ -188,7 +192,10 @@ export class AvailabilityService {
           );
           // Check if there is a rates and availability range created for the current date.
           if (hasRange === undefined) {
-            throw new Error("There are rates and availability ranges missing.");
+            return {
+              status: "error",
+              msg: "There are rates and availability ranges missing.",
+            };
           }
 
           const filteredReservations = overlappingReservations.filter(
@@ -205,7 +212,10 @@ export class AvailabilityService {
           const availability = hasRange.rooms_to_sell;
 
           if (totalRoomsOccupied > availability) {
-            return false;
+            return {
+              status: "error",
+              msg: "No room available",
+            };
           }
         }
 
@@ -234,6 +244,7 @@ export class AvailabilityService {
       }
 
       return {
+        status: "ok",
         bedsToAssign: this.assignedBedsToCurrentReservation,
         reservationsToUpdate: this.reservationsToUpdate,
       };
@@ -268,7 +279,17 @@ class BedAssignment {
   }
 
   pushReservationToUpdate(reservation) {
-    this.availabilityService.reservationsToUpdate.push(reservation);
+    const index = this.availabilityService.reservationsToUpdate.findIndex(
+      element => (element.id = reservation.id)
+    );
+    if (index !== -1) {
+      this.availabilityService.reservationsToUpdate[index] = {
+        id: reservation.id,
+        bed_id: reservation.bed_id,
+      };
+    } else {
+      this.availabilityService.reservationsToUpdate.push(reservation);
+    }
   }
 
   pushBedsToCurrentReservation(beds) {

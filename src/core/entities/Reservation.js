@@ -10,6 +10,7 @@ export class Reservation {
     check_in,
     check_out,
     number_of_guests,
+    total_amount,
     special_request,
     created_by,
     updated_by,
@@ -26,6 +27,7 @@ export class Reservation {
     this.check_in = check_in;
     this.check_out = check_out;
     this.number_of_guests = number_of_guests;
+    this.total_amount = total_amount;
     this.special_request = special_request;
     this.created_by = created_by;
     this.updated_by = updated_by;
