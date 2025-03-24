@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS guests (
   country_code VARCHAR(2),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FULLTEXT(first_name, last_name)
+  FULLTEXT(first_name, last_name),
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -361,7 +361,7 @@ BEGIN
   END IF;
 
   -- Insert new rate
-  INSERT INTO rates_and_availability (room_type_id, property_id,start_date, end_date, custom_rate, rooms_to_sell)
+  INSERT INTO rates_and_availability (room_type_id, property_id, start_date, end_date, custom_rate, rooms_to_sell)
   VALUES (p_room_type_id, p_property_id, p_start_date, p_end_date, p_custom_rate, p_rooms_to_sell);
 
   IF exit_handler = 0 THEN

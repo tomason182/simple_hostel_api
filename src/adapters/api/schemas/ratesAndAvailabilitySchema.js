@@ -69,11 +69,11 @@ export const ratesAndAvailabilitySchema = {
     trim: true,
     exists: {
       bail: true,
-      errorMessage: "Custom availability must be provided",
+      errorMessage: "rooms to sell must be provided",
     },
     isInt: {
       bail: true,
-      errorMessage: "Custom availability must be an integer number",
+      errorMessage: "rooms to sell must be an integer number",
     },
     customSanitizer: {
       options: value => {

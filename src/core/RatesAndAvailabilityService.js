@@ -48,7 +48,7 @@ export class RatesAndAvailabilityService {
       const totalInventory =
         roomType.getType() === "dorm"
           ? roomType.getMaxOccupancy() * roomType.getInventory()
-          : roomType.getInventory;
+          : roomType.getInventory();
 
       // Check if rooms to sell is > 0 & <= rooms max occupancy;
       if (rateAndAvailability.getRoomsToSell() > totalInventory) {
