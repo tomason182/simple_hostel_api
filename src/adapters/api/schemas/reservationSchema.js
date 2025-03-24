@@ -1,5 +1,3 @@
-import { escape } from "mysql2";
-
 export const reservationSchema = {
   firstName: {
     in: ["body"],

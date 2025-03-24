@@ -61,6 +61,11 @@ export class AvailabilityService {
           propertyId
         );
 
+      const paymentPolicies =
+        await this.availabilityTransactionManagerPort.getPropertyPaymentPolicies(
+          propertyId
+        );
+
       let roomList = [];
 
       const totalNights = (checkOut - checkIn) / (1000 * 3600 * 24);
@@ -128,6 +133,7 @@ export class AvailabilityService {
       return {
         totalNights,
         currencies,
+        paymentPolicies,
         roomList,
       };
     } catch (e) {

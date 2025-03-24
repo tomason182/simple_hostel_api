@@ -26,6 +26,13 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
+  // Get property payment policies
+  getPropertyPaymentPolicies(propertyId) {
+    return this.ratesAndAvailabilityRepository.getPropertyPaymentPolicies(
+      propertyId
+    );
+  }
+
   // Get rates and availability ranges for room type id.
   getRanges(roomTypeId, checkIn, checkOut, conn = null) {
     return this.ratesAndAvailabilityRepository.getRanges(

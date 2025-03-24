@@ -104,4 +104,20 @@ export class MySQLRatesAndAvailabilityRepository {
       );
     }
   }
+
+  async getPropertyPaymentPolicies(propertyId) {
+    try {
+      const query =
+        "SELECT advance_payment_required, deposit_amount FROM advance_payment_policies WHERE property_id = ?  LIMIT 1";
+      const params = [propertyId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result[0] || [];
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property payment policies. Error: ${e.message}`
+      );
+    }
+  }
 }
