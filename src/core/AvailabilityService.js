@@ -37,6 +37,8 @@ export class AvailabilityService {
           conn
         );
 
+      console.log("rates: ", ratesAndAvailabilityRanges);
+
       if (ratesAndAvailabilityRanges.length === 0) {
         return {
           status: "error",
@@ -142,6 +144,8 @@ export class AvailabilityService {
   }
 
   async checkAvailabilityAndAssignBeds(reservation, ranges, conn = null) {
+    this.assignedBedsToCurrentReservation = [];
+    this.reservationsToUpdate = [];
     try {
       const selectedRooms = reservation.getSelectedRooms();
       const checkIn = reservation.getCheckIn();
@@ -184,6 +188,8 @@ export class AvailabilityService {
             checkOut,
             conn
           );
+
+        console.log(overlappingReservations);
 
         const initialDate = new Date(checkIn);
 
@@ -309,7 +315,7 @@ class BedAssignment {
     // if (condition to retrieve more reservations if we are reaching the end of the list)
 
     const overlappingReservations = this.reservationsList.filter(
-      r => r.check_in <= checkOut && r.check_out > checkIn
+      r => r.check_in < checkOut && r.check_out > checkIn
     );
 
     const result = this.greedyBedAssignment(

@@ -93,8 +93,6 @@ export class ReservationCompositeService {
       reservation.setGuestId(guest.getId());
       reservation.setBeds(bedsAssigned.bedsToAssign);
 
-      console.log(reservation);
-
       await this.reservationTransactionManagerPort.saveReservation(
         reservation,
         conn

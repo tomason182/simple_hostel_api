@@ -130,14 +130,6 @@ export function createReservationRoutes(services) {
         const month = value.substring(4, 6);
         const day = value.substring(6, 8);
 
-        const check = new Date(year, month, day);
-        if (
-          check.getFullYear() !== parseInt(year) ||
-          check.getMonth() !== parseInt(month) ||
-          check.getDate() !== parseInt(day)
-        ) {
-          throw new Error("Invalid date format");
-        }
         return new Date(`${year}-${month}-${day}`);
       }),
     param("check_out")
