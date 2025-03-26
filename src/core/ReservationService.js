@@ -35,7 +35,10 @@ export class ReservationService {
     try {
       // Check dates.
       if (from > to) {
-        throw new Error("Dates are in invert order. From greater that to");
+        return {
+          status: "error",
+          msg: "Invalid date order",
+        };
       }
 
       const reservationsList =
@@ -70,9 +73,10 @@ export class ReservationService {
         }
       });
 
-      console.log(reservations);
-
-      return reservations;
+      return {
+        status: "ok",
+        msg: reservations,
+      };
     } catch (e) {
       throw e;
     }
