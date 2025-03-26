@@ -189,10 +189,9 @@ export class AvailabilityService {
             conn
           );
 
-        console.log(overlappingReservations);
-
         const initialDate = new Date(checkIn);
 
+        let total_amount = 0;
         for (
           let date = initialDate;
           date < checkOut;
@@ -222,6 +221,7 @@ export class AvailabilityService {
           );
 
           const availability = hasRange.rooms_to_sell;
+          total_amount += Number(hasRange.custom_rate);
 
           if (totalRoomsOccupied > availability) {
             return {
@@ -230,6 +230,13 @@ export class AvailabilityService {
             };
           }
         }
+
+        total_amount = total_amount * room.number_of_rooms;
+        reservation.setTotalAmount(room.room_type_id, total_amount);
+
+        roomType.type === "dorm"
+          ? (total_amount *= room.selectedRooms)
+          : total_amount;
 
         const roomTypeTotalBeds =
           await this.availabilityTransactionManagerPort.getRoomTypeBeds(

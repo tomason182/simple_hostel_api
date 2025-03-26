@@ -55,6 +55,11 @@ export class ReservationCompositeService {
         };
       }
 
+      // El total amount de cada cuarto se actualiza en el objeto reserva dentro de Availability service.
+      // Aqui se debe calcular el total del deposito y adjuntarlo al objeto
+      console.log(reservation.getSelectedRooms());
+      throw new Error("msg");
+
       // Find if Guest already exist for the property
       const guestExist =
         await this.reservationTransactionManagerPort.findGuestByEmail(

@@ -7,6 +7,8 @@ export class Reservation {
     currency,
     reservation_status,
     payment_status,
+    advance_payment_status,
+    advance_payment_amount,
     check_in,
     check_out,
     special_request,
@@ -22,6 +24,8 @@ export class Reservation {
     this.currency = currency;
     this.reservation_status = reservation_status;
     this.payment_status = payment_status;
+    this.advance_payment_status = advance_payment_status;
+    this.advance_payment_amount = advance_payment_amount;
     this.check_in = check_in;
     this.check_out = check_out;
     this.special_request = special_request;
@@ -40,6 +44,14 @@ export class Reservation {
 
   getSelectedRooms() {
     return this.selected_rooms;
+  }
+
+  setTotalAmount(roomId, totalAmount) {
+    const index = this.selected_rooms.findIndex(
+      room => room.room_type_id === roomId
+    );
+
+    this.selected_rooms[index].total_amount = totalAmount;
   }
 
   // Setter and Getter for beds
