@@ -155,10 +155,10 @@ export function createReservationRoutes(services) {
       .isIn([
         "pending",
         "canceled",
-        "no-show",
+        "no_show",
         "confirmed",
-        "checked-in",
-        "checked-out",
+        "checked_in",
+        "checked_out",
       ])
       .withMessage("invalid reservation status"),
     authMiddleware(tokenService),
