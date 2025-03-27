@@ -50,7 +50,7 @@ export function createReservationRoutes(services) {
   // @route GET /api/v2/reservations/find/:from-:to
   // @access Private
   router.get(
-    "/find-by-range/:from-:to",
+    "/find-by-range/:from-:to-:type",
     authMiddleware(tokenService),
     param("from")
       .trim()
@@ -77,12 +77,17 @@ export function createReservationRoutes(services) {
         const day = value.substring(6, 8);
         return new Date(`${year}-${month}-${day}`);
       }),
+    param("type")
+      .trim()
+      .isIn(["calendar", "search"])
+      .withMessage("Invalid search type"),
     reservationController.findByDateRange
   );
 
   // @desc find reservations by date range and name (if provided)
   // @route POST /api/v2/reservations/find-by-date-and-name
   // @access Private
+  // REVISAR !!! REQUIERE TYPE CALENDAR O SEARCH?
   router.post(
     "/find-by-dates-and-name",
     authMiddleware(tokenService),
@@ -137,6 +142,27 @@ export function createReservationRoutes(services) {
         return new Date(`${year}-${month}-${day}`);
       }),
     reservationController.checkPropertyAvailability
+  );
+
+  // @desc Mark reservation as canceled
+  // @route GET /api/v2/reservations/mark-as-canceled/:id
+  // @access Private
+  router.put(
+    "/change-status/:id-:status",
+    param("id").trim().isInt().withMessage("Invalid reservation ID").toInt(),
+    param("status")
+      .trim()
+      .isIn([
+        "pending",
+        "canceled",
+        "no-show",
+        "confirmed",
+        "checked-in",
+        "checked-out",
+      ])
+      .withMessage("invalid reservation status"),
+    authMiddleware(tokenService),
+    reservationController.changeReservationStatus
   );
 
   return router;

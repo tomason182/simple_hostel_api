@@ -174,13 +174,14 @@ export class ReservationController {
 
       const propertyId = req.user.property_id;
 
-      const { from, to } = matchedData(req);
+      const { from, to, type } = matchedData(req);
 
       const result =
         await this.reservationInputPort.findReservationsByDateRange(
           propertyId,
           from,
-          to
+          to,
+          type
         );
 
       return res.status(200).json(result);
@@ -203,6 +204,30 @@ export class ReservationController {
         propertyId,
         check_in,
         check_out
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  changeReservationStatus = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { id, status } = matchedData(req);
+
+      console.log(status);
+
+      const result = await this.reservationInputPort.changeReservationStatus(
+        id,
+        status,
+        propertyId
       );
 
       return res.status(200).json(result);

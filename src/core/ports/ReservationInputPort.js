@@ -25,11 +25,12 @@ export class ReservationInputPort {
     return this.reservationService.findLatestReservations(propertyId);
   }
 
-  findReservationsByDateRange(propertyId, from, to) {
+  findReservationsByDateRange(propertyId, from, to, type) {
     return this.reservationService.findReservationsByDateRange(
       propertyId,
       from,
-      to
+      to,
+      type
     );
   }
 
@@ -51,6 +52,14 @@ export class ReservationInputPort {
       propertyId,
       check_in,
       check_out
+    );
+  }
+
+  changeReservationStatus(id, status, propertyId) {
+    return this.reservationService.changeReservationStatus(
+      id,
+      status,
+      propertyId
     );
   }
 }

@@ -167,10 +167,17 @@ export class MySQLReservationRepository {
     }
   }
 
-  async getReservationsByDateRange(propertyId, from, to) {
+  async getReservationsByDateRange(propertyId, from, to, type = "calendar") {
     try {
-      const query =
-        "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ? AND reservations.reservation_status NOT IN ('canceled', 'no_show')";
+      let query;
+      if (type === "calendar") {
+        query =
+          "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ? AND reservations.reservation_status NOT IN ('canceled', 'no_show')";
+      } else if (type === "search") {
+        query =
+          "SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservations.reservation_status, guests.first_name, guests.last_name, assigned_beds.bed_id FROM reservations JOIN guests ON guests.id = reservations.guest_id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id WHERE reservations.property_id = ? AND reservations.check_in <= ? AND reservations.check_out > ?";
+      }
+
       const params = [propertyId, to, from];
 
       const [result] = await this.mysqlPool.execute(query, params);
@@ -256,6 +263,26 @@ export class MySQLReservationRepository {
     } catch (e) {
       throw new Error(
         `An error occurred trying to get advance payment policy. Error: ${e.message}`
+      );
+    }
+  }
+
+  // Update reservation status
+  async updateReservationStatus(propertyId, id, status) {
+    try {
+      const query =
+        "UPDATE reservations SET reservation_status = ? WHERE property_id = ? AND id = ?";
+      const params = [status, propertyId, id];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update reservation status. Error: ${e.message}`
       );
     }
   }

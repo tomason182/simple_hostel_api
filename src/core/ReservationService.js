@@ -31,7 +31,7 @@ export class ReservationService {
     }
   }
 
-  async findReservationsByDateRange(propertyId, from, to) {
+  async findReservationsByDateRange(propertyId, from, to, type) {
     try {
       // Check dates.
       if (from > to) {
@@ -45,7 +45,8 @@ export class ReservationService {
         await this.reservationOutport.findReservationsByDateRange(
           propertyId,
           from,
-          to
+          to,
+          type
         );
 
       let reservations = [];
@@ -210,6 +211,20 @@ export class ReservationService {
         reservation,
         guest,
       };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async changeReservationStatus(id, status, propertyId) {
+    try {
+      const result = await this.reservationOutport.updateReservationStatus(
+        propertyId,
+        id,
+        status
+      );
+
+      return result;
     } catch (e) {
       throw e;
     }
