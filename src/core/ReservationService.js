@@ -189,6 +189,7 @@ export class ReservationService {
         id: r.guest_id,
         first_name: r.first_name,
         last_name: r.last_name,
+        id_number: r.id_number,
         email: r.email,
         phone_number: r.phone_number,
         street: r.street,
