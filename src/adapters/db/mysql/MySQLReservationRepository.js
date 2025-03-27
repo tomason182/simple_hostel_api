@@ -185,7 +185,7 @@ export class MySQLReservationRepository {
 
   async findReservationById(propertyId, reservationId) {
     const query =
-      "SELECT r.id AS id, r.booking_source, r.currency, r.reservation_status, r.payment_status, r.advance_payment_status, r.advance_payment_amount, r.check_in, r.check_out, g.id AS guest_id, g.first_name, g.last_name, g.id_number, g.email, g.phone_number, g.city, g.street, g.postal_code, g.country_code, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount, rt.description FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND r.id = ?";
+      "SELECT r.id AS id, r.booking_source, r.currency, r.reservation_status, r.payment_status, r.advance_payment_status, r.advance_payment_amount, r.check_in, r.check_out, r.special_request, g.id AS guest_id, g.first_name, g.last_name, g.id_number, g.email, g.phone_number, g.city, g.street, g.postal_code, g.country_code, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount, rt.description FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND r.id = ?";
     const params = [propertyId, reservationId];
 
     const [result] = await this.mysqlPool.execute(query, params);
