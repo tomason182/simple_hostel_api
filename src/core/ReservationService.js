@@ -175,7 +175,10 @@ export class ReservationService {
       );
 
       if (reservationList.length === 0) {
-        throw new Error("Reservation ID not found");
+        return {
+          status: "error",
+          msg: "Reservation ID not found",
+        };
       }
 
       // Select the first reservation
