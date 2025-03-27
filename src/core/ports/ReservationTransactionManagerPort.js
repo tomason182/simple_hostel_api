@@ -40,6 +40,10 @@ export class ReservationTransactionManagerPort {
     return this.reservationRepository.updateAssignedBed(id, bed, conn);
   }
 
+  getAdvancePaymentPolicy(propertyId, conn = null) {
+    return this.reservationRepository.getAdvancePaymentPolicy(propertyId, conn);
+  }
+
   // RATES AND AVAILABILITY SERVICES.
   // Get all the rates and availability ranges
   getAllRanges(selectedRooms, checkIn, checkOut, conn = null) {

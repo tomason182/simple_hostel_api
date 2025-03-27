@@ -254,6 +254,18 @@ export const reservationSchema = {
         "Payment status must be one of: pending, canceled, refunded, paid, partial",
     },
   },
+  advancePaymentStatus: {
+    in: ["body"],
+    exists: {
+      bail: true,
+      errorMessage: "Advance payment status must be provided",
+    },
+    isIn: {
+      options: [["pending", "canceled", "refunded", "paid", "partial"]],
+    },
+    errorMessage:
+      "Advance payment status must be one of: pending, canceled, refunded, paid, partial",
+  },
   specialRequest: {
     in: ["body"],
     trim: true,

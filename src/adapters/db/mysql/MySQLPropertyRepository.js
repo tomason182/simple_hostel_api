@@ -224,6 +224,7 @@ export class MySQLPropertyRepository {
   }
 
   // Policies
+  // Get deposit amount from advance payment policy table is done in the Reservation Repository. !!!
 
   async getPropertyPolicies(propertyId) {
     try {

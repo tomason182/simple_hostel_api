@@ -54,6 +54,19 @@ export class Reservation {
     this.selected_rooms[index].total_amount = totalAmount;
   }
 
+  // setter and getter for advance payment
+  setAdvancePaymentAmount(totalAmount, advancePaymentPercentage) {
+    this.advance_payment_amount = totalAmount * advancePaymentPercentage;
+  }
+
+  getAdvancePaymentAmount() {
+    return this.advance_payment_amount;
+  }
+
+  getAdvancePaymentStatus() {
+    return this.advance_payment_status;
+  }
+
   // Setter and Getter for beds
   setBeds(beds) {
     this.assigned_beds = beds;

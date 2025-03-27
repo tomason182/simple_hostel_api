@@ -56,9 +56,24 @@ export class ReservationCompositeService {
       }
 
       // El total amount de cada cuarto se actualiza en el objeto reserva dentro de Availability service.
-      // Aqui se debe calcular el total del deposito y adjuntarlo al objeto
-      console.log(reservation.getSelectedRooms());
-      throw new Error("msg");
+      const totalAmount = reservation
+        .getSelectedRooms()
+        .reduce((acc, value) => acc + value.total_amount, 0);
+
+      const advancePayment =
+        await this.reservationTransactionManagerPort.getAdvancePaymentPolicy(
+          propertyId,
+          conn
+        );
+      let depositAmount = 0;
+      if (
+        advancePayment !== null &&
+        advancePayment.advance_payment_required === 1
+      ) {
+        depositAmount = Number(advancePayment.deposit_amount);
+      }
+
+      reservation.setAdvancePaymentAmount(totalAmount, depositAmount);
 
       // Find if Guest already exist for the property
       const guestExist =
