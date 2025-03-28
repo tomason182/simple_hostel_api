@@ -7,7 +7,6 @@ export class Reservation {
     currency,
     reservation_status,
     payment_status,
-    advance_payment_status,
     advance_payment_amount,
     check_in,
     check_out,
@@ -24,7 +23,6 @@ export class Reservation {
     this.currency = currency;
     this.reservation_status = reservation_status;
     this.payment_status = payment_status;
-    this.advance_payment_status = advance_payment_status;
     this.advance_payment_amount = advance_payment_amount;
     this.check_in = check_in;
     this.check_out = check_out;
@@ -61,10 +59,6 @@ export class Reservation {
 
   getAdvancePaymentAmount() {
     return this.advance_payment_amount;
-  }
-
-  getAdvancePaymentStatus() {
-    return this.advance_payment_status;
   }
 
   // Setter and Getter for beds

@@ -39,7 +39,6 @@ export class ReservationController {
         currency: data.currency,
         reservation_status: data.reservationStatus,
         payment_status: data.paymentStatus,
-        advance_payment_status: data.advancePaymentStatus,
         check_in: data.checkIn,
         check_out: data.checkOut,
         special_request: data.specialRequest || null,
