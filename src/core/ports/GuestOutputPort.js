@@ -21,6 +21,6 @@ export class GuestOutputPort {
   }
 
   updateGuest(guest) {
-    return this.guestRepository.updateGuest(guest);
+    return this.guestRepository.update(guest);
   }
 }
