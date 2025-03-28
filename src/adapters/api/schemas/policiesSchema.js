@@ -32,6 +32,10 @@ export const reservationPoliciesSchema = {
   check_in_from: {
     in: ["body"],
     trim: true,
+    exists: {
+      bail: true,
+      errorMessage: "check-in from can not be empty",
+    },
     isTime: {
       bail: true,
       errorMessage: "Check-in from is not a valid TIME format",
@@ -40,6 +44,10 @@ export const reservationPoliciesSchema = {
   check_in_to: {
     in: ["body"],
     trim: true,
+    exists: {
+      bail: true,
+      errorMessage: "check-in from can not be empty",
+    },
     isTime: {
       bail: true,
       errorMessage: "Check-in to is not a valid TIME format",
@@ -48,6 +56,10 @@ export const reservationPoliciesSchema = {
   check_out_until: {
     in: ["body"],
     trim: true,
+    exists: {
+      bail: true,
+      errorMessage: "check-in from can not be empty",
+    },
     isTime: {
       bail: true,
       errorMessage: "Check-out until is not a valid TIME format",
@@ -60,13 +72,19 @@ export const reservationPoliciesSchema = {
         if (!Array.isArray(values)) {
           throw new Error("Payment method should be an array");
         }
-        const validPaymentMethods = ["bank_transfer", "cash", "debit_credit"];
+        const validPaymentMethods = [
+          "bank_transfer",
+          "cash",
+          "debit_credit",
+          "bitcoin",
+        ];
 
         const invalidMethods = values.filter(
           value => !validPaymentMethods.includes(value)
         );
 
         if (invalidMethods.length > 0) {
+          console.log(invalidMethods);
           throw new Error("Invalid payment method found");
         }
         return true;

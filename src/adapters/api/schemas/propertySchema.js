@@ -98,8 +98,8 @@ export const propertyPoliciesSchema = {
         const validPaymentMethods = [
           "bank_transfer",
           "cash",
-          "debit_card",
-          "credit_card",
+          "debit_credit",
+          "bitcoin",
         ];
 
         const invalidMethods = values.filter(
