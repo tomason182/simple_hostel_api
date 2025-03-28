@@ -173,13 +173,7 @@ export function createReservationRoutes(services) {
     param("id").trim().isInt().withMessage("Invalid reservation ID").toInt(),
     param("status")
       .trim()
-      .isIn([
-        "pending",
-        "partial",
-        "paid",
-        "deposit_refunded",
-        "fully_refunded",
-      ])
+      .isIn(["pending", "partial", "paid", "refunded", "fully_refunded"])
       .withMessage(
         "Payment status must be one of pending, partial, paid, deposit_refunded, fully_refunded"
       ),
