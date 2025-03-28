@@ -229,4 +229,18 @@ export class ReservationService {
       throw e;
     }
   }
+
+  async changePaymentStatus(id, status, propertyId) {
+    try {
+      const result = await this.reservationOutport.updatePaymentStatus(
+        propertyId,
+        id,
+        status
+      );
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

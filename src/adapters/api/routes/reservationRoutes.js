@@ -144,8 +144,8 @@ export function createReservationRoutes(services) {
     reservationController.checkPropertyAvailability
   );
 
-  // @desc Mark reservation as canceled
-  // @route GET /api/v2/reservations/mark-as-canceled/:id
+  // @desc Change reservation status
+  // @route PUT /api/v2/reservations/change-status/:id
   // @access Private
   router.put(
     "/change-status/:id-:status",
@@ -163,6 +163,28 @@ export function createReservationRoutes(services) {
       .withMessage("invalid reservation status"),
     authMiddleware(tokenService),
     reservationController.changeReservationStatus
+  );
+
+  // @desc Change payment status
+  // @route PUT /api/v2/reservations/change-payment-status/:id
+  // @access Private
+  router.put(
+    "/change-payment-status/:id-:status",
+    param("id").trim().isInt().withMessage("Invalid reservation ID").toInt(),
+    param("status")
+      .trim()
+      .isIn([
+        "pending",
+        "partial",
+        "paid",
+        "deposit_refunded",
+        "fully_refunded",
+      ])
+      .withMessage(
+        "Payment status must be one of pending, partial, paid, deposit_refunded, fully_refunded"
+      ),
+    authMiddleware(tokenService),
+    reservationController.changePaymentStatus
   );
 
   return router;

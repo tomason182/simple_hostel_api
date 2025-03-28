@@ -62,4 +62,8 @@ export class ReservationInputPort {
       propertyId
     );
   }
+
+  changePaymentStatus(id, status, propertyId) {
+    return this.reservationService.changePaymentStatus(id, status, propertyId);
+  }
 }

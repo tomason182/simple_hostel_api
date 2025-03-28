@@ -70,4 +70,12 @@ export class ReservationOutputPort {
       status
     );
   }
+
+  updatePaymentStatus(propertyId, id, status) {
+    return this.reservationRepository.updatePaymentStatus(
+      propertyId,
+      id,
+      status
+    );
+  }
 }

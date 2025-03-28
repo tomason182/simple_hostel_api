@@ -286,4 +286,17 @@ export class MySQLReservationRepository {
       );
     }
   }
+
+  async updatePaymentStatus(propertyId, id, status) {
+    const query =
+      "UPDATE reservations SET payment_status = ? WHERE property_id = ? AND id = ?";
+    const params = [status, propertyId, id];
+
+    const [result] = await this.mysqlPool.execute(query, params);
+
+    return {
+      affectedRows: result.affectedRows,
+      changedRows: result.changedRows,
+    };
+  }
 }

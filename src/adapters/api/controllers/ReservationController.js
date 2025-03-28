@@ -222,9 +222,29 @@ export class ReservationController {
       const propertyId = req.user.property_id;
       const { id, status } = matchedData(req);
 
-      console.log(status);
-
       const result = await this.reservationInputPort.changeReservationStatus(
+        id,
+        status,
+        propertyId
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  changePaymentStatus = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { id, status } = matchedData(req);
+
+      const result = await this.reservationInputPort.changePaymentStatus(
         id,
         status,
         propertyId

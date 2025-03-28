@@ -160,7 +160,6 @@ CREATE TABLE IF NOT EXISTS reservations (
   reservation_status ENUM('confirmed', 'provisional', 'canceled', 'no_show') NOT NULL,
   payment_status ENUM('pending', 'canceled', 'refunded', 'paid', 'partial') NOT NULL,
   advance_payment_amount DECIMAL(10,2),
-  advance_payment_status ENUM ('paid', 'pending', 'refunded', 'partial_refunded', 'canceled') NOT NULL,
   check_in DATE NOT NULL,
   check_out DATE NOT NULL,  
   special_request VARCHAR(500) DEFAULT NULL,
