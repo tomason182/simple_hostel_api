@@ -48,7 +48,10 @@ export class GuestService {
       );
 
       if (guestExist === null) {
-        throw new Error(`We couldn't find a guest with ID ${guest.getId()}`);
+        return {
+          status: "error",
+          msg: `We couldn't find a guest with ID ${guest.getId()}`,
+        };
       }
 
       const existedGuest = new Guest(guestExist);
@@ -61,15 +64,19 @@ export class GuestService {
         );
 
         if (newEmailExist !== null) {
-          throw new Error(
-            `The new email provided, ${guest.getEmail()}, already exists. Please use a different email.`
-          );
+          return {
+            status: "error",
+            msg: `The new email provided, ${guest.getEmail()}, already exists. Please use a different email.`,
+          };
         }
       }
 
       const result = await this.guestOutputPort.updateGuest(guest);
 
-      return result;
+      return {
+        status: "ok",
+        msg: result,
+      };
     } catch (e) {
       throw e;
     }
