@@ -26,7 +26,6 @@ export class ReservationCompositeService {
       const roomsIdList = selectedRooms.flatMap(room => room.room_type_id);
 
       // Get ranges for all selected room types and lock rows to prevent race conditions.
-      // DE ESTOS RANGOS PUEDO CALCULAR DISPONIBILIDAD Y TAMBIEN PRECIO TOTAL.
       const ranges = await this.reservationTransactionManagerPort.getAllRanges(
         roomsIdList,
         checkIn,
@@ -118,17 +117,19 @@ export class ReservationCompositeService {
         conn
       );
 
-      const to = guest.getEmail();
-      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
-      const subject = "Your reservation is confirmed";
-      const body = "<p>You made your first reservation</p>";
+      if (source === "web" || reservation.getBookingSource() === "direct") {
+        const to = guest.getEmail();
+        const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+        const subject = "Your reservation is confirmed";
+        const body = "<p>You made your first reservation</p>";
 
-      await this.reservationTransactionManagerPort.sendEmailToGuest(
-        to,
-        subject,
-        body,
-        from
-      );
+        await this.reservationTransactionManagerPort.sendEmailToGuest(
+          to,
+          subject,
+          body,
+          from
+        );
+      }
 
       if (source === "web") {
         // We send an email to the property if the reservation is made form the website.

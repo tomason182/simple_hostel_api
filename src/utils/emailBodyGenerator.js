@@ -47,10 +47,18 @@ export function resetPasswordBody(firstName, link) {
   return body;
 }
 
-export function bookingConfirmation(guest, reservation) {
+export function bookingConfirmation(name, checkIn, checkOut) {
   const body = `<table align="center width="100% cellpadding="0" style="max-width: 600px; background-color: #fff; margin: 20px auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); font-family: sans-serif, arial; color: #333">
     <tr>
-      <td></td>
+      <th>Hello ${name}! Your reservation is confirmed</th>
+    </tr>
+    <tr>
+      <th>Check-in</th>
+      <td>${checkIn}</td>
+    </tr>
+    <tr>
+      <th>Check-out</th>
+      <td>${checkOut}</td>
     </tr>
   </table>`;
 }
