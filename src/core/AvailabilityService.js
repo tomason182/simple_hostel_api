@@ -37,8 +37,6 @@ export class AvailabilityService {
           conn
         );
 
-      console.log("rates: ", ratesAndAvailabilityRanges);
-
       if (ratesAndAvailabilityRanges.length === 0) {
         return {
           status: "error",
@@ -299,8 +297,9 @@ class BedAssignment {
 
   pushReservationToUpdate(reservation) {
     const index = this.availabilityService.reservationsToUpdate.findIndex(
-      element => (element.id = reservation.id)
+      element => element.id === reservation.id
     );
+
     if (index !== -1) {
       this.availabilityService.reservationsToUpdate[index] = {
         id: reservation.id,

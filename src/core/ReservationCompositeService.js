@@ -97,7 +97,6 @@ export class ReservationCompositeService {
 
       if (bedsAssigned.reservationsToUpdate.length > 0) {
         const bedsToReassign = bedsAssigned.reservationsToUpdate;
-        console.log(bedsToReassign);
 
         for (const object of bedsToReassign) {
           await this.reservationTransactionManagerPort.updateAssignedBed(
