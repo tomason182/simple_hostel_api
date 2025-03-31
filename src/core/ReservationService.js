@@ -85,7 +85,10 @@ export class ReservationService {
   async findReservationsByDateRangeAndName(propertyId, from, until, name) {
     try {
       if (from > until) {
-        throw new Error("Dates are in invert order. From greater that to");
+        return {
+          status: "error",
+          msg: "Dates are in invert order. From greater that to",
+        };
       }
 
       let searchResult = [];
@@ -162,7 +165,7 @@ export class ReservationService {
         storedReservation.selected_rooms.push(room);
       }
 
-      return reservations;
+      return { status: "ok", msg: reservations };
     } catch (e) {
       throw e;
     }

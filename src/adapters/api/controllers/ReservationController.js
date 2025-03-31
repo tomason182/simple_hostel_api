@@ -74,16 +74,17 @@ export class ReservationController {
       const { from, until, name } = matchedData(req);
 
       if (from === undefined && until === undefined && name === undefined) {
-        res.status(400);
-        throw new Error("Any field provided");
+        res.status(200).json({ status: "error", msg: "any file provided" });
       }
 
       if (
         (from === undefined && until !== undefined) ||
         (from !== undefined && until === undefined)
       ) {
-        res.status(400);
-        throw new Error("Both dates must be provided for the range");
+        res.status(200).json({
+          status: "error",
+          msg: "Both dates must be provided for the range",
+        });
       }
 
       const result =

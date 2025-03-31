@@ -95,7 +95,7 @@ export function createReservationRoutes(services) {
     reservationController.findReservationsByDatesRangeAndName
   );
 
-  // @desc find reservations by date range and name (if provided)
+  // @desc find reservations by ID
   // @route POST /api/v2/reservations/find-by-date-and-name
   // @access Private
   router.get(
