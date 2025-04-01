@@ -142,7 +142,13 @@ export class ReservationCompositeService {
       }
 
       await conn.commit();
-      return true;
+      return {
+        status: "ok",
+        msg: {
+          id: reservation.getId(),
+          email: guest.getEmail(),
+        },
+      };
     } catch (e) {
       await conn.rollback();
       throw e;
