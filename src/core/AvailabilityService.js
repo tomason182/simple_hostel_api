@@ -232,9 +232,9 @@ export class AvailabilityService {
         total_amount = total_amount * room.number_of_rooms;
         reservation.setTotalAmount(room.room_type_id, total_amount);
 
-        roomType.type === "dorm"
+        /*         roomType.type === "dorm"
           ? (total_amount *= room.selectedRooms)
-          : total_amount;
+          : total_amount; */
 
         const roomTypeTotalBeds =
           await this.availabilityTransactionManagerPort.getRoomTypeBeds(
