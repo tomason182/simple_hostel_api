@@ -249,7 +249,7 @@ export const reservationSchema = {
       errorMessage: "payment status must be provided",
     },
     isIn: {
-      options: [["pending", "canceled", "refunded", "paid", "partial"]],
+      options: [["pending", "refunded", "paid", "partial"]],
       errorMessage:
         "Payment status must be one of: pending, canceled, refunded, paid, partial",
     },
