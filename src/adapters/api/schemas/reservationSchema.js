@@ -185,9 +185,9 @@ export const reservationSchema = {
       errorMessage: "Booking source must be provided",
     },
     isIn: {
-      options: [["booking.com", "hostelWorld.com", "direct", "website"]],
+      options: [["booking.com", "hostelWorld.com", "direct", "other"]],
       errorMessage:
-        "Booking source must be one of: booking.com, hostelWorld.com, direct or website",
+        "Booking source must be one of: booking.com, hostelWorld.com, direct or other",
     },
   },
   checkIn: {

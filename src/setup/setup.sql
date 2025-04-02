@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS reservations (
   id INT AUTO_INCREMENT PRIMARY KEY,
   guest_id INT NOT NULL,
   property_id INT NOT NULL,
-  booking_source ENUM('booking.com', 'hostelworld.com', 'direct', 'website') NOT NULL,
+  booking_source varchar(50) NOT NULL,
   currency CHAR(3) NOT NULL,
   reservation_status ENUM('confirmed', 'provisional', 'canceled', 'no_show') NOT NULL,
   payment_status ENUM('pending', 'canceled', 'refunded', 'paid', 'partial') NOT NULL,
