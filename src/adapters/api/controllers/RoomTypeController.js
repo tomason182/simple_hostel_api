@@ -105,7 +105,7 @@ export class RoomTypeController {
         propertyId
       );
 
-      return res.status(200).json({ result });
+      return res.status(200).json(result);
     } catch (err) {
       next(err);
     }
