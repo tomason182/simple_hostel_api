@@ -10,7 +10,7 @@ export const roomTypeSchema = {
     isLength: {
       options: {
         min: 1,
-        max: 255,
+        max: 100,
       },
       errorMessage: "Description must be between 1 and 255 characters",
     },
@@ -90,59 +90,6 @@ export const updateRoomTypeSchema = {
     isIn: {
       options: [["mixed", "female"]],
       errorMessage: "room type gender must be mixed or female",
-    },
-  },
-  base_rate: {
-    in: ["body"],
-    trim: true,
-    isFloat: {
-      bail: true,
-      errorMessage: "Invalid data type. Must be decimal",
-    },
-    notEmpty: {
-      bail: true,
-      errorMessage: "The base rate is required",
-    },
-  },
-  currency: {
-    in: ["body"],
-    trim: true,
-    escape: true,
-    notEmpty: {
-      bail: true,
-      errorMessage: "The currency (field) must not be empty",
-    },
-  },
-  amenities: {
-    in: ["body"],
-    trim: true,
-    escape: true,
-    isArray: {
-      bail: true,
-      options: { min: 0, max: 10 },
-      errorMessage: "amenities is not a array",
-    },
-    custom: {
-      options: value => {
-        const amenitiesList = [
-          "bathroom",
-          "shower",
-          "breakfast",
-          "towels",
-          "bedding",
-          "heating",
-          "air-conditioning",
-          "free-wifi",
-          "tv",
-          "locker",
-        ];
-        for (let i = 0; i < value.length; i++) {
-          if (!amenitiesList.includes(value[i])) {
-            throw new Error(`The value '${value[i]}' is not allowed.`);
-          }
-        }
-        return true;
-      },
     },
   },
 };

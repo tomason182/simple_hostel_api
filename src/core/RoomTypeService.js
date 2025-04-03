@@ -112,30 +112,40 @@ export class RoomTypeService {
     }
   }
 
-  async updateRoomTypeById(roomTypeData, propertyId) {
+  async updateRoomType(roomTypeData, propertyId) {
     try {
       // Check if new description is unique
       // Check if room type exist in the database
+
       const roomTypeExist =
-        await this.roomTypeOutputPort.findOneRoomTypeByDescription(
-          roomTypeData.description,
-          propertyId
+        await this.roomTypeOutputPort.findRoomTypeByDescription(
+          propertyId,
+          roomTypeData.description
         );
 
       // If room type exist in the db, throw an error
       if (roomTypeExist !== null && !roomTypeData.id.equals(roomTypeExist.id)) {
-        throw new Error("Room Type name already exist");
+        return {
+          status: "error",
+          msg: "Room type description already exist",
+        };
       }
 
       const result = await this.roomTypeOutputPort.updateRoomTypeById(
-        roomTypeData
+        roomTypeData,
+        propertyId
       );
 
       if (result === 0 || result === null) {
-        throw new Error("Room type update could not be done");
+        return {
+          status: "error",
+          msg: "Room type could not be updated",
+        };
       }
 
-      return result;
+      console.log(result);
+
+      return { status: "ok", msg: result };
     } catch (e) {
       throw e;
     }

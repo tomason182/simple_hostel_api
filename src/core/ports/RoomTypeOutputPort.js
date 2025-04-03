@@ -8,10 +8,10 @@ export class RoomTypeOutputPort {
     return this.roomTypeRepository.save(roomType);
   }
 
-  findRoomTypeByDescription(description, propertyId, conn = null) {
+  findRoomTypeByDescription(propertyId, description, conn = null) {
     return this.roomTypeRepository.findRoomTypeByDescription(
-      description,
       propertyId,
+      description,
       conn
     );
   }
@@ -28,8 +28,12 @@ export class RoomTypeOutputPort {
     return this.roomTypeRepository.findRoomTypeById(id, propertyId, conn);
   }
 
-  updateRoomTypeById(roomTypeData, conn = null) {
-    return this.roomTypeRepository.updateRoomTypeById(roomTypeData, conn);
+  updateRoomTypeById(roomTypeData, propertyId, conn = null) {
+    return this.roomTypeRepository.updateRoomTypeById(
+      roomTypeData,
+      propertyId,
+      conn
+    );
   }
 
   deleteRoomTypeById(id, propertyId, conn = null) {

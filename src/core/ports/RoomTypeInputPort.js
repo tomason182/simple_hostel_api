@@ -15,8 +15,8 @@ export class RoomTypeInputPort {
     return this.roomTypeService.findRoomTypeById(id);
   }
 
-  updateRoomTypeById(roomTypeData) {
-    return this.roomTypeService.updateRoomTypeById(roomTypeData);
+  updateRoomType(roomTypeData, propertyId) {
+    return this.roomTypeService.updateRoomType(roomTypeData, propertyId);
   }
 
   deleteRoomTypeById(id, propertyId) {

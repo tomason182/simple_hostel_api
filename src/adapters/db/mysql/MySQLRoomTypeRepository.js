@@ -54,10 +54,11 @@ export class MySQLRoomTypeRepository {
   }
 
   // Find RoomType by description
-  async findRoomTypeByDescription(description) {
+  async findRoomTypeByDescription(propertyId, description) {
     try {
-      const query = "SELECT * FROM room_types WHERE description = ?";
-      const params = [description];
+      const query =
+        "SELECT * FROM room_types WHERE property_id = ? AND description = ?";
+      const params = [propertyId, description];
 
       const [result] = await this.pool.execute(query, params);
 
@@ -192,6 +193,28 @@ export class MySQLRoomTypeRepository {
       throw new Error(
         `An error occurred trying to get room types upcoming reservations. Error: ${e.message}`
       );
+    }
+  }
+
+  async updateRoomTypeById(roomTypeData, propertyId) {
+    try {
+      const query =
+        "UPDATE room_types SET description = ?, gender = ? WHERE id = ? AND property_id = ?";
+      const params = [
+        roomTypeData.description,
+        roomTypeData.gender,
+        roomTypeData.id,
+        propertyId,
+      ];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return {
+        affectedRows: result.affectedRows,
+        changedRows: result.changedRows,
+      };
+    } catch (e) {
+      throw new Error(`An error occurred trying to update room type`);
     }
   }
 }

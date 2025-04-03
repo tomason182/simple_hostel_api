@@ -96,14 +96,11 @@ export class RoomTypeController {
         id: data.id,
         description: data.description,
         gender: data.gender,
-        base_rate: data.baseRate,
-        currency: data.currency,
-        amenities: data.amenities,
       };
 
       const propertyId = req.user.property_id;
 
-      const result = await this.roomTypeInputPort.updateRoomTypeById(
+      const result = await this.roomTypeInputPort.updateRoomType(
         roomTypeData,
         propertyId
       );
