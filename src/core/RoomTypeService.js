@@ -48,7 +48,7 @@ export class RoomTypeService {
       await this.roomTypeOutputPort.save(roomType);
 
       return {
-        status: "success",
+        status: "ok",
         msg: "Room type created successfully",
       };
     } catch (e) {
@@ -143,9 +143,7 @@ export class RoomTypeService {
         };
       }
 
-      console.log(result);
-
-      return { status: "ok", msg: result };
+      return { status: "ok", msg: "Room type updated successfully" };
     } catch (e) {
       throw e;
     }
