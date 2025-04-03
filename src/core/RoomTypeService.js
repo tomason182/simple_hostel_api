@@ -114,9 +114,6 @@ export class RoomTypeService {
 
   async updateRoomType(roomTypeData, propertyId) {
     try {
-      // Check if new description is unique
-      // Check if room type exist in the database
-
       const roomTypeExist =
         await this.roomTypeOutputPort.findRoomTypeByDescription(
           propertyId,
@@ -124,7 +121,10 @@ export class RoomTypeService {
         );
 
       // If room type exist in the db, throw an error
-      if (roomTypeExist !== null && !roomTypeData.id.equals(roomTypeExist.id)) {
+      if (
+        roomTypeExist !== null &&
+        !parseInt(roomTypeData.id) === roomTypeExist.id
+      ) {
         return {
           status: "error",
           msg: "Room type description already exist",
