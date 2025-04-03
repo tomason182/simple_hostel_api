@@ -152,7 +152,7 @@ export class RoomTypeService {
   async deleteRoomTypeById(id, propertyId) {
     try {
       // Check if room type has upcoming reservations
-      const today = new Date();
+      /*       const today = new Date();
       const hasReservation =
         await this.roomTypeOutputPort.getUpcomingReservations(id, today);
 
@@ -161,7 +161,7 @@ export class RoomTypeService {
           status: "error",
           msg: "The are upcoming reservations for the room type you want to delete",
         };
-      }
+      } */
 
       const roomTypeDeleted = await this.roomTypeOutputPort.deleteRoomTypeById(
         id,
