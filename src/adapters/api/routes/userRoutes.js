@@ -9,6 +9,7 @@ import {
   userChangePassSchema,
   usernameSchema,
   userResetPassSchema,
+  userEditSchema,
 } from "../schemas/userSchema.js";
 
 export function createUserRoutes(services) {
@@ -50,7 +51,7 @@ export function createUserRoutes(services) {
   router.post(
     "/create",
     authMiddleware(tokenService),
-    checkSchema(userUpdateSchema), // CAMBIAR ESTE SCHEMA PORQUE LO MODIFIQUE PARA USER UPDATE USAR USER EDIT SCHEMA.
+    checkSchema(userEditSchema),
     body("role")
       .trim()
       .isIn(["admin", "manager", "employee"])
