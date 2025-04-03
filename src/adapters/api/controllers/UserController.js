@@ -121,9 +121,7 @@ export class UserController {
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
-
       const property_id = req.user.property_id;
-
       const { id, username, first_name, last_name, role } = matchedData(req);
 
       const userData = {
@@ -144,6 +142,29 @@ export class UserController {
       );
 
       return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Authenticate a user
+  // @route POST /api/v2/users/auth
+  // @access Public
+  finishCreateUser = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const { token, password } = matchedData(req);
+
+      const result = await this.userInputPort.validateNewUser(token, password);
+
+      return {
+        status: "ok",
+        msg: result,
+      };
     } catch (e) {
       next(e);
     }

@@ -82,6 +82,16 @@ export class UserService {
         throw new Error(`User with email ${userData.username} already exists.`);
       }
 
+      // LIMIT PROPERTY USER TO 5.
+      const propertyTotalUsers = await this.getAllPropertyUsers(propertyId);
+
+      if (propertyTotalUsers.length > 4) {
+        return {
+          status: "error",
+          msg: "Team members creation limited reached. You can not create more than 5 team members.",
+        };
+      }
+
       // Generate random password
       const pass = user.generateRandomPassword();
       await user.setPasswordHash(pass);
@@ -89,9 +99,45 @@ export class UserService {
       const result = await this.userOutputPort.addUser(propertyId, user);
 
       // SEND EMAIL TO USER TO VALIDATE EMAIL AND CREATE PASSWORD.
+      const token = this.userOutputPort.generateToken(user.id, 900); // Expires in 900 seg || 15 min
+
+      const confirmationLink =
+        process.env.API_URL + "accounts/email-validation-and-password/" + token;
+
+      const to = user.getUsername();
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Confirm your email for SimpleHostel";
+      const body = confirmationMailBody(user.getFirstName(), confirmationLink);
+
+      await this.userOutputPort.sendEmail(to, subject, body, from);
       return {
         msg: "Email sent to user to create a password and validate the account",
       };
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async validateNewUser(token, password) {
+    try {
+      // Validar que el token es correcto
+      const decoded = await this.userOutputPort.verifyToken(token);
+      const userId = decoded.sub;
+      await this.userOutputPort.validateUserEmail(userId);
+
+      // Modificar password para usuario;
+      const userExist = await this.userOutputPort.findUserById(userId);
+
+      if (userExist === null) {
+        throw Error("We couldn't find the user");
+      }
+
+      const user = new User(userExist);
+      await user.setPasswordHash(password);
+
+      const result = this.userOutputPort.updatePassword(user);
+
+      return result;
     } catch (e) {
       throw e;
     }
@@ -122,9 +168,6 @@ export class UserService {
       const user = new User(userExist);
 
       const waitingPeriod = user.setWaitingPeriod();
-      console.log("Waiting period: ", waitingPeriod);
-
-      console.log("Diff: ", Date.now() - user.getLastResendEmail());
 
       if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
         throw new Error(
