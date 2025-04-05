@@ -17,6 +17,10 @@ export class UserCompositeService {
         conn
       );
 
+      if (user.status === "error") {
+        return user;
+      }
+
       const property = await this.userTransactionManagerPort.createProperty(
         PropertyData,
         conn
@@ -49,7 +53,10 @@ export class UserCompositeService {
       await this.userTransactionManagerPort.sendEmail(to, subject, body, from);
 
       await conn.commit();
-      return accessControlID;
+      return {
+        status: "ok",
+        msg: "USER_CREATED",
+      };
     } catch (e) {
       await conn.rollback();
       throw e;

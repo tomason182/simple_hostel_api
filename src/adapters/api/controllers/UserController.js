@@ -41,13 +41,12 @@ export class UserController {
         );
       }
 
-      console.log("token: ", captchaToken);
       const isCaptchaTokenValid = await verifyCaptcha(captchaToken);
       console.log("isTokenValid: ", isCaptchaTokenValid);
 
-      if (isCaptchaTokenValid === false) {
+      /*       if (isCaptchaTokenValid === false) {
         throw new Error("Unable to verify reCaptcha");
-      }
+      } */
 
       const userData = {
         username,
@@ -65,9 +64,7 @@ export class UserController {
         propertyData
       );
 
-      return res
-        .status(200)
-        .json({ msg: "Email sent", access_control_id: userWithProperty });
+      return res.status(200).json(userWithProperty);
     } catch (e) {
       next(e);
     }

@@ -20,7 +20,7 @@ export class UserService {
       if (userExist !== null) {
         return {
           status: "error",
-          msg: "EMAIL_EXIST",
+          msg: "EMAIL_EXISTS",
         };
       }
 
