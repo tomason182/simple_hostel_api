@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  first_name VARCHAR(70) NOT NULL,
+  first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100),
   is_valid_email BOOLEAN NOT NULL,
   last_resend_email BIGINT NOT NULL,

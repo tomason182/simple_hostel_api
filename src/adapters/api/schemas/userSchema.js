@@ -41,10 +41,10 @@ export const userRegistrationSchema = {
     isLength: {
       options: {
         min: 1,
-        max: 70,
+        max: 100,
       },
       errorMessage:
-        "First name is required and maximum length is 70 characters",
+        "First name is required and maximum length is 100 characters",
     },
   },
   lastName: {
