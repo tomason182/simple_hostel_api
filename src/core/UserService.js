@@ -18,7 +18,10 @@ export class UserService {
       );
 
       if (userExist !== null) {
-        throw new Error("User already exist");
+        return {
+          status: "error",
+          msg: "EMAIL_EXIST",
+        };
       }
 
       const user = new User(userData);
@@ -29,7 +32,7 @@ export class UserService {
 
       const result = await this.userOutputPort.save(user, connection);
 
-      return result; // {id: userId }
+      return result; // { user }
     } catch (e) {
       throw e;
     }
