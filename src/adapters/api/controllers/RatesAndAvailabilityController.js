@@ -52,11 +52,14 @@ export class RatesAndAvailabilityController {
       const propertyId = req.user.property_id;
       const data = matchedData(req);
 
+      const checkIn = new Date(data.from);
+      const checkOut = new Date(data.to);
+
       const result =
         await this.ratesAndAvailabilityInputPort.checkAvailabilityForProperty(
           propertyId,
-          data.from,
-          data.to
+          checkIn,
+          checkOut
         );
 
       return res.status(200).json(result);
