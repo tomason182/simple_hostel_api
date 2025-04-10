@@ -24,7 +24,10 @@ export class PropertyService {
       );
 
       if (propertyExist === null) {
-        throw Error("Property not found");
+        return {
+          status: "error",
+          msg: "property not found",
+        };
       }
 
       const property = new Property(propertyExist);
