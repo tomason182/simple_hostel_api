@@ -68,4 +68,6 @@ export function createBookEngineRoutes(service) {
     checkSchema(reservationSchema, ["body"]),
     bookEngineController.createReservation
   );
+
+  return router;
 }

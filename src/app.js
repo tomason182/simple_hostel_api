@@ -11,6 +11,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 // Import Routes
+import { createBookEngineRoutes } from "./adapters/api/routes/bookEngineRoutes.js";
 import { createUserRoutes } from "./adapters/api/routes/userRoutes.js";
 import { createPropertyRoutes } from "./adapters/api/routes/propertyRoutes.js";
 import { createRoomTypeRoutes } from "./adapters/api/routes/roomTypeRoutes.js";
@@ -78,6 +79,7 @@ export async function createApp(services) {
   app.use(limiter);
 
   // Use routes
+  app.use("/api/v2/book-engine", createBookEngineRoutes(services));
   app.use("/api/v2/users", createUserRoutes(services));
   app.use("/api/v2/properties", createPropertyRoutes(services));
   app.use("/api/v2/room-types", createRoomTypeRoutes(services));
