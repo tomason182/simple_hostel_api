@@ -107,6 +107,7 @@ export class BookEngineController {
         currency: propertyData.getBaseCurrency(),
         reservation_status: "provisional",
         payment_status: "pending",
+        advance_payment_status: "pending",
         check_in: data.checkIn,
         check_out: data.checkOut,
         special_request: data.specialRequest || null,
