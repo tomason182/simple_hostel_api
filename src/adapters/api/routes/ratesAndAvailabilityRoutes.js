@@ -61,6 +61,8 @@ export function createRatesAndAvailabilityRoutes(service) {
   // @desc Check Availability
   // @route POST /api/v2/rates-and-availability/check
   // @access Private
+  // @ NO ESTA EN UNO. SE UTILIZA GET/reservations/check-availability/:check_in-:check-out
+  // @Ambas devuelven lo mismo
   router.post(
     "/check-availability",
     authMiddleware(tokenService),

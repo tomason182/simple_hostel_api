@@ -43,6 +43,7 @@ export class RatesAndAvailabilityController {
   // @desc Check availability
   // @route POST /api/v2/rates_availability/check-availability
   // @access Private
+  // @ NO esta en uso. Se utiliza ruta de reservations.
   checkAvailability = async (req, res, next) => {
     try {
       const errors = validationResult(req);
