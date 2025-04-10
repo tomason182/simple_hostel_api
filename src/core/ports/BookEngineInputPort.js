@@ -21,7 +21,10 @@ export class BookEngineInputPort {
       checkOut
     );
   }
-  createReservation(reservationData) {
-    return this.reservationCompositeService.createReservation(reservationData);
+  createReservation(reservationData, guestData) {
+    return this.reservationCompositeService.createReservation(
+      reservationData,
+      guestData
+    );
   }
 }

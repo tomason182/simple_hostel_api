@@ -108,7 +108,10 @@ export class BookEngineController {
         selected_rooms: data.selectedRooms,
       };
 
-      const result = await this.bookEngineInputPort.createReservation(data);
+      const result = await this.bookEngineInputPort.createReservation(
+        reservationData,
+        guestData
+      );
 
       return res.status(200).json(result);
     } catch (e) {
