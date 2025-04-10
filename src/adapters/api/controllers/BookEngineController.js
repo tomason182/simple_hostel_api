@@ -84,6 +84,11 @@ export class BookEngineController {
         return res.status(404).json(propertyData);
       }
 
+      // Is necessary to check if the policies are satisfied.
+      // minimum length of stay
+      // maximum length of stay (We might want to remove this policy)
+      // minimum advance booking
+
       const guestData = {
         first_name: data.firstName,
         last_name: data.lastName,
