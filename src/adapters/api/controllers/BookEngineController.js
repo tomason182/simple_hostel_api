@@ -18,9 +18,19 @@ export class BookEngineController {
 
       const propertyId = data.propertyId;
 
-      const result = await this.bookEngineInputPort.getPropertyData(propertyId);
+      // In get property data we check if property ID exist.
+      const propertyInfo = await this.bookEngineInputPort.getPropertyData(
+        propertyId
+      );
 
-      return res.status(200).json(result);
+      if (propertyInfo.status === "error") {
+        return res.status(404).json(propertyInfo);
+      }
+      // If property ID exist we get the policies.
+      const propertyPolicies =
+        await this.bookEngineInputPort.getPropertyPolicies(propertyId);
+
+      return res.status(200).json({ propertyInfo, propertyPolicies });
     } catch (e) {
       next(e);
     }

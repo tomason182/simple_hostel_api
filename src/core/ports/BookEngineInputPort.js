@@ -9,7 +9,10 @@ export class BookEngineInputPort {
     this.propertyService = propertyService;
   }
   getPropertyData(propertyId) {
-    return this.propertyService.getPropertyData(propertyId);
+    return this.propertyService.getPropertyDetails(propertyId);
+  }
+  getPropertyPolicies(propertyId) {
+    return this.propertyService.getPropertyPolicies(propertyId);
   }
   checkAvailabilityForProperty(propertyId, checkIn, checkOut) {
     return this.availabilityService.checkAvailabilityForProperty(
