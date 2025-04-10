@@ -77,6 +77,37 @@ export class BookEngineController {
 
       const data = matchedData(req);
 
+      const propertyData = await this.bookEngineInputPort.getPropertyData(
+        data.propertyId
+      );
+      if (propertyData.status === "error") {
+        return res.status(404).json(propertyData);
+      }
+
+      const guestData = {
+        first_name: data.firstName,
+        last_name: data.lastName,
+        id_number: data.idNumber || null,
+        email: data.email,
+        phone_number: data.phoneNumber || null,
+        street: data.street || null,
+        city: data.city || null,
+        country_code: data.countryCode || null,
+        postal_code: data.postalCode || null,
+      };
+
+      const reservationData = {
+        property_id: propertyData.getId(),
+        booking_source: "book-engine",
+        currency: propertyData.getBaseCurrency(),
+        reservation_status: "provisional",
+        payment_status: "pending",
+        check_in: data.checkIn,
+        check_out: data.checkOut,
+        special_request: data.specialRequest || null,
+        selected_rooms: data.selectedRooms,
+      };
+
       const result = await this.bookEngineInputPort.createReservation(data);
 
       return res.status(200).json(result);
