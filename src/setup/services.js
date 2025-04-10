@@ -24,6 +24,7 @@ import { RoomTypeService } from "../core/RoomTypeService.js";
 
 // PORTS
 import { AvailabilityTransactionManagerPort } from "../core/ports/AvailabilityTransactionManagerPort.js";
+import { BookEngineInputPort } from "../core/ports/BookEngineInputPort.js";
 import { UserInputPort } from "../core/ports/UserInputPort.js";
 import { UserOutputPort } from "../core/ports/UserOutputPort.js";
 import { PropertyInputPort } from "../core/ports/PropertyInputPort.js";
@@ -47,6 +48,7 @@ import { createTokenService } from "../adapters/config/tokenConfig.js";
 import { DataProviderService } from "../adapters/dataProvider/DataProviderService.js";
 
 // Import controllers
+import { BookEngineController } from "../adapters/api/controllers/BookEngineController.js";
 import { UserController } from "../adapters/api/controllers/UserController.js";
 import { PropertyController } from "../adapters/api/controllers/PropertyController.js";
 import { RoomTypeController } from "../adapters/api/controllers/RoomTypeController.js";
@@ -124,7 +126,6 @@ export default function initializeServices() {
   const roomTypeService = new RoomTypeService(roomTypeOutputPort);
 
   // Initialize transaction manager port
-
   const userTransactionManagerPort = new UserTransactionManagerPort(
     userService,
     propertyService,
@@ -156,6 +157,10 @@ export default function initializeServices() {
   );
 
   // Initialize input ports
+  const bookEngineInputPort = new BookEngineInputPort(
+    propertyService,
+    reservationService
+  );
   const userInputPort = new UserInputPort(
     userService,
     userCompositeService,
@@ -177,6 +182,7 @@ export default function initializeServices() {
   );
 
   // Initialize controllers
+  const bookEngineController = new BookEngineController(bookEngineInputPort);
   const userController = new UserController(userInputPort);
   const propertyController = new PropertyController(propertyInputPort);
   const roomTypeController = new RoomTypeController(roomTypeInputPort);
