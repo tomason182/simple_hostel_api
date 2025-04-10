@@ -9,7 +9,7 @@ export class ReservationCompositeService {
   }
 
   // Create a new Reservation
-  async createReservationAndGuest(reservationData, guestData, source) {
+  async createReservationAndGuest(reservationData, guestData) {
     const conn = await this.mysqlPool.getConnection();
     try {
       await conn.beginTransaction();
@@ -116,7 +116,10 @@ export class ReservationCompositeService {
         conn
       );
 
-      if (source === "web" || reservation.getBookingSource() === "direct") {
+      if (
+        reservation.getBookingSource() === "book-engine" ||
+        reservation.getBookingSource() === "direct"
+      ) {
         const to = guest.getEmail();
         const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
         const subject = "Your reservation is confirmed";
@@ -130,7 +133,7 @@ export class ReservationCompositeService {
         );
       }
 
-      if (source === "web") {
+      if (reservation.getBookingSource() === "book-engine") {
         // We send an email to the property if the reservation is made form the website.
         await this.reservationTransactionManagerPort.sendEmailToProperty();
 

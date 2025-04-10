@@ -18,9 +18,6 @@ export class ReservationController {
       const user = req.user._id;
       const data = matchedData(req);
 
-      // Set source to app. This prevent notification been send in the reservation service.
-      const source = "app"; // when coming from website source = "web"
-
       const guestData = {
         first_name: data.firstName,
         last_name: data.lastName,
@@ -49,8 +46,7 @@ export class ReservationController {
 
       const result = await this.reservationInputPort.createReservationAndGuest(
         reservationData,
-        guestData,
-        source
+        guestData
       );
 
       return res.status(200).json(result);

@@ -9,11 +9,10 @@ export class ReservationInputPort {
     this.availabilityService = availabilityService;
   }
 
-  createReservationAndGuest(reservationData, guestData, source) {
+  createReservationAndGuest(reservationData, guestData) {
     return this.reservationCompositeService.createReservationAndGuest(
       reservationData,
-      guestData,
-      source
+      guestData
     );
   }
 
