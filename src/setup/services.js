@@ -159,7 +159,8 @@ export default function initializeServices() {
   // Initialize input ports
   const bookEngineInputPort = new BookEngineInputPort(
     propertyService,
-    reservationService
+    reservationCompositeService,
+    availabilityService
   );
   const userInputPort = new UserInputPort(
     userService,
@@ -193,6 +194,7 @@ export default function initializeServices() {
   const reservationController = new ReservationController(reservationInputPort);
 
   return {
+    bookEngineController,
     userController,
     propertyController,
     guestController,
