@@ -17,6 +17,9 @@ export function fetchDataProvider(services) {
     dataProviderService.fetchCountryCities
   );
 
+  // Get currencies
+  router.get("/currencies", dataProviderService.fetchCurrencies);
+
   // Get payment methods
   router.get("/payment-methods", dataProviderService.fetchPaymentMethods);
 

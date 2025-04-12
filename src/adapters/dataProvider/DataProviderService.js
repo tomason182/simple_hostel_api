@@ -26,6 +26,17 @@ export class DataProviderService {
     }
   };
 
+  fetchCurrencies = async (req, res, next) => {
+    try {
+      const query = "SELECT * FROM worldcurrencies";
+      const [result] = await this.mysqlPool.execute(query);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
   fetchPaymentMethods = async (req, res, next) => {
     try {
       const query = "SELECT * FROM payment_methods";
@@ -33,7 +44,7 @@ export class DataProviderService {
       const [result] = await this.mysqlPool.execute(query);
 
       return res.status(200).json(result);
-    } catch {
+    } catch (e) {
       next(e);
     }
   };
