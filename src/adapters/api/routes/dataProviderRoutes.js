@@ -23,5 +23,8 @@ export function fetchDataProvider(services) {
   // Get payment methods
   router.get("/payment-methods", dataProviderService.fetchPaymentMethods);
 
+  // Get amenities
+  router.get("/amenities/:language", dataProviderService.fetchAmenities);
+
   return router;
 }
