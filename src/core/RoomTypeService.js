@@ -231,7 +231,10 @@ export class RoomTypeService {
           amenitiesToRemove
         );
 
-      return result;
+      return {
+        status: "ok",
+        msg: result,
+      };
     } catch (e) {
       throw e;
     }
