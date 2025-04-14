@@ -253,6 +253,13 @@ CREATE TABLE IF NOT EXISTS amenities (
   name VARCHAR(100) UNIQUE
 );
 
+-- Create facilities table
+CREATE TABLE IF NOT EXISTS facilities (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) UNIQUE,
+  category VARCHAR(25)
+)
+
 -- Create amenities translations table
 CREATE TABLE IF NOT EXISTS amenities_translations (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -264,6 +271,17 @@ CREATE TABLE IF NOT EXISTS amenities_translations (
   UNIQUE (amenity_id, language_code)
 );
 
+-- Create facilities translation table
+CREATE TABLE IF NOT EXISTS facilities_translation (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  facility_id INT,
+  language_code VARCHAR(5),
+  name VARCHAR(100),
+
+  FOREIGN KEY (facility_id) REFERENCES facilities(id) ON DELETE CASCADE,
+  UNIQUE (facility_id, language_code)
+);
+
 -- Create room type amenities table
 CREATE TABLE IF NOT EXISTS room_type_amenities (
   room_type_id INT,
@@ -273,6 +291,17 @@ CREATE TABLE IF NOT EXISTS room_type_amenities (
 
   FOREIGN KEY (room_type_id) REFERENCES room_types(id) ON DELETE CASCADE,
   FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
+);
+
+-- Create property facilities table
+CREATE TABLE IF NOT EXISTS property_facilities (
+  property_id INT,
+  facility_id INT,
+
+  PRIMARY KEY (property_id, facility_id),
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY (facility_id) REFERENCES facilities(id) ON DELETE CASCADE
 );
 
 -- PROCEDURES
