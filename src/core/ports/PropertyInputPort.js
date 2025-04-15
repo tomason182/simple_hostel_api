@@ -50,4 +50,8 @@ export class PropertyInputPort {
   addOrUpdateFacilities(propertyId, facilities) {
     return this.propertyService.addOrUpdateFacilities(propertyId, facilities);
   }
+
+  getPropertyFacilities(propertyId) {
+    return this.propertyService.getPropertyFacilities(propertyId);
+  }
 }

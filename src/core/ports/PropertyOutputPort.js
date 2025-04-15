@@ -107,4 +107,8 @@ export class PropertyOutputPort {
       facilitiesToRemove
     );
   }
+
+  getPropertyFacilities(propertyId) {
+    return this.facilitiesRepository.getPropertyFacilities(propertyId);
+  }
 }

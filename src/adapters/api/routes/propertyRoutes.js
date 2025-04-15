@@ -105,10 +105,16 @@ export function createPropertyRoutes(services) {
 
   // Add or edit property facilities
   router.post(
-    "/facilities/",
+    "/facilities",
     checkSchema(facilitiesSchema),
     authMiddleware(tokenService),
     propertyController.addOrUpdateFacilities
+  );
+
+  router.get(
+    "/facilities",
+    authMiddleware(tokenService),
+    propertyController.getPropertyFacilities
   );
 
   return router;

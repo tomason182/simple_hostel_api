@@ -350,4 +350,18 @@ export class PropertyService {
       throw e;
     }
   }
+
+  async getPropertyFacilities(propertyId) {
+    try {
+      const result = await this.propertyOutputPort.getPropertyFacilities(
+        propertyId
+      );
+
+      const facilities = result.flatMap(i => i.facility_id);
+
+      return { status: "ok", msg: facilities };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

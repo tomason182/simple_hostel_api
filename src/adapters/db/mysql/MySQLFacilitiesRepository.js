@@ -3,6 +3,21 @@ export class MySQLFacilitiesRepository {
     this.mysqlPool = mysqlPool;
   }
 
+  async getPropertyFacilities(propertyId) {
+    try {
+      const query = "SELECT * FROM property_facilities WHERE property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result || [];
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get property facilities. Error: ${e.message}`
+      );
+    }
+  }
+
   async getValidFacilities(facilityList) {
     try {
       if (!Array.isArray(facilityList)) {

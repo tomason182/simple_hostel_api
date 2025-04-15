@@ -297,4 +297,21 @@ export class PropertyController {
       next(e);
     }
   };
+
+  // @desc Get property facilities
+  // @route GET /api/v2/properties/facilities
+  // @access private
+  getPropertyFacilities = async (req, res, next) => {
+    try {
+      const propertyId = req.user.property_id;
+
+      const result = await this.propertyInputPort.getPropertyFacilities(
+        propertyId
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }
