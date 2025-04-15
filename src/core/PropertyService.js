@@ -298,4 +298,17 @@ export class PropertyService {
       throw e;
     }
   }
+
+  async addOrUpdateFacilities(propertyId, facilities) {
+    try {
+      console.log("propertyId", propertyId);
+      console.log("facilities: ", facilities);
+
+      return {
+        msg: "ok",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

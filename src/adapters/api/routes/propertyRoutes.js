@@ -13,6 +13,7 @@ import {
   childrenPoliciesSchema,
   otherPoliciesSchema,
 } from "../schemas/policiesSchema.js";
+import { facilitiesSchema } from "../schemas/amenitiesSchema.js";
 
 export function createPropertyRoutes(services) {
   const router = express.Router();
@@ -100,6 +101,14 @@ export function createPropertyRoutes(services) {
     checkSchema(otherPoliciesSchema),
     authMiddleware(tokenService),
     propertyController.otherPolicies
+  );
+
+  // Add or edit property facilities
+  router.post(
+    "/facilities/",
+    checkSchema(facilitiesSchema),
+    authMiddleware(tokenService),
+    propertyController.addOrUpdateFacilities
   );
 
   return router;

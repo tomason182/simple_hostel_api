@@ -8,7 +8,7 @@ export const amenitiesSchema = {
     custom: {
       options: values => {
         if (!Array.isArray(values)) throw new Error("Must be an array");
-        if (values.length === 0) return false; // Allow empty arrays
+        if (values.length === 0) return false; // NOT Allow empty arrays
 
         if (values.every(value => Number.isInteger(value))) {
           return true;
@@ -30,7 +30,7 @@ export const facilitiesSchema = {
     custom: {
       options: values => {
         if (!Array.isArray(values)) throw new Error("Must be an array");
-        if (values.length === 0) return false;
+        if (values.length === 0) return false; // NOT be an empty array
 
         if (values.every(value => Number.isInteger(value))) {
           return true;
