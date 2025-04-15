@@ -77,7 +77,7 @@ export class DataProviderService {
       }
 
       const query =
-        "SELECT * FROM facilities_translations WHERE language_code = ?";
+        "SELECT ft.id, ft.facility_id, ft.name, f.category FROM facilities_translations AS ft JOIN facilities AS f ON f.id = ft.facility_id WHERE ft.language_code = ?";
       const params = [language];
 
       const [result] = await this.mysqlPool.execute(query, params);
