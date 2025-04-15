@@ -321,9 +321,6 @@ export class PropertyService {
         facility => facility.facility_id
       );
 
-      console.log("old: ", oldFacilities);
-      console.log("new: ", newFacilities);
-
       let toAdd = [];
       let toRemove = [];
 
@@ -338,9 +335,6 @@ export class PropertyService {
           toAdd.push(value);
         }
       });
-
-      console.log("to add: ", toAdd);
-      console.log("to remove: ", toRemove);
 
       const result = await this.propertyOutputPort.insertOrUpdateFacilities(
         propertyId,
