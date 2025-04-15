@@ -3,6 +3,26 @@ export class MySQLFacilitiesRepository {
     this.mysqlPool = mysqlPool;
   }
 
+  async getValidFacilities(facilityList) {
+    try {
+      if (!Array.isArray(facilityList)) {
+        throw new Error("Parameter is not an array");
+      }
+
+      const placeholders = facilityList.map(() => "?").join(", ");
+      const query = `SELECT id FROM facilities WHERE id IN (${placeholders})`;
+      const params = facilityList;
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result || [];
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to get valid facilities. Error: ${e.message}`
+      );
+    }
+  }
+
   async getPropertyFacilities(propertyId) {
     try {
       const query = "SELECT * FROM property_facilities WHERE property_id = ?";
