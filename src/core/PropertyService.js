@@ -301,11 +301,56 @@ export class PropertyService {
 
   async addOrUpdateFacilities(propertyId, facilities) {
     try {
-      console.log("propertyId", propertyId);
-      console.log("facilities: ", facilities);
+      const validFacilities = await this.propertyOutputPort.getValidFacilities(
+        facilities
+      );
+
+      if (validFacilities.length === 0) {
+        return {
+          status: "error",
+          msg: "Invalid facilities ID",
+        };
+      }
+
+      const newFacilities = validFacilities.flatMap(item => item.id);
+
+      const propertyFacilities =
+        await this.propertyOutputPort.getPropertyFacilities(propertyId);
+
+      const oldFacilities = propertyFacilities.flatMap(
+        facility => facility.facility_id
+      );
+
+      console.log("old: ", oldFacilities);
+      console.log("new: ", newFacilities);
+
+      let toAdd = [];
+      let toRemove = [];
+
+      oldFacilities.forEach(value => {
+        if (!newFacilities.includes(value)) {
+          toRemove.push(value);
+        }
+      });
+
+      newFacilities.forEach(value => {
+        if (!oldFacilities.includes(value)) {
+          toAdd.push(value);
+        }
+      });
+
+      console.log("to add: ", toAdd);
+      console.log("to remove: ", toRemove);
+
+      const result = await this.propertyOutputPort.insertOrUpdateFacilities(
+        propertyId,
+        toAdd,
+        toRemove
+      );
 
       return {
-        msg: "ok",
+        status: "ok",
+        msg: result,
       };
     } catch (e) {
       throw e;

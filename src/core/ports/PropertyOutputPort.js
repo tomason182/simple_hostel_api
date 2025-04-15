@@ -1,6 +1,7 @@
 export class PropertyOutputPort {
-  constructor(propertyRepository) {
+  constructor(propertyRepository, facilitiesRepository) {
     this.propertyRepository = propertyRepository;
+    this.facilitiesRepository = facilitiesRepository;
   }
 
   save(propertyData, connection) {
@@ -87,6 +88,23 @@ export class PropertyOutputPort {
     return this.propertyRepository.insertOrUpdateOtherPolicies(
       propertyId,
       policies
+    );
+  }
+
+  // Facilities
+  getValidFacilities(facilities) {
+    return this.facilitiesRepository.getValidFacilities(facilities);
+  }
+
+  getPropertyFacilities(propertyId) {
+    return this.facilitiesRepository.getPropertyFacilities(propertyId);
+  }
+
+  insertOrUpdateFacilities(propertyId, facilitiesToAdd, facilitiesToRemove) {
+    return this.facilitiesRepository.insertOrUpdateFacilities(
+      propertyId,
+      facilitiesToAdd,
+      facilitiesToRemove
     );
   }
 }
