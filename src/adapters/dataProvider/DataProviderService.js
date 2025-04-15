@@ -77,7 +77,7 @@ export class DataProviderService {
       }
 
       const query =
-        "SELECT * FROM facilities_translation WHERE language_code = ?";
+        "SELECT * FROM facilities_translations WHERE language_code = ?";
       const params = [language];
 
       const [result] = await this.mysqlPool.execute(query, params);
