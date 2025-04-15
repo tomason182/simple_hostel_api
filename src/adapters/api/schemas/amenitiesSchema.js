@@ -19,3 +19,25 @@ export const amenitiesSchema = {
     },
   },
 };
+
+export const facilitiesSchema = {
+  facilities: {
+    in: "body",
+    isArray: {
+      bail: true,
+      errorMessage: "facilities is not an array",
+    },
+    custom: {
+      options: values => {
+        if (!Array.isArray(values)) throw new Error("Must be an array");
+        if (values.length === 0) return false;
+
+        if (values.every(value => Number.isInteger(value))) {
+          return true;
+        }
+        return false;
+      },
+      errorMessage: "Invalid facilities IDs",
+    },
+  },
+};
