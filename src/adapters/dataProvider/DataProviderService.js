@@ -67,4 +67,24 @@ export class DataProviderService {
       next(e);
     }
   };
+
+  fetchFacilities = async (req, res, next) => {
+    try {
+      const language = req.params.language;
+      const allowedLanguages = ["en", "es"];
+      if (!allowedLanguages.includes(language)) {
+        throw new Error("Invalid language");
+      }
+
+      const query =
+        "SELECT * FROM facilities_translation WHERE language_code = ?";
+      const params = [language];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

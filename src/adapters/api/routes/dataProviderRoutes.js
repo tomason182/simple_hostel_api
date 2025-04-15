@@ -26,5 +26,8 @@ export function fetchDataProvider(services) {
   // Get amenities
   router.get("/amenities/:language", dataProviderService.fetchAmenities);
 
+  // Get facilities
+  router.get("/facilities/:language");
+
   return router;
 }

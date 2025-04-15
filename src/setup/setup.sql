@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS amenities_translations (
 );
 
 -- Create facilities translation table
-CREATE TABLE IF NOT EXISTS facilities_translation (
+CREATE TABLE IF NOT EXISTS facilities_translations (
   id INT PRIMARY KEY AUTO_INCREMENT,
   facility_id INT,
   language_code VARCHAR(5),
