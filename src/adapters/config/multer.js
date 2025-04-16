@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import sanitize from "sanitize-filename";
 
 const uploadPath = path.join("public", "uploads");
 if (!fs.existsSync(uploadPath)) {
@@ -12,10 +13,10 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
+    const sanitized = sanitize(file.originalname);
     const uniqueName = `image-${
       Date.now() + "-" + Math.round(Math.random() * 1e9)
-    }${ext}`;
+    }${sanitized}`;
     cb(null, uniqueName);
   },
 });
