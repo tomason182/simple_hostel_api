@@ -11,6 +11,7 @@ import { MySQLReservationRepository } from "../adapters/db/mysql/MySQLReservatio
 import { MySQLRatesAndAvailabilityRepository } from "../adapters/db/mysql/MySQLRatesAndAvailabilityRepository.js";
 import { MySQLAmenitiesRepository } from "../adapters/db/mysql/MySQLAmenitiesRepository.js";
 import { MySQLFacilitiesRepository } from "../adapters/db/mysql/MySQLFacilitiesRepository.js";
+import { MySQLImagesRepository } from "../adapters/db/mysql/MySQLImagesRepository.js";
 
 // SERVICES
 import { AvailabilityService } from "../core/AvailabilityService.js";
@@ -40,6 +41,7 @@ import { ReservationInputPort } from "../core/ports/ReservationInputPort.js";
 import { ReservationOutputPort } from "../core/ports/ReservationOutputPort.js";
 import { ReservationTransactionManagerPort } from "../core/ports/ReservationTransactionManagerPort.js";
 import { UserTransactionManagerPort } from "../core/ports/UserTransactionManagerPort.js";
+import { ImagesInputPort } from "../core/ports/ImagesInputPort.js";
 
 // Import nodemailer email notification service
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
@@ -56,6 +58,7 @@ import { RoomTypeController } from "../adapters/api/controllers/RoomTypeControll
 import { GuestController } from "../adapters/api/controllers/GuestController.js";
 import { RatesAndAvailabilityController } from "../adapters/api/controllers/RatesAndAvailabilityController.js";
 import { ReservationController } from "../adapters/api/controllers/ReservationController.js";
+import { ImagesController } from "../adapters/api/controllers/ImagesController.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -71,6 +74,7 @@ export default function initializeServices() {
     new MySQLRatesAndAvailabilityRepository(mysqlPool);
   const amenitiesRepository = new MySQLAmenitiesRepository(mysqlPool);
   const facilitiesRepository = new MySQLFacilitiesRepository(mysqlPool);
+  const imagesRepository = new MySQLImagesRepository(mysqlPool);
 
   // INITIALIZE EXTRA SERVICES.
   const emailService = createEmailNotification();
@@ -187,6 +191,8 @@ export default function initializeServices() {
     availabilityService
   );
 
+  const imagesInputPort = new ImagesInputPort(imagesRepository);
+
   // Initialize controllers
   const bookEngineController = new BookEngineController(bookEngineInputPort);
   const userController = new UserController(userInputPort);
@@ -197,6 +203,7 @@ export default function initializeServices() {
     ratesAndAvailabilityInputPort
   );
   const reservationController = new ReservationController(reservationInputPort);
+  const imagesController = new ImagesController(imagesInputPort);
 
   return {
     bookEngineController,
@@ -206,6 +213,7 @@ export default function initializeServices() {
     ratesAndAvailabilityController,
     reservationController,
     roomTypeController,
+    imagesController,
     dataProviderService,
   };
 }
