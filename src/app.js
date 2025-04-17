@@ -92,6 +92,7 @@ export async function createApp(services) {
   app.use("/api/v2/reservations", createReservationRoutes(services));
   app.use("/api/v2/data-provider", fetchDataProvider(services));
   app.use("/api/v2/images", createImagesRoutes(services));
+  app.use("/uploads", express.static("uploads"));
 
   // Use error middleware
   app.use(notFound);
