@@ -71,11 +71,11 @@ export class MySQLImagesRepository {
     }
   }
 
-  async deleteRoomTypeImage(roomId, imageId) {
+  async deleteRoomTypeImage(propertyId, imageId) {
     try {
       const query =
-        "DELETE FROM room_type_images WHERE id = ? AND room_type_id = ?";
-      const params = [imageId, roomId];
+        "DELETE FROM room_type_images WHERE id = ? AND property_id = ?";
+      const params = [imageId, propertyId];
 
       const [result] = await this.mysqlPool.execute(query, params);
 

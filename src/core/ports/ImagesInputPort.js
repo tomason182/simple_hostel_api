@@ -10,4 +10,20 @@ export class ImagesInputPort {
   savePropertyImagesFilenames(propertyId, filesPath) {
     return this.imagesRepository.savePropertyImages(propertyId, filesPath);
   }
+
+  getRoomTypeImages(roomTypeId) {
+    return this.imagesRepository.getRoomTypeImages(roomTypeId);
+  }
+
+  getPropertyImage(propertyId) {
+    return this.imagesRepository.getPropertyImage(propertyId);
+  }
+
+  deleteRoomTypeImage(propertyId, imageId) {
+    return this.imagesRepository.deleteRoomTypeImage(propertyId, imageId);
+  }
+
+  deletePropertyImage(propertyId, imageId) {
+    return this.imagesRepository.deletePropertyImage(propertyId, imageId);
+  }
 }
