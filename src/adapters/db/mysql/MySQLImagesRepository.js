@@ -6,7 +6,7 @@ export class MySQLImagesRepository {
   async getRoomTypeImages(roomId) {
     try {
       const query =
-        "SELECT file_name FROM room_type_images WHERE room_type_id = ?";
+        "SELECT id, file_name FROM room_type_images WHERE room_type_id = ?";
       const params = [roomId];
 
       const [result] = await this.mysqlPool.execute(query, params);
@@ -22,7 +22,7 @@ export class MySQLImagesRepository {
   async getPropertyImages(propertyId) {
     try {
       const query =
-        "SELECT file_name FROM property_images WHERE property_id = ?";
+        "SELECT id, file_name FROM property_images WHERE property_id = ?";
       const params = [propertyId];
 
       const [result] = await this.mysqlPool.execute(query, params);
@@ -43,7 +43,7 @@ export class MySQLImagesRepository {
 
       const [result] = await this.mysqlPool.execute(query, params);
 
-      return result;
+      return result[0] || null;
     } catch (e) {
       throw new Error(
         `An error occurred getting roomType image by id: ${e.message}`
@@ -59,7 +59,7 @@ export class MySQLImagesRepository {
 
       const [result] = await this.mysqlPool.execute(query, params);
 
-      return result;
+      return result[0] || null;
     } catch (e) {
       throw new Error(
         `An error occurred getting property image by id: ${e.message}`

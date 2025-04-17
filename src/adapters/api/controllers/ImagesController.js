@@ -145,8 +145,9 @@ export class ImagesController {
       const propertyId = req.user.property_id;
       const image = await this.imagesInputPort.getRoomTypeImageById(imageId);
 
-      // Image filename es image.file_name ¿¿??
-      console.log(image);
+      if (image === null) {
+        return res.status(400).json({ msg: "Image not found" });
+      }
       // Delete image from the database
       const result = await this.imagesInputPort.deleteRoomTypeImage(
         propertyId,
