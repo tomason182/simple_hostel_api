@@ -275,6 +275,14 @@ CREATE TABLE IF NOT EXISTS room_type_amenities (
   FOREIGN KEY (amenity_id) REFERENCES amenities(id) ON DELETE CASCADE
 );
 
+-- Create photos table
+CREATE TABLE IF NOT EXISTS photos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  name_photo VARCHAR(255),
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
