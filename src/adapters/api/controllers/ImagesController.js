@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 export class ImagesController {
   constructor(imagesInputPort) {
     this.imagesInputPort = imagesInputPort;
@@ -18,6 +21,17 @@ export class ImagesController {
         return res.status(400).json({ msg: "No files to upload" });
       }
 
+      // Check NOT to exceed maximum images permitted.
+      const imagesStored = await this.imagesInputPort.getRoomTypeImage(
+        roomTypeId
+      );
+
+      if (imagesStored.length + files.length > 10) {
+        return res
+          .status(400)
+          .json({ msg: "Maximum amount of images reached" });
+      }
+
       const propertyId = req.params.property_id;
 
       const filePaths = files.map(file => file.filename);
@@ -30,6 +44,13 @@ export class ImagesController {
 
       return res.status(200).json(result);
     } catch (e) {
+      await Promise.all(
+        req.files
+          .map(file => fs.unlink(path.join("public", "uploads", file.filename)))
+          .catch(err => {
+            console.error("Error deleting file: ", err);
+          })
+      );
       next(e);
     }
   };
@@ -46,6 +67,17 @@ export class ImagesController {
 
       const propertyId = req.user.property_id;
 
+      // Check NOT to exceed maximum images permitted.
+      const imagesStored = await this.imagesInputPort.getPropertyImages(
+        propertyId
+      );
+
+      if (imagesStored.length + files.length > 10) {
+        return res
+          .status(400)
+          .json({ msg: "Maximum amount of images reached" });
+      }
+
       const filePaths = files.map(file => file.filename);
 
       const result = await this.imagesInputPort.savePropertyImages(
@@ -55,6 +87,13 @@ export class ImagesController {
 
       return res.status(200).json(result);
     } catch (e) {
+      await Promise.all(
+        req.files
+          .map(file => fs.unlink(path.join("public", "uploads", file.filename)))
+          .catch(err => {
+            console.error("Error deleting file: ", err);
+          })
+      );
       next(e);
     }
   };
