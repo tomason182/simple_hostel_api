@@ -101,7 +101,7 @@ export class ImagesController {
   // @desc    Get room types images.
   // @route   GET /api/v2/images/room-types/:id
   // @access  Private
-  getRoomTypeImage = async (req, res, next) => {
+  getRoomTypeImages = async (req, res, next) => {
     try {
       const roomTypeId = parseInt(req.params.id, 10);
       if (isNaN(roomTypeId)) {

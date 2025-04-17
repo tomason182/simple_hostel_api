@@ -1,7 +1,7 @@
 import express from "express";
-import authMiddleware from "../../../middleware/authMiddleware";
-import { createTokenService } from "../../config/tokenConfig";
-import { upload } from "../../config/multer";
+import authMiddleware from "../../../middleware/authMiddleware.js";
+import { createTokenService } from "../../config/tokenConfig.js";
+import { upload } from "../../config/multer.js";
 
 export function createImagesRoutes(services) {
   const router = express.Router();

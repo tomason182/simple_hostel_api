@@ -18,6 +18,7 @@ import { createRoomTypeRoutes } from "./adapters/api/routes/roomTypeRoutes.js";
 import { createGuestRoutes } from "./adapters/api/routes/guestRoutes.js";
 import { createRatesAndAvailabilityRoutes } from "./adapters/api/routes/ratesAndAvailabilityRoutes.js";
 import { createReservationRoutes } from "./adapters/api/routes/reservationRoutes.js";
+import { createImagesRoutes } from "./adapters/api/routes/imagesRoutes.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -90,6 +91,7 @@ export async function createApp(services) {
   );
   app.use("/api/v2/reservations", createReservationRoutes(services));
   app.use("/api/v2/data-provider", fetchDataProvider(services));
+  app.use("/api/v2/images", createImagesRoutes(services));
 
   // Use error middleware
   app.use(notFound);
