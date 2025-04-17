@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
 export class ImagesController {
@@ -22,7 +22,7 @@ export class ImagesController {
       }
 
       // Check NOT to exceed maximum images permitted.
-      const imagesStored = await this.imagesInputPort.getRoomTypeImage(
+      const imagesStored = await this.imagesInputPort.getRoomTypeImages(
         roomTypeId
       );
 
@@ -32,11 +32,11 @@ export class ImagesController {
           .json({ msg: "Maximum amount of images reached" });
       }
 
-      const propertyId = req.params.property_id;
+      const propertyId = req.user.property_id;
 
       const filePaths = files.map(file => file.filename);
 
-      const result = await this.imagesInputPort.saveRoomTypesImagesFilename(
+      const result = await this.imagesInputPort.saveRoomTypesImagesFilenames(
         propertyId,
         roomTypeId,
         filePaths
@@ -45,11 +45,13 @@ export class ImagesController {
       return res.status(200).json(result);
     } catch (e) {
       await Promise.all(
-        req.files
-          .map(file => fs.unlink(path.join("public", "uploads", file.filename)))
-          .catch(err => {
-            console.error("Error deleting file: ", err);
-          })
+        req.files.map(file =>
+          fs
+            .unlink(path.join("public", "uploads", file.filename))
+            .catch(err => {
+              console.error("Error deleting file: ", err);
+            })
+        )
       );
       next(e);
     }

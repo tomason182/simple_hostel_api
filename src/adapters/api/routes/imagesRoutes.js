@@ -12,7 +12,7 @@ export function createImagesRoutes(services) {
 
   // Upload room types images.
   router.post(
-    "/upload/room-types/:id",
+    "/room-types/upload/:id",
     authMiddleware(tokenService),
     upload.array("photos", 10),
     imagesController.uploadRoomTypeImages
@@ -20,7 +20,7 @@ export function createImagesRoutes(services) {
 
   // Upload property images.
   router.post(
-    "/upload/property",
+    "/property/upload",
     authMiddleware(tokenService),
     upload.array("photos", 10),
     imagesController.uploadPropertyImages

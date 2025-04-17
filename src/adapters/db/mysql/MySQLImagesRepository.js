@@ -70,7 +70,7 @@ export class MySQLImagesRepository {
   async saveRoomTypesImages(propertyId, roomId, files) {
     try {
       const placeholders = files.map(() => "(?,?,?)").join(", ");
-      const query = `INSERT INTO room_type_images (room_type_id, file_name) VALUES ${placeholders}`;
+      const query = `INSERT INTO room_type_images (property_id, room_type_id, file_name) VALUES ${placeholders}`;
       const params = files.flatMap(file => [propertyId, roomId, file]);
 
       const [result] = await this.mysqlPool.execute(query, params);

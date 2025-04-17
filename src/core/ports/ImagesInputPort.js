@@ -3,7 +3,7 @@ export class ImagesInputPort {
     this.imagesRepository = imagesRepository;
   }
 
-  saveRoomTypesImagesFilenames(roomId, files) {
+  saveRoomTypesImagesFilenames(propertyId, roomId, files) {
     return this.imagesRepository.saveRoomTypesImages(propertyId, roomId, files);
   }
 
