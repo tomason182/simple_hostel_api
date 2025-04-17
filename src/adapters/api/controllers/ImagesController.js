@@ -108,7 +108,7 @@ export class ImagesController {
         return res.status(400).json({ msg: "Invalid Room Type ID" });
       }
 
-      const result = await this.imagesInputPort.getRoomTypeImage(roomTypeId);
+      const result = await this.imagesInputPort.getRoomTypeImages(roomTypeId);
 
       return res.status(200).json(result);
     } catch (e) {

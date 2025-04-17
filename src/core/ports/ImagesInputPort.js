@@ -15,8 +15,8 @@ export class ImagesInputPort {
     return this.imagesRepository.getRoomTypeImages(roomTypeId);
   }
 
-  getPropertyImage(propertyId) {
-    return this.imagesRepository.getPropertyImage(propertyId);
+  getPropertyImages(propertyId) {
+    return this.imagesRepository.getPropertyImages(propertyId);
   }
 
   getRoomTypeImageById(imageId) {

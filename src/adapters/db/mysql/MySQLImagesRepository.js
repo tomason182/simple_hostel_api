@@ -9,7 +9,7 @@ export class MySQLImagesRepository {
         "SELECT file_name FROM room_type_images WHERE room_type_id = ?";
       const params = [roomId];
 
-      const [result] = await this.mysqlPool(query, params);
+      const [result] = await this.mysqlPool.execute(query, params);
 
       return result || [];
     } catch (e) {
