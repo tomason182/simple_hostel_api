@@ -60,7 +60,6 @@ export async function createApp(services) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser(process.env.JWT_SECRET));
-  app.use(express.static(path.join(__dirname, "public")));
 
   // Compress all responses
   app.use(compression());
@@ -92,7 +91,16 @@ export async function createApp(services) {
   app.use("/api/v2/reservations", createReservationRoutes(services));
   app.use("/api/v2/data-provider", fetchDataProvider(services));
   app.use("/api/v2/images", createImagesRoutes(services));
-  app.use("/images", express.static("public/uploads"));
+
+  // Static files
+  app.use(
+    "/images",
+    (req, res, next) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+      next();
+    },
+    express.static(path.join("public", "uploads"))
+  );
 
   // Use error middleware
   app.use(notFound);
