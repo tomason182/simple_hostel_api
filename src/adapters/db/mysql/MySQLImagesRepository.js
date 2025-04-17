@@ -54,22 +54,6 @@ export class MySQLImagesRepository {
     }
   }
 
-  async deleteRoomTypeImage(roomId, imageId) {
-    try {
-      const query =
-        "DELETE FROM room_type_images WHERE id = ? AND room_type_id = ?";
-      const params = [imageId, roomId];
-
-      const [result] = await this.mysqlPool.execute(query, params);
-
-      return result;
-    } catch (e) {
-      throw new Error(
-        `An error occurred deleting a room type image. Error: ${e.message}`
-      );
-    }
-  }
-
   async savePropertyImages(propertyId, files) {
     try {
       const placeholders = files.map(() => "(?,?)").join(", ");
@@ -84,6 +68,22 @@ export class MySQLImagesRepository {
       };
     } catch (e) {
       `An error occurred saving property images filenames. Error: ${e.message}`;
+    }
+  }
+
+  async deleteRoomTypeImage(roomId, imageId) {
+    try {
+      const query =
+        "DELETE FROM room_type_images WHERE id = ? AND room_type_id = ?";
+      const params = [imageId, roomId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return result;
+    } catch (e) {
+      throw new Error(
+        `An error occurred deleting a room type image. Error: ${e.message}`
+      );
     }
   }
 

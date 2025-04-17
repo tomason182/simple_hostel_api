@@ -25,12 +25,6 @@ export function createImagesRoutes(services) {
     imagesController.getRoomTypeImages
   );
 
-  // Delete room type image.
-  router.delete("/images/room-types/:imageId");
-
-  // Delete property image.
-  router.delete("/images/property/:imageId");
-
   // Upload property images.
   router.post(
     "/images/upload/property",
@@ -38,6 +32,12 @@ export function createImagesRoutes(services) {
     upload.array("photos", 10),
     imagesController.uploadPropertyImages
   );
+
+  // Delete room type image.
+  router.delete("/images/room-types/:imageId");
+
+  // Delete property image.
+  router.delete("/images/property/:imageId");
 
   // Get property images.
   router.get(
