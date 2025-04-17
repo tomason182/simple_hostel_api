@@ -19,6 +19,14 @@ export class ImagesInputPort {
     return this.imagesRepository.getPropertyImage(propertyId);
   }
 
+  getRoomTypeImageById(imageId) {
+    return this.imagesRepository.getRoomTypeImageById(imageId);
+  }
+
+  getPropertyImageById(imageId) {
+    return this.imagesRepository.getPropertyImageById(imageId);
+  }
+
   deleteRoomTypeImage(propertyId, imageId) {
     return this.imagesRepository.deleteRoomTypeImage(propertyId, imageId);
   }

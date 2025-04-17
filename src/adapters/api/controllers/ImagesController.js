@@ -137,15 +137,26 @@ export class ImagesController {
   deleteRoomTypeImage = async (req, res, next) => {
     try {
       const imageId = parseInt(req.params.imageId, 10);
-      if (isNaN(roomTypeId)) {
-        return res.status(400).json({ msg: "Invalid Room Type ID" });
+      if (isNaN(imageId)) {
+        return res.status(400).json({ msg: "Invalid image ID" });
       }
       const propertyId = req.user.property_id;
+      const image = await this.imagesInputPort.getRoomTypeImageById(imageId);
 
+      // Image filename es image.file_name ¿¿??
+      console.log(image);
+      // Delete image from the database
       const result = await this.imagesInputPort.deleteRoomTypeImage(
         propertyId,
         imageId
       );
+
+      // Delete image from storage
+      await fs
+        .unlink(path.join("public", "uploads", image.file_name))
+        .catch(err => {
+          console.error("Failed to delete image file", err);
+        });
 
       return res.status(200).json(result);
     } catch (e) {
@@ -159,15 +170,24 @@ export class ImagesController {
   deletePropertyImage = async (req, res, next) => {
     try {
       const imageId = parseInt(req.params.imageId, 10);
-      if (isNaN(roomTypeId)) {
-        return res.status(400).json({ msg: "Invalid Room Type ID" });
+      if (isNaN(imageId)) {
+        return res.status(400).json({ msg: "Invalid image ID" });
       }
       const propertyId = req.user.property_id;
+      const image = await this.imagesInputPort.getPropertyImageById(imageId);
 
+      // Delete image filename from database
       const result = await this.imagesInputPort.deletePropertyImage(
         propertyId,
         imageId
       );
+
+      // Delete image from storage
+      await fs
+        .unlink(path.join("public", "uploads", image.file_name))
+        .catch(err => {
+          console.error("Failed to delete image file", err);
+        });
 
       return res.status(200).json(result);
     } catch (e) {
