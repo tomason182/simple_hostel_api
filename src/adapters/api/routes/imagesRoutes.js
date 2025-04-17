@@ -12,7 +12,7 @@ export function createImagesRoutes(services) {
 
   // Upload room types images.
   router.post(
-    "/images/upload/room-types/:id",
+    "/upload/room-types/:id",
     authMiddleware(tokenService),
     upload.array("photos", 10),
     imagesController.uploadRoomTypeImages
@@ -20,7 +20,7 @@ export function createImagesRoutes(services) {
 
   // Upload property images.
   router.post(
-    "/images/upload/property",
+    "/upload/property",
     authMiddleware(tokenService),
     upload.array("photos", 10),
     imagesController.uploadPropertyImages
@@ -28,28 +28,28 @@ export function createImagesRoutes(services) {
 
   // Get room types images.
   router.get(
-    "/images/room-types/:id",
+    "/room-types/:id",
     authMiddleware(tokenService),
     imagesController.getRoomTypeImages
   );
 
   // Get property images.
   router.get(
-    "/images/property",
+    "/property",
     authMiddleware(tokenService),
     imagesController.getPropertyImages
   );
 
   // Delete room type image.
   router.delete(
-    "/images/room-types/delete/:imageId",
+    "/room-types/delete/:imageId",
     authMiddleware(tokenService),
     imagesController.deleteRoomTypeImage
   );
 
   // Delete property image.
   router.delete(
-    "/images/property/delete/:imageId",
+    "/property/delete/:imageId",
     authMiddleware(tokenService),
     imagesController.deletePropertyImage
   );
