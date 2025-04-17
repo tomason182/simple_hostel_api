@@ -18,9 +18,12 @@ export class ImagesController {
         return res.status(400).json({ msg: "No files to upload" });
       }
 
+      const propertyId = req.params.property_id;
+
       const filePaths = files.map(file => file.filename);
 
       const result = await this.imagesInputPort.saveRoomTypesImagesFilename(
+        propertyId,
         roomTypeId,
         filePaths
       );

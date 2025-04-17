@@ -4,6 +4,6 @@ export class ImagesInputPort {
   }
 
   saveRoomTypesImagesFilenames(roomId, files) {
-    return this.imagesRepository.saveRoomTypesImages(roomId, files);
+    return this.imagesRepository.saveRoomTypesImages(propertyId, roomId, files);
   }
 }

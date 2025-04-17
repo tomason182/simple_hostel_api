@@ -307,10 +307,12 @@ CREATE TABLE IF NOT EXISTS property_facilities (
 -- Create roomType images table
 CREATE TABLE IF NOT EXISTS room_type_images (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NON NULL,
   room_type_id INT NOT NULL,
   file_name VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+  FOREIGN KEY (property_id) REFERENCES properties(id),
   FOREIGN KEY (room_type_id) REFERENCES room_types(id)
 );
 
