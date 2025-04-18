@@ -2,7 +2,7 @@ import express from "express";
 import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
-import upload from "../../../middleware/photoMiddleware.js";
+import uploadImages from "../../../middleware/photoMiddleware.js";
 import {
   contactDetailsSchema,
   propertyInfoSchema,
@@ -107,7 +107,7 @@ export function createPropertyRoutes(services) {
     "/photos/uploads",
     //checkSchema(),
     authMiddleware(tokenService),
-    upload.single('photo'), // ver si se puede subir un arreglo
+    uploadImages().single('photo'), // ver si se puede subir un arreglo
     propertyController.uploadPhotos
   );
 
