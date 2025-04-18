@@ -219,20 +219,28 @@ export class UserController {
   // @route   GET /api/v1/users/logout
   // @access  Private
   logoutUser = (req, res, next) => {
-    res.cookie("jwt", "", {
-      domain:
-        process.env.NODE_ENV === "production"
-          ? ".simplehostel.net"
-          : "localhost",
-      path: "/",
-      httpOnly: true,
-      secure: true,
-      signed: true,
-      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "None",
-      partitioned: true,
-      maxAge: 0,
-    });
-    return res.status(200).json({ msg: "User logout" });
+    return res
+      .cookie("jwt", "", {
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        signed: true,
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".simplehostel.net"
+            : undefined,
+        maxAge: 0,
+      })
+      .cookie("isAuth", "", {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+        path: "/",
+        maxAge: 0,
+      })
+      .status(200)
+      .json({ msg: "User logout" });
   };
 
   // @desc    Get user profile
