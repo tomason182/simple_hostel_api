@@ -68,6 +68,15 @@ export class Property {
     return this.contact_info.phone_number;
   }
 
+  // Getter and Setter for country code
+  getCountryCode() {
+    return this.contact_info.country_code;
+  }
+
+  setCountryCode(country_code) {
+    this.contact_info.country_code = country_code;
+  }
+
   // Getter and Setter email
   setEmail(email) {
     this.contact_info.email = email;
@@ -93,15 +102,6 @@ export class Property {
 
   setCity(city) {
     this.address.city = city;
-  }
-
-  // Getter and Setter for country code
-  getCountryCode() {
-    return this.address.country_code;
-  }
-
-  setCountryCode(country_code) {
-    this.address.country_code = country_code;
   }
 
   // Getter and Setter for postal code

@@ -14,10 +14,11 @@ export class MySQLPropertyRepository {
 
       // Insert property contact info in contact_info table
       const contactInfoQuery =
-        "INSERT INTO contacts_info (property_id, phone_number, email) VALUES(?,?,?)";
+        "INSERT INTO contacts_info (property_id, phone_number, country_code, email) VALUES(?,?,?,?)";
       const contactInfoParams = [
         property.getId(),
         property.getPhoneNumber(),
+        property.getCountryCode(),
         property.getEmail(),
       ];
 
@@ -25,13 +26,13 @@ export class MySQLPropertyRepository {
 
       // Insert property address in addresses table
       const addressQuery =
-        "INSERT INTO addresses (property_id, street, city, postal_code, country_code) VALUES(?,?,?,?,?)";
+        "INSERT INTO addresses (property_id, street, city, postal_code, alpha_2_code) VALUES(?,?,?,?,?)";
       const addressParams = [
         property.getId(),
         property.getStreet(),
         property.getCity(),
         property.getPostalCode(),
-        property.getCountryCode(),
+        property.getAlpha2Code(),
       ];
 
       await connection.execute(addressQuery, addressParams);
