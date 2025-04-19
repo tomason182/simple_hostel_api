@@ -29,7 +29,11 @@ export function createUserRoutes(services) {
       .isLength({ min: 1, max: 255 })
       .withMessage("Property name maximum length is 255 characters"),
     body("acceptTerms").isBoolean().withMessage("Accept terms must be boolean"),
-    body("captchaToken").trim().escape(),
+    body("captchaToken")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("captcha needs to be provided"),
     userController.userRegister
   );
 
