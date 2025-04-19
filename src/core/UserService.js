@@ -161,11 +161,17 @@ export class UserService {
     try {
       const userExist = await this.userOutputPort.findUserByUsername(email);
       if (userExist === null) {
-        throw new Error("User not found");
+        return {
+          status: "error",
+          msg: "USER_NOT_FOUND",
+        };
       }
 
       if (userExist.is_valid_email === 1) {
-        throw new Error("Email is already validated");
+        return {
+          status: "error",
+          msg: "EMAIL_VALIDATED",
+        };
       }
 
       const user = new User(userExist);
@@ -173,11 +179,11 @@ export class UserService {
       const waitingPeriod = user.setWaitingPeriod();
 
       if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
-        throw new Error(
-          `Please wait ${
-            waitingPeriod / 60 / 1000
-          } minutes before requesting a new email`
-        );
+        return {
+          status: "error",
+          msg: "WAITING_PERIOD",
+          time: waitingPeriod / 60 / 100,
+        };
       }
 
       user.setLastResendEmail();
@@ -195,7 +201,7 @@ export class UserService {
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
-      return { msg: `Email sent successfully to ${user.getUsername()}` };
+      return { status: "ok", msg: "EMAIL_SENT" };
     } catch (e) {
       throw e;
     }
