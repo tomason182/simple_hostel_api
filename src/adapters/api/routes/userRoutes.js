@@ -38,7 +38,7 @@ export function createUserRoutes(services) {
   );
 
   // Confirm email
-  router.post(
+  router.get(
     "/confirm-email/:token",
     param("token").isJWT().withMessage("Invalid JWT token"),
     userController.finishUserRegister

@@ -20,7 +20,7 @@ export class JWTTokenService {
       const decoded = verify(token, this.secret);
       return decoded;
     } catch (e) {
-      throw new Error("Invalid or expired token");
+      throw new Error("EXPIRED_TOKEN");
     }
   }
 }
