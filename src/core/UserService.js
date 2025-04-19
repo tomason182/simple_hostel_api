@@ -179,10 +179,12 @@ export class UserService {
       const waitingPeriod = user.setWaitingPeriod();
 
       if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
+        const timeLeft =
+          waitingPeriod - (Date.now() - user.getLastResendEmail());
         return {
           status: "error",
           msg: "WAITING_PERIOD",
-          time: waitingPeriod / 60 / 100,
+          time: parseInt(timeLeft / 60 / 1000),
         };
       }
 
