@@ -12,11 +12,11 @@ export const userRegistrationSchema = {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUpperCase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUpperCase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
