@@ -37,8 +37,16 @@ export class UserCompositeService {
           user.getRole(),
           conn
         );
+
+      // Cuando se reenvia un token se agrega email e id.
+      // Cuando se verifica ese token se descompone en email e id
+      // Por lo tanto aca el token tambien tiene que tener email e id para se coherentes cuando se verifica el token.
+      const tokenData = {
+        id: user.getId(),
+        email: user.getUsername(),
+      };
       const token = this.userTransactionManagerPort.generateToken(
-        user.getId(),
+        tokenData,
         900
       );
 
@@ -65,6 +73,7 @@ export class UserCompositeService {
     }
   }
 
+  // Esta funcion parece estar en desuso. Se utiliza AddorUpdateUser en UserService.
   async addUserToProperty(propertyId, userData) {
     const conn = await this.mysqlPool.getConnection();
     try {
@@ -99,7 +108,16 @@ export class UserCompositeService {
           user.getRole(),
           conn
         );
-      const token = this.userTransactionManagerPort.generateToken(user.id, 900); // Expires in 900 seg || 15 min
+
+      // Mismo que antes. Necesario email e id para verificar token
+      const tokenData = {
+        id: user.getId(),
+        email: user.getUsername(),
+      };
+      const token = this.userTransactionManagerPort.generateToken(
+        tokenData,
+        900
+      ); // Expires in 900 seg || 15 min
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;

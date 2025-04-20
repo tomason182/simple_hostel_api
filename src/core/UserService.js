@@ -102,7 +102,11 @@ export class UserService {
       const result = await this.userOutputPort.addUser(propertyId, user);
 
       // SEND EMAIL TO USER TO VALIDATE EMAIL AND CREATE PASSWORD.
-      const token = this.userOutputPort.generateToken(user.id, 900); // Expires in 900 seg || 15 min
+      const tokenData = {
+        id: user.getId(),
+        email: user.getUsername(),
+      };
+      const token = this.userOutputPort.generateToken(tokenData, 900); // Expires in 900 seg || 15 min
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation-and-password/" + token;
@@ -149,7 +153,8 @@ export class UserService {
   async validateEmail(token) {
     try {
       const decoded = await this.userOutputPort.verifyToken(token);
-      const userId = decoded.sub;
+      // Cuando se reenvia el email el token contiene el id y el email
+      const userId = decoded.sub.id;
       const result = await this.userOutputPort.validateUserEmail(userId);
       return result;
     } catch (e) {
@@ -192,7 +197,13 @@ export class UserService {
 
       await this.userOutputPort.updateLastResendEmail(user);
 
-      const token = this.userOutputPort.generateToken(user.getId(), 900);
+      // Cuando se reenvia mail de confirmación es necesario tener el email tambien
+      // en el token para poder extraerlo en la front y utilizarlo.
+      const tokenData = {
+        userId: user.getId(),
+        email: user.getUsername(),
+      };
+      const token = this.userOutputPort.generateToken(tokenData, 900);
 
       const confirmationLink =
         process.env.API_URL + "accounts/email-validation/" + token;
@@ -392,7 +403,12 @@ export class UserService {
 
       await this.userOutputPort.updateLastResendEmail(user);
 
-      const token = this.userOutputPort.generateToken(user.getId(), 900);
+      const tokenData = {
+        id: user.getId(),
+        email: user.getUsername(),
+      };
+
+      const token = this.userOutputPort.generateToken(tokenData, 900);
       const confirmationLink =
         process.env.API_URL + "accounts/reset-password/new/" + token;
       const to = user.getUsername();
