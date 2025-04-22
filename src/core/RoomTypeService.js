@@ -151,25 +151,19 @@ export class RoomTypeService {
 
   async deleteRoomTypeById(id, propertyId) {
     try {
-      // Check if room type has upcoming reservations
-      /*       const today = new Date();
-      const hasReservation =
-        await this.roomTypeOutputPort.getUpcomingReservations(id, today);
-
-      if (hasReservation.length > 0) {
-        return {
-          status: "error",
-          msg: "The are upcoming reservations for the room type you want to delete",
-        };
-      } */
+      // Cuando un room type es eliminado deberian elimnarse todas las reservas relacionadas.
+      // De lo contrario surgen problemas relacionados con la busqueda de reservas.
 
       const roomTypeDeleted = await this.roomTypeOutputPort.deleteRoomTypeById(
         id,
         propertyId
       );
 
-      if (roomTypeDeleted === null) {
-        throw new Error("No room types found that belong to this ID");
+      if (roomTypeDeleted.affectedRows === 0) {
+        return {
+          status: "error",
+          msg: "ROOM_TYPE_NOT_FOUND",
+        };
       }
 
       return roomTypeDeleted;
