@@ -305,13 +305,20 @@ export class UserController {
 
       if (req.user._id === userId) {
         res.status(403);
-        throw new Error("To delete your own account go to settings.");
+        return {
+          status: "error",
+          msg: "NOT_DELETE_OWN_ACCOUNT",
+        };
       }
 
       const result = await this.userInputPort.deleteUserProfile(
         propertyId,
         userId
       );
+
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
 
       return res.status(200).json(result);
     } catch (e) {

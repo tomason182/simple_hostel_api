@@ -308,11 +308,17 @@ export class UserService {
       );
 
       if (userExist === null) {
-        throw new Error("User not found");
+        return {
+          status: "error",
+          msg: "USER_NOT_FOUND",
+        };
       }
 
       if (userExist?.role === "admin") {
-        throw new Error("Admin user can not be deleted");
+        return {
+          status: "error",
+          msg: "ADMIN_NOT_DELETE",
+        };
       }
 
       const deletedUser = await this.userOutputPort.deleteUser(userId);
