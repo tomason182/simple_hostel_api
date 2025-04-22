@@ -16,7 +16,7 @@ export class RoomTypeService {
       if (roomTypeExist !== null) {
         return {
           status: "error",
-          msg: "Room Type name already exist",
+          msg: "ROOM_TYPE_EXIST",
         };
       }
 
@@ -37,7 +37,7 @@ export class RoomTypeService {
       if (totalBeds > 50) {
         return {
           status: "error",
-          msg: "Maximum number of beds reached. You can not create more than 50 beds",
+          msg: "MAX_NUMBER_BEDS",
         };
       }
 
@@ -49,7 +49,7 @@ export class RoomTypeService {
 
       return {
         status: "ok",
-        msg: "Room type created successfully",
+        msg: "ROOM_TYPE_CREATE_SUCCESS",
       };
     } catch (e) {
       throw e;
@@ -127,7 +127,7 @@ export class RoomTypeService {
       ) {
         return {
           status: "error",
-          msg: "Room type description already exist",
+          msg: "ROOM_TYPE_EXIST",
         };
       }
 
@@ -139,11 +139,11 @@ export class RoomTypeService {
       if (result === 0 || result === null) {
         return {
           status: "error",
-          msg: "Room type could not be updated",
+          msg: "UNEXPECTED_ERROR",
         };
       }
 
-      return { status: "ok", msg: "Room type updated successfully" };
+      return { status: "ok", msg: "ROOM_TYPE_UPDATE_SUCCESS" };
     } catch (e) {
       throw e;
     }
