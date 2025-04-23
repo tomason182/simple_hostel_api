@@ -65,6 +65,13 @@ export function createUserRoutes(services) {
     userController.createOrUpdateUser
   );
 
+  // Validate new user email and set up password.
+  router.post(
+    "/validate/new-user/",
+    checkSchema(userChangePassSchema),
+    userController.finishCreateUser
+  );
+
   // Authenticate a user
   router.post("/auth", checkSchema(userLoginSchema), userController.authUser);
 

@@ -148,7 +148,7 @@ export class UserController {
     }
   };
 
-  // @desc Authenticate a user
+  // @desc Validate new user
   // @route POST /api/v2/users/auth
   // @access Public
   finishCreateUser = async (req, res, next) => {
