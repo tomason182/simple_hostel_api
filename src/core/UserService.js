@@ -59,22 +59,32 @@ export class UserService {
         );
 
         if (userExist === null) {
-          throw new Error(
-            "Sorry, we could no find the user ID in this property"
-          );
+          return {
+            status: "error",
+            msg: "USER_NOT_FOUND",
+          };
         }
 
         if (userExist !== null && userExist.username !== userData.username) {
-          throw new Error("User email can not be change");
+          return {
+            status: "error",
+            msg: "EMAIL_NOT_CHANGE",
+          };
         }
 
-        if (userExist.role === "admin" && user.getRole() !== "admin") {
-          throw new Error("Admin users role can not be modify");
+        if (userExist.role === "admin") {
+          return {
+            status: "error",
+            msg: "ADMIN_NOT_CHANGE",
+          };
         }
 
         const result = await this.userOutputPort.editUser(propertyId, user);
 
-        return { msg: "User Updated successfully" };
+        return {
+          status: "ok",
+          msg: "USER_UPDATED",
+        };
       }
 
       userExist = await this.userOutputPort.findUserByUsername(
@@ -82,7 +92,10 @@ export class UserService {
       );
 
       if (userExist !== null) {
-        throw new Error(`User with email ${userData.username} already exists.`);
+        return {
+          status: "error",
+          msg: "USER_EXIST",
+        };
       }
 
       // LIMIT PROPERTY USER TO 5.
@@ -91,7 +104,7 @@ export class UserService {
       if (propertyTotalUsers.length > 4) {
         return {
           status: "error",
-          msg: "Team members creation limited reached. You can not create more than 5 team members.",
+          msg: "TEAM_MEMBERS_LIMIT",
         };
       }
 
@@ -118,7 +131,8 @@ export class UserService {
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
       return {
-        msg: "Email sent to user to create a password and validate the account",
+        status: "ok",
+        msg: "EMAIL_SENT",
       };
     } catch (e) {
       throw e;
