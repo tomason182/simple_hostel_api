@@ -304,11 +304,10 @@ export class UserController {
       const userId = parseInt(data.id);
 
       if (req.user._id === userId) {
-        res.status(403);
-        return {
+        return res.status(403).json({
           status: "error",
           msg: "NOT_DELETE_OWN_ACCOUNT",
-        };
+        });
       }
 
       const result = await this.userInputPort.deleteUserProfile(
