@@ -97,6 +97,7 @@ export default function initializeServices() {
   // INITIALIZE OUTPUT PORT.
   const userOutputPort = new UserOutputPort(
     userRepository,
+    propertyRepository,
     accessControlService,
     tokenService,
     emailService

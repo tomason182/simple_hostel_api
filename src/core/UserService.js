@@ -108,6 +108,11 @@ export class UserService {
         };
       }
 
+      // Get Property name
+      const propertyInfo = await this.userOutputPort.findPropertyById(
+        propertyId
+      );
+
       // Generate random password
       const pass = user.generateRandomPassword();
       await user.setPasswordHash(pass);
@@ -118,6 +123,7 @@ export class UserService {
       const tokenData = {
         id: user.getId(),
         email: user.getUsername(),
+        propertyName: propertyInfo.property_name,
       };
       const token = this.userOutputPort.generateToken(tokenData, 900); // Expires in 900 seg || 15 min
 
@@ -144,14 +150,14 @@ export class UserService {
       // Validar que el token es correcto
       const decoded = await this.userOutputPort.verifyToken(token);
       const userId = decoded.sub;
-      await this.userOutputPort.validateUserEmail(userId);
 
-      // Modificar password para usuario;
       const userExist = await this.userOutputPort.findUserById(userId);
 
       if (userExist === null) {
         throw Error("We couldn't find the user");
       }
+
+      await this.userOutputPort.validateUserEmail(userId);
 
       const user = new User(userExist);
       await user.setPasswordHash(password);

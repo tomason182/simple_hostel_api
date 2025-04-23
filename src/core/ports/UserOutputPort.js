@@ -1,14 +1,21 @@
 export class UserOutputPort {
   constructor(
     userRepository,
+    propertyRepository,
     accessControlService,
     tokenService,
     emailService
   ) {
     this.userRepository = userRepository;
+    this.propertyRepository = propertyRepository;
     this.accessControlService = accessControlService;
     this.tokenService = tokenService;
     this.emailService = emailService;
+  }
+
+  // Property repository methods
+  findPropertyById(propertyId) {
+    return this.propertyRepository.findPropertyById(propertyId);
   }
 
   // User repository methods

@@ -57,7 +57,8 @@ export class MySQLPropertyRepository {
   }
 
   async findPropertyById(id) {
-    const query = "SELECT id, property_name FROM properties WHERE id = ?";
+    const query =
+      "SELECT id, property_name FROM properties WHERE id = ? LIMIT 1";
     const params = [id];
     const [result] = await this.pool.execute(query, params);
 
