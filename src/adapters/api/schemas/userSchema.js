@@ -28,7 +28,7 @@ export const userRegistrationSchema = {
       },
     },
     errorMessage:
-      "Password must contain at lease 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
   firstName: {
     in: ["body"],
@@ -161,11 +161,11 @@ export const userChangePassSchema = {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUppercase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUpperCase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
@@ -177,17 +177,17 @@ export const userChangePassSchema = {
       },
     },
     errorMessage:
-      "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
   newPassword: {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUppercase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUpperCase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
@@ -199,17 +199,17 @@ export const userChangePassSchema = {
       },
     },
     errorMessage:
-      "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
   repeatNewPassword: {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUppercase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUpperCase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
@@ -221,7 +221,7 @@ export const userChangePassSchema = {
       },
     },
     errorMessage:
-      "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
 };
 
@@ -242,11 +242,11 @@ export const userResetPassSchema = {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUppercase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
@@ -258,17 +258,17 @@ export const userResetPassSchema = {
       },
     },
     errorMessage:
-      "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
   repeatNewPassword: {
     in: ["body"],
     isStrongPassword: {
       options: {
-        minLength: 14,
-        minLowerCase: 4,
-        minUppercase: 2,
-        minNumbers: 2,
-        minSymbols: 2,
+        minLength: 8,
+        minLowerCase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
       },
     },
     custom: {
@@ -280,6 +280,6 @@ export const userResetPassSchema = {
       },
     },
     errorMessage:
-      "Password should contain at least 14 characters, 4 lowercase, 2 uppercase, 2 numbers and 2 symbols ",
+      "Password must contain at lease 8 characters, 1 lowercase, 1 uppercase, 1 numbers and 1 symbols",
   },
 };
