@@ -7,6 +7,7 @@ export class RoomType {
     gender,
     max_occupancy,
     inventory,
+    status = true,
     products = [],
     amenities = [],
     created_at = null,
@@ -19,6 +20,7 @@ export class RoomType {
     this.gender = gender;
     this.max_occupancy = max_occupancy;
     this.inventory = inventory;
+    this.status = status;
     this.products = products;
     this.amenities = amenities;
     this.created_at = created_at;
@@ -85,6 +87,12 @@ export class RoomType {
 
   setInventory(newInv) {
     this.inventory = newInv;
+  }
+
+  // Setter for status
+  // Cuando se crea un room type su estado es true. Al eliminarlo se setea su estado a false.
+  setStatus(status) {
+    this.status = status;
   }
 
   // Getter and Setter for products

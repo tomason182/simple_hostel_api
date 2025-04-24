@@ -57,7 +57,7 @@ export class MySQLRoomTypeRepository {
   async findRoomTypeByDescription(propertyId, description) {
     try {
       const query =
-        "SELECT * FROM room_types WHERE property_id = ? AND description = ?";
+        "SELECT * FROM room_types WHERE property_id = ? AND description = ? AND status=1";
       const params = [propertyId, description];
 
       const [result] = await this.pool.execute(query, params);
@@ -74,7 +74,7 @@ export class MySQLRoomTypeRepository {
   async getAllPropertyBeds(propertyId, conn = null) {
     try {
       const query =
-        "SELECT beds.id FROM beds JOIN products ON beds.product_id = products.id JOIN room_types ON products.room_type_id = room_types.id WHERE room_types.property_id = ?";
+        "SELECT beds.id FROM beds JOIN products ON beds.product_id = products.id JOIN room_types ON products.room_type_id = room_types.id WHERE room_types.property_id = ? AND room_types.status=1";
       const params = [propertyId];
 
       const [result] = await (conn
@@ -94,7 +94,7 @@ export class MySQLRoomTypeRepository {
   async findAllPropertyRoomTypes(propertyId, conn = null) {
     try {
       const query =
-        "SELECT room_types.id AS id, room_types.property_id, room_types.description, room_types.type, room_types.gender, room_types.max_occupancy, room_types.inventory, products.id AS product_id, products.room_name, beds.id AS bed_id FROM room_types LEFT JOIN products ON room_types.id = products.room_type_id LEFT JOIN beds ON products.id = beds.product_id WHERE room_types.property_id = ? ORDER BY room_types.id, products.id, beds.id";
+        "SELECT room_types.id AS id, room_types.property_id, room_types.description, room_types.type, room_types.gender, room_types.max_occupancy, room_types.inventory, products.id AS product_id, products.room_name, beds.id AS bed_id FROM room_types LEFT JOIN products ON room_types.id = products.room_type_id LEFT JOIN beds ON products.id = beds.product_id WHERE room_types.property_id = ? AND room_types.status=1 ORDER BY room_types.id, products.id, beds.id";
       const params = [propertyId];
 
       console.log(params);
@@ -111,7 +111,7 @@ export class MySQLRoomTypeRepository {
   async findPropertyRoomTypes(propertyId, conn = null) {
     try {
       const query =
-        "SELECT room_types.id AS id, room_types.description, room_types.type, room_types.gender, room_types.max_occupancy, room_types.inventory FROM room_types WHERE property_id = ?";
+        "SELECT room_types.id AS id, room_types.description, room_types.type, room_types.gender, room_types.max_occupancy, room_types.inventory FROM room_types WHERE property_id = ? AND status=1";
       const params = [propertyId];
 
       const [result] = await (conn
@@ -166,7 +166,9 @@ export class MySQLRoomTypeRepository {
 
   async deleteRoomTypeById(id, propertyId) {
     try {
-      const query = "DELETE FROM room_types WHERE id = ? AND property_id = ?";
+      // NO ELIMINAMOS EL CUARTO LE SETEAMOS EL STATUS A 0 (disable)
+      const query =
+        "UPDATE room_types SET status = 0 WHERE id = ? AND property_id = ?";
       const params = [id, propertyId];
 
       const [result] = await this.pool.execute(query, params);
@@ -185,7 +187,7 @@ export class MySQLRoomTypeRepository {
   async getUpcomingReservations(roomTypeId, checkIn) {
     try {
       const query =
-        "SELECT reservation_rooms.id, reservation_rooms.reservation_id FROM reservation_rooms JOIN reservations ON reservations.id = reservation_rooms.reservation_id WHERE reservations.check_in >= ? AND reservation_rooms.room_type_id = ?";
+        "SELECT reservation_rooms.id, reservation_rooms.reservation_id FROM reservation_rooms JOIN reservations ON reservations.id = reservation_rooms.reservation_id WHERE reservations.check_out > ? AND reservation_rooms.room_type_id = ?";
       const params = [checkIn, roomTypeId];
 
       const [result] = await this.pool.execute(query, params);

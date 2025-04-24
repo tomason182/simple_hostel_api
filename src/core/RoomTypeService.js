@@ -151,8 +151,22 @@ export class RoomTypeService {
 
   async deleteRoomTypeById(id, propertyId) {
     try {
-      // Cuando un room type es eliminado deberian elimnarse todas las reservas relacionadas.
-      // De lo contrario surgen problemas relacionados con la busqueda de reservas.
+      // Cuando un room type es eliminado lo que se hace es establecer el status=0 (deshabilitado).
+      // De esta forma el cuarto queda desvincualdo del funcionamiento de la aplicación pero las reservas
+      // siguen vinculadas al mismo.
+
+      // Check for upcoming reservations
+      // IMPORTANTE: aca convine enviar el dia desde el front, para que no haya diferencias horarias.
+      const today = new Date().toISOString().split("T")[0];
+      const upcomingReservations =
+        await this.roomTypeOutputPort.getUpcomingReservations(id, today);
+
+      if (upcomingReservations.length > 0) {
+        return {
+          status: "error",
+          msg: "UPCOMING_RESERVATIONS",
+        };
+      }
 
       const roomTypeDeleted = await this.roomTypeOutputPort.deleteRoomTypeById(
         id,
@@ -165,6 +179,8 @@ export class RoomTypeService {
           msg: "ROOM_TYPE_NOT_FOUND",
         };
       }
+
+      console.log(roomTypeDeleted);
 
       return roomTypeDeleted;
     } catch (e) {

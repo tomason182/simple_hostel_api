@@ -183,6 +183,7 @@ CREATE TABLE IF NOT EXISTS room_types (
   gender VARCHAR(10) NOT NULL,
   max_occupancy INT NOT NULL CHECK (max_occupancy > 0),
   inventory INT NOT NULL CHECK (inventory > 0),
+  status  BOOLEAN DEFAULT true,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
