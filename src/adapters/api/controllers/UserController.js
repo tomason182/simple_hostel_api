@@ -158,9 +158,13 @@ export class UserController {
         return res.status(400).json(errors.array());
       }
 
-      const { token, password } = matchedData(req);
+      const { token, newPassword, repeatNewPassword } = matchedData(req);
 
-      const result = await this.userInputPort.validateNewUser(token, password);
+      const result = await this.userInputPort.validateNewUser(
+        token,
+        newPassword,
+        repeatNewPassword
+      );
 
       return {
         status: "ok",

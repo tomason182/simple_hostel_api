@@ -72,6 +72,14 @@ export class UserInputPort {
     );
   }
 
+  validateNewUser(token, newPassword, repeatNewPassword) {
+    return this.userService.validateNewUser(
+      token,
+      newPassword,
+      repeatNewPassword
+    );
+  }
+
   // Token service
   verifyToken(token) {
     return this.tokenService.verifyToken(token);

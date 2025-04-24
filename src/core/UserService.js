@@ -145,8 +145,14 @@ export class UserService {
     }
   }
 
-  async validateNewUser(token, password) {
+  async validateNewUser(token, newPassword, repeatNewPassword) {
     try {
+      if (newPassword !== repeatNewPassword) {
+        return {
+          status: "error",
+          msg: "PASSWORD_NOT_MATCH",
+        };
+      }
       // Validar que el token es correcto
       const decoded = await this.userOutputPort.verifyToken(token);
       const userId = decoded.sub;
@@ -154,7 +160,10 @@ export class UserService {
       const userExist = await this.userOutputPort.findUserById(userId);
 
       if (userExist === null) {
-        throw Error("We couldn't find the user");
+        return {
+          status: "error",
+          msg: "USER_NOT_FOUND",
+        };
       }
 
       await this.userOutputPort.validateUserEmail(userId);
