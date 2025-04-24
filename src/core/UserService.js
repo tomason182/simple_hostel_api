@@ -155,7 +155,7 @@ export class UserService {
       }
       // Validar que el token es correcto
       const decoded = await this.userOutputPort.verifyToken(token);
-      const userId = decoded.sub;
+      const userId = decoded.sub.id;
 
       const userExist = await this.userOutputPort.findUserById(userId);
 
@@ -169,7 +169,7 @@ export class UserService {
       await this.userOutputPort.validateUserEmail(userId);
 
       const user = new User(userExist);
-      await user.setPasswordHash(password);
+      await user.setPasswordHash(newPassword);
 
       const result = this.userOutputPort.updatePassword(user);
 
