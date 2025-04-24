@@ -67,8 +67,9 @@ export function createUserRoutes(services) {
 
   // Validate new user email and set up password.
   router.post(
-    "/validate/new-user/",
-    checkSchema(userChangePassSchema),
+    "/validate/new-user/:token",
+    param("token").isJWT().withMessage("Invalid JWT token"),
+    checkSchema(userResetPassSchema),
     userController.finishCreateUser
   );
 
