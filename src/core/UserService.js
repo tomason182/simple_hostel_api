@@ -421,9 +421,10 @@ export class UserService {
     try {
       const userExist = await this.userOutputPort.findUserByUsername(email);
       if (userExist === null) {
-        throw new Error(
-          "We couldn't find a matching account for the email address you entered. Please check the email address and try again."
-        );
+        return {
+          status: "error",
+          msg: "USER_NOT_FOUND",
+        };
       }
 
       const user = new User(userExist);
@@ -431,7 +432,10 @@ export class UserService {
       const waitingPeriod = user.setWaitingPeriod();
 
       if (Date.now() - user.getLastResendEmail() < waitingPeriod) {
-        throw new Error("Please wait 5 minutes before requesting a new email");
+        return {
+          status: "error",
+          msg: "WAITING_PERIOD",
+        };
       }
 
       user.setLastResendEmail();
@@ -454,7 +458,7 @@ export class UserService {
 
       await this.userOutputPort.sendEmail(to, subject, body, from);
 
-      return { msg: "email sent" };
+      return { status: "ok", msg: "EMAIL_SENT" };
     } catch (e) {
       throw e;
     }
