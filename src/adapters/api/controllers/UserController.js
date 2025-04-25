@@ -415,7 +415,6 @@ export class UserController {
       }
 
       const data = matchedData(req);
-      console.log(data);
 
       const result = await this.userInputPort.resetUserPasswordLastStep(
         data.token,

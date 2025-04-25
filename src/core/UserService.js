@@ -474,7 +474,7 @@ export class UserService {
       }
 
       const decode = this.userOutputPort.verifyToken(token);
-      const userId = decode.sub;
+      const userId = decode.sub.id;
 
       const userExist = await this.userOutputPort.findUserById(userId);
 
