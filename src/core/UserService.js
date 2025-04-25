@@ -467,7 +467,10 @@ export class UserService {
   async resetUserPasswordLastStep(token, newPass, repeatNewPass) {
     try {
       if (newPass !== repeatNewPass) {
-        throw Error("Passwords do not match");
+        return {
+          status: "error",
+          msg: "PASSWORD_NOT_MATCH",
+        };
       }
 
       const decode = this.userOutputPort.verifyToken(token);
@@ -476,7 +479,10 @@ export class UserService {
       const userExist = await this.userOutputPort.findUserById(userId);
 
       if (userExist === null) {
-        throw Error("We couldn't find the user");
+        return {
+          status: "error",
+          msg: "USER_NOT_FOUND",
+        };
       }
 
       const user = new User(userExist);
