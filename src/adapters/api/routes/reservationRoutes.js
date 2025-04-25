@@ -181,5 +181,15 @@ export function createReservationRoutes(services) {
     reservationController.changePaymentStatus
   );
 
+  // @desc Change reservation dates
+  // @route PUT /api/v2/reservations/change-dates/:id
+  // @access Private
+  router.put(
+    "/change-dates/:id",
+    param("id".trim().isInt().withMessage("Invalid reservation ID").toInt()),
+    authMiddleware(tokenService),
+    reservationController.changeReservationDates
+  );
+
   return router;
 }

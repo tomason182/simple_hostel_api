@@ -251,4 +251,25 @@ export class ReservationController {
       next(e);
     }
   };
+
+  changeReservationDates = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { id } = matchedData(req);
+
+      const result = await this.reservationInputPort.changeReservationDates(
+        propertyId,
+        id
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }
