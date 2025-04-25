@@ -221,6 +221,24 @@ export class ReservationService {
 
   async changeReservationStatus(id, status, propertyId) {
     try {
+      // No se permite cambiar de canceled o no-show a un estado activo
+      // Esto requeriria comprobar dispobibilidad y asignar nuevas camas.
+
+      if (status !== "canceled" && status !== "no-show") {
+        const reservation = await this.reservationOutport.findReservationById(
+          propertyId,
+          id
+        );
+
+        if (
+          reservation[0].reservation_status === "canceled" ||
+          reservation[0].reservation_status === "no-show"
+        ) {
+          throw new Error(
+            "Canceled or no-show reservations can not be modify."
+          );
+        }
+      }
       const result = await this.reservationOutport.updateReservationStatus(
         propertyId,
         id,

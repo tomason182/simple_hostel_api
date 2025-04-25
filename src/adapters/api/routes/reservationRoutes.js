@@ -153,9 +153,9 @@ export function createReservationRoutes(services) {
     param("status")
       .trim()
       .isIn([
-        "pending",
         "canceled",
         "no_show",
+        "provisional",
         "confirmed",
         "checked_in",
         "checked_out",
