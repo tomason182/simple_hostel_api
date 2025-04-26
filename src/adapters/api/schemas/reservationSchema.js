@@ -300,3 +300,34 @@ export const findReservationsByDatesAndName = {
     optional: true,
   },
 };
+
+export const changeReservationDates = {
+  newCheckIn: {
+    in: ["body"],
+    exists: {
+      bail: true,
+      errorMessage: "New check-in must be provided",
+    },
+    isISO8601: {
+      strict: true,
+      errorMessage: "New Check-in date must be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
+  },
+  newCheckOut: {
+    in: ["body"],
+    exists: {
+      bail: true,
+      errorMessage: "New check-out must be provided",
+    },
+    isISO8601: {
+      strict: true,
+      errorMessage: "New check-out must be ISO8601 format",
+    },
+    customSanitizer: {
+      options: value => new Date(value),
+    },
+  },
+};

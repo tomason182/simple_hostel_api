@@ -5,6 +5,7 @@ import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
   reservationSchema,
   findReservationsByDatesAndName,
+  changeReservationDates,
 } from "../schemas/reservationSchema.js";
 
 export function createReservationRoutes(services) {
@@ -186,7 +187,8 @@ export function createReservationRoutes(services) {
   // @access Private
   router.put(
     "/change-dates/:id",
-    param("id".trim().isInt().withMessage("Invalid reservation ID").toInt()),
+    param("id").trim().isInt().withMessage("Invalid reservation ID").toInt(),
+    checkSchema(changeReservationDates),
     authMiddleware(tokenService),
     reservationController.changeReservationDates
   );
