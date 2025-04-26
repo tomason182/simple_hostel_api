@@ -147,8 +147,7 @@ export class Reservation {
     return this.check_in;
   }
 
-  setCheckIn(checkIn) {
-    const date = formatDate(checkIn); // formatDate not implemented yet.
+  setCheckIn(date) {
     this.check_in = date;
   }
 
@@ -157,8 +156,7 @@ export class Reservation {
     return this.check_out;
   }
 
-  setCheckOut(checkOut) {
-    const date = formatDate(checkOut);
+  setCheckOut(date) {
     this.check_out = date;
   }
 
