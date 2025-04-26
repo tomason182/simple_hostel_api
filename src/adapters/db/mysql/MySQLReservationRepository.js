@@ -80,14 +80,15 @@ export class MySQLReservationRepository {
 
   async getOverlappingReservations(
     roomTypeId,
+    reservationId = -1,
     startDate,
     endDate,
     conn = null
   ) {
     try {
       const query =
-        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_rooms, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in < ? AND reservations.check_out > ?";
-      const params = [roomTypeId, endDate, startDate];
+        "SELECT reservation_rooms.id as id, reservation_rooms.number_of_rooms, reservations.check_in, reservations.check_out FROM reservation_rooms JOIN reservations ON reservation_rooms.reservation_id = reservations.id WHERE reservation_rooms.room_type_id = ? AND reservation_rooms.reservation_id != ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_in < ? AND reservations.check_out > ?";
+      const params = [roomTypeId, reservationId, endDate, startDate];
 
       const [result] = await (conn
         ? conn.execute(query, params)
@@ -101,11 +102,11 @@ export class MySQLReservationRepository {
     }
   }
 
-  async getReservationsListLimit(roomTypeId, from, conn = null) {
+  async getReservationsListLimit(roomTypeId, reservationId, from, limit, conn) {
     try {
       const query =
-        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id, JSON_OBJECTAGG (assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id  LIMIT 500";
-      const params = [roomTypeId, from];
+        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id, JSON_OBJECTAGG (assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservation_rooms.reservation_id != ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id  LIMIT ?";
+      const params = [roomTypeId, reservationId, from, limit];
 
       const [result] = await (conn
         ? conn.execute(query, params)

@@ -141,7 +141,7 @@ export class AvailabilityService {
     }
   }
 
-  async checkAvailabilityAndAssignBeds(reservation, ranges, conn = null) {
+  async checkAvailabilityAndAssignBeds(reservation, conn = null) {
     this.assignedBedsToCurrentReservation = [];
     this.reservationsToUpdate = [];
     try {
@@ -149,6 +149,27 @@ export class AvailabilityService {
       const checkIn = reservation.getCheckIn();
       const checkOut = reservation.getCheckOut();
       const propertyId = reservation.getPropertyId();
+
+      // NECESITAMOS EL ID DE LA RESERVA. SI RESERVA NUEVA ID = NULL ENTONCES ESTABLECEMOS -1 A EFECTOS DE FILTRAR LA RESERVA DE LA BD.
+      const reservationId = reservation.getId() || -1;
+
+      const roomsIdList = selectedRooms.flatMap(room => room.room_type_id);
+
+      // GET PROPERTY RANGES.
+      // Get ranges for all selected room types and lock rows to prevent race conditions.
+      const ranges = await this.availabilityTransactionManagerPort.getAllRanges(
+        roomsIdList,
+        checkIn,
+        checkOut,
+        conn
+      );
+
+      if (ranges.length === 0) {
+        return {
+          status: "error",
+          msg: "Property close for the selected rates.",
+        };
+      }
 
       for (const room of selectedRooms) {
         // Bring the availability ranges
@@ -179,9 +200,12 @@ export class AvailabilityService {
         }
 
         // Brings the reservation_room table and the check-in, check-out from the reservation table.
+        // CREO QUE ACA SE PODRIA FILTRAR OVERLAPPING RESERVATIONS POR RESERVATION ID. PARA USER ESTO MISMO PARA EL CAMBIO DE FECHAS (1).
+        // (1) SE PUEDE FILTARR DIRECTAMENTE EN LA BD.
         const overlappingReservations =
           await this.availabilityTransactionManagerPort.getOverlappingReservations(
             room.room_type_id,
+            reservationId,
             checkIn,
             checkOut,
             conn
@@ -232,10 +256,6 @@ export class AvailabilityService {
         total_amount = total_amount * room.number_of_rooms;
         reservation.setTotalAmount(room.room_type_id, total_amount);
 
-        /*         roomType.type === "dorm"
-          ? (total_amount *= room.selectedRooms)
-          : total_amount; */
-
         const roomTypeTotalBeds =
           await this.availabilityTransactionManagerPort.getRoomTypeBeds(
             room.room_type_id,
@@ -243,7 +263,7 @@ export class AvailabilityService {
           );
 
         const currentReservation = {
-          id: -1,
+          id: reservationId,
           check_in: reservation.getCheckIn(),
           check_out: reservation.getCheckOut(),
           number_of_rooms: reservation.getNumberOfRooms(room.room_type_id),
@@ -256,7 +276,15 @@ export class AvailabilityService {
           roomType,
           roomTypeTotalBeds
         );
-        await bedAssignment.getReservationsListLimit(checkIn, conn);
+
+        // (2) CAMBIAR FECHAS: CREO QUE ACÁ SE PUEDE FILTRAR DE RESERVATION LIST EL ID DE LA RESERVA (SI ESTA RESERVA YA FUE CREADA Y SE QUIERE CAMBIAR FECHAS.)
+        // SI LA RESERVA ES NUEVA NO TIENE UN ID POR LO QUE HAY QUE CONDICIONAR.
+        await bedAssignment.getReservationsListLimit(
+          checkIn,
+          reservationId,
+          500,
+          conn
+        );
         await bedAssignment.assignBedsToReservation(currentReservation, conn);
       }
 
@@ -279,11 +307,18 @@ class BedAssignment {
     this.reservationsList = [];
   }
 
-  async getReservationsListLimit(from, limit, conn = null) {
+  async getReservationsListLimit(
+    from,
+    reservationToFilter,
+    limit,
+    conn = null
+  ) {
     // Bring all the reservations with a check-out greater that the current reservation check-in. LIMIT 500 reservations.
+    // VER (2)
     this.reservationsList =
       await this.availabilityService.availabilityTransactionManagerPort.getReservationsListLimit(
         this.roomType.id,
+        reservationToFilter,
         from,
         limit,
         conn

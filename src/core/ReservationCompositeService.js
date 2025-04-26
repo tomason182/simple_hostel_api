@@ -18,32 +18,11 @@ export class ReservationCompositeService {
       const reservation = new Reservation(reservationData);
       reservation.setSelectedRooms(reservationData.selected_rooms);
 
-      const selectedRooms = reservation.getSelectedRooms();
-      const checkIn = reservation.getCheckIn();
-      const checkOut = reservation.getCheckOut();
       const propertyId = reservation.getPropertyId();
-
-      const roomsIdList = selectedRooms.flatMap(room => room.room_type_id);
-
-      // Get ranges for all selected room types and lock rows to prevent race conditions.
-      const ranges = await this.reservationTransactionManagerPort.getAllRanges(
-        roomsIdList,
-        checkIn,
-        checkOut,
-        conn
-      );
-
-      if (ranges.length === 0) {
-        return {
-          status: "error",
-          msg: "Property close for the selected rates.",
-        };
-      }
 
       const bedsAssigned =
         await this.reservationTransactionManagerPort.checkAvailabilityAndAssignBeds(
           reservation,
-          ranges,
           conn
         );
 

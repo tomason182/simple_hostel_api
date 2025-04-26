@@ -65,4 +65,13 @@ export class ReservationInputPort {
   changePaymentStatus(id, status, propertyId) {
     return this.reservationService.changePaymentStatus(id, status, propertyId);
   }
+
+  changeReservationDates(propertyId, id, newCheckIn, newCheckOut) {
+    return this.reservationService.changeReservationDates(
+      propertyId,
+      id,
+      newCheckIn,
+      newCheckOut
+    );
+  }
 }

@@ -260,11 +260,13 @@ export class ReservationController {
       }
 
       const propertyId = req.user.property_id;
-      const { id } = matchedData(req);
+      const { id, newCheckIn, newCheckOut } = matchedData(req);
 
       const result = await this.reservationInputPort.changeReservationDates(
         propertyId,
-        id
+        id,
+        newCheckIn,
+        newCheckOut
       );
 
       return res.status(200).json(result);

@@ -264,4 +264,17 @@ export class ReservationService {
       throw e;
     }
   }
+
+  async changeReservationDates(propertyId, id, newCheckIn, newCheckOut) {
+    try {
+      // Get the reservation.
+      const { reservation } = await this.findReservationById(propertyId, id);
+
+      console.log(reservation);
+
+      // Check
+    } catch (e) {
+      throw e;
+    }
+  }
 }

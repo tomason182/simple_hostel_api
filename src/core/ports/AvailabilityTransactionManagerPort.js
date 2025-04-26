@@ -43,6 +43,16 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
+  // GET ALL RANGES
+  getAllRanges(selectedRooms, checkIn, checkOut, conn = null) {
+    return this.ratesAndAvailabilityRepository.getAllRanges(
+      selectedRooms,
+      checkIn,
+      checkOut,
+      conn
+    );
+  }
+
   // ROOM TYPES
   getPropertyRoomTypes(propertyId, conn = null) {
     return this.roomTypeRepository.findPropertyRoomTypes(propertyId, conn);
@@ -61,9 +71,16 @@ export class AvailabilityTransactionManagerPort {
   }
 
   // RESERVATIONS
-  getOverlappingReservations(roomTypeId, checkIn, checkOut, conn = null) {
+  getOverlappingReservations(
+    roomTypeId,
+    reservationId,
+    checkIn,
+    checkOut,
+    conn = null
+  ) {
     return this.reservationRepository.getOverlappingReservations(
       roomTypeId,
+      reservationId,
       checkIn,
       checkOut,
       conn
@@ -84,10 +101,18 @@ export class AvailabilityTransactionManagerPort {
     );
   }
 
-  getReservationsListLimit(roomTypeId, from, conn = null) {
+  getReservationsListLimit(
+    roomTypeId,
+    reservationId,
+    from,
+    limit,
+    conn = null
+  ) {
     return this.reservationRepository.getReservationsListLimit(
       roomTypeId,
+      reservationId,
       from,
+      limit,
       conn
     );
   }
