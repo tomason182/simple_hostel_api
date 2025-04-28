@@ -112,9 +112,9 @@ export class MySQLReservationRepository {
 
   async getReservationsListLimit(roomTypeId, reservationId, from, limit, conn) {
     try {
-      const query =
-        "SELECT reservations.id as id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id, JSON_OBJECTAGG (assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservation_rooms.reservation_id != ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id  LIMIT ?";
-      const params = [roomTypeId, reservationId, from, limit];
+      const safeLimit = parseInt(limit);
+      const query = `SELECT reservations.id AS id, reservations.check_in, reservations.check_out, reservation_rooms.number_of_rooms, reservation_rooms.room_type_id, JSON_OBJECTAGG(assigned_beds.id, assigned_beds.bed_id) AS assigned_beds FROM reservations JOIN reservation_rooms ON reservation_rooms.reservation_id = reservations.id JOIN assigned_beds ON assigned_beds.reservation_id = reservations.id  WHERE reservation_rooms.room_type_id = ? AND reservation_rooms.reservation_id != ? AND reservations.reservation_status NOT IN ('canceled', 'no_show') AND reservations.check_out > ? GROUP BY reservations.id, reservations.check_in, reservations.check_out,reservation_rooms.number_of_rooms, reservation_rooms.room_type_id  LIMIT ${safeLimit}`;
+      const params = [roomTypeId, reservationId, from];
 
       const [result] = await (conn
         ? conn.execute(query, params)
@@ -310,7 +310,7 @@ export class MySQLReservationRepository {
       const reservationId = reservation.getId();
       // Update reservation dates
       const queryReservation =
-        "UPDATE reservations SET check_in = ?, check_out = ?, advance_payment_amount = ? WHERE reservation_id = ?";
+        "UPDATE reservations SET check_in = ?, check_out = ?, advance_payment_amount = ? WHERE id = ?";
       const paramsReservation = [
         reservation.getCheckIn(),
         reservation.getCheckOut(),
