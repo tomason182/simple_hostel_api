@@ -4,14 +4,12 @@ export class ReservationTransactionManagerPort {
     guestRepository,
     ratesAndAvailabilityRepository,
     availabilityService,
-    emailService,
-    bedAssignmentService
+    emailService
   ) {
     this.reservationRepository = reservationRepository;
     this.guestRepository = guestRepository;
     this.ratesAndAvailabilityRepository = ratesAndAvailabilityRepository;
     this.availabilityService = availabilityService;
-    this.bedAssignmentService = bedAssignmentService;
     this.emailService = emailService;
   }
 
@@ -33,11 +31,6 @@ export class ReservationTransactionManagerPort {
   // Create reservation
   saveReservation(reservation, conn = null) {
     return this.reservationRepository.save(reservation, conn);
-  }
-
-  // Update reservations beds
-  updateAssignedBed(id, bed, conn) {
-    return this.reservationRepository.updateAssignedBed(id, bed, conn);
   }
 
   getAdvancePaymentPolicy(propertyId, conn = null) {

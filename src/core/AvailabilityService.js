@@ -141,7 +141,11 @@ export class AvailabilityService {
     }
   }
 
-  async checkAvailabilityAndAssignBeds(reservation, conn = null) {
+  async checkAvailabilityAndAssignBeds(
+    reservation,
+    advancePaymentPolicy,
+    conn = null
+  ) {
     this.assignedBedsToCurrentReservation = [];
     this.reservationsToUpdate = [];
     try {
@@ -288,10 +292,38 @@ export class AvailabilityService {
         await bedAssignment.assignBedsToReservation(currentReservation, conn);
       }
 
+      // Calcular el costo total.
+      const totalAmount = reservation
+        .getSelectedRooms()
+        .reduce((acc, value) => acc + value.total_amount, 0);
+
+      // Calcular el valor del pago por adelantado.
+      let depositAmount = 0;
+      if (
+        advancePaymentPolicy !== null &&
+        advancePaymentPolicy.advance_payment_required === 1
+      ) {
+        depositAmount = Number(advancePayment.deposit_amount);
+      }
+
+      reservation.setAdvancePaymentAmount(totalAmount, depositAmount);
+
+      // Resignar camas a las reservas en conflicto.   [{id1: bed_id_1}, {id2:bed_id_2}]
+      if (this.reservationsToUpdate.length > 0) {
+        const bedsToReassign = this.reservationsToUpdate;
+
+        await this.availabilityTransactionManagerPort.updateAssignedBed(
+          bedsToReassign,
+          conn
+        );
+      }
+
+      // Asignar camas a la reserva actual
+      reservation.setBeds(bedsAssigned.bedsToAssign);
+
       return {
         status: "ok",
-        bedsToAssign: this.assignedBedsToCurrentReservation,
-        reservationsToUpdate: this.reservationsToUpdate,
+        msg: "Beds assigned",
       };
     } catch (e) {
       throw e;

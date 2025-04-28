@@ -116,4 +116,8 @@ export class AvailabilityTransactionManagerPort {
       conn
     );
   }
+
+  updateAssignedBed(id, bed, conn) {
+    return this.reservationRepository.updateAssignedBed(id, bed, conn);
+  }
 }

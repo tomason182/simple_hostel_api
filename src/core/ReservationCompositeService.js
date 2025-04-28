@@ -20,9 +20,16 @@ export class ReservationCompositeService {
 
       const propertyId = reservation.getPropertyId();
 
+      const advancePayment =
+        await this.reservationTransactionManagerPort.getAdvancePaymentPolicy(
+          propertyId,
+          conn
+        );
+
       const bedsAssigned =
         await this.reservationTransactionManagerPort.checkAvailabilityAndAssignBeds(
           reservation,
+          advancePayment,
           conn
         );
 
@@ -32,26 +39,6 @@ export class ReservationCompositeService {
           msg: bedsAssigned.msg,
         };
       }
-
-      // El total amount de cada cuarto se actualiza en el objeto reserva dentro de Availability service.
-      const totalAmount = reservation
-        .getSelectedRooms()
-        .reduce((acc, value) => acc + value.total_amount, 0);
-
-      const advancePayment =
-        await this.reservationTransactionManagerPort.getAdvancePaymentPolicy(
-          propertyId,
-          conn
-        );
-      let depositAmount = 0;
-      if (
-        advancePayment !== null &&
-        advancePayment.advance_payment_required === 1
-      ) {
-        depositAmount = Number(advancePayment.deposit_amount);
-      }
-
-      reservation.setAdvancePaymentAmount(totalAmount, depositAmount);
 
       // Find if Guest already exist for the property
       const guestExist =
@@ -72,23 +59,8 @@ export class ReservationCompositeService {
         await this.reservationTransactionManagerPort.updateGuest(guest, conn);
       }
 
-      // Update reservations assigned beds if needed.  [{id1: bed_id_1}, {id2:bed_id_2}]
-
-      if (bedsAssigned.reservationsToUpdate.length > 0) {
-        const bedsToReassign = bedsAssigned.reservationsToUpdate;
-
-        for (const object of bedsToReassign) {
-          await this.reservationTransactionManagerPort.updateAssignedBed(
-            parseInt(object.id),
-            object.bed_id,
-            conn
-          );
-        }
-      }
-
       // Set get ID to reservation
       reservation.setGuestId(guest.getId());
-      reservation.setBeds(bedsAssigned.bedsToAssign);
 
       await this.reservationTransactionManagerPort.saveReservation(
         reservation,
