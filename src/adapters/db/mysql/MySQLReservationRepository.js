@@ -120,10 +120,31 @@ export class MySQLReservationRepository {
     }
   }
 
-  async updateAssignedBed(id, bed, conn) {
+  async updateAssignedBed(data, conn) {
     try {
-      const query = "UPDATE assigned_beds SET bed_id=? WHERE id=?";
-      const params = [bed, id];
+      let query = "";
+      let params = [];
+
+      if (data.length === 1) {
+        query = "UPDATE assigned_beds SET bed_id=? WHERE id=?";
+        params = [parseInt(data[0].bed_id), parseInt(data[0].id)];
+      } else if (data.length > 1) {
+        const caseStatement = data
+          .map(obj => `WHEN ${parseInt(obj.id)} THEN ${parseIt(bed_id)}`)
+          .join(" ");
+
+        const ids = data.map(obj => parseInt(obj.id)).join(", ");
+
+        query = `
+          UPDATE assigned_beds
+          SET bed_id CASE id 
+          ${caseStatement} 
+          ELSE bed__id
+          END
+          WHERE id IN ${ids}`;
+      } else {
+        return 0;
+      }
 
       const [result] = await (conn
         ? conn.execute(query, params)
@@ -190,13 +211,15 @@ export class MySQLReservationRepository {
     }
   }
 
-  async findReservationById(propertyId, reservationId) {
+  async findReservationById(propertyId, reservationId, conn) {
     // IMPORTANTE: Esto NO se puede limitar a 1 porque devuelve un array con varios elementos si la reserva contiene varios cuartos selectionados.
     const query =
       "SELECT r.id AS id, r.property_id, r.booking_source, r.currency, r.reservation_status, r.payment_status, r.advance_payment_amount, r.check_in, r.check_out, r.special_request, g.id AS guest_id, g.first_name, g.last_name, g.id_number, g.email, g.phone_number, g.city, g.street, g.postal_code, g.country_code, rr.room_type_id AS room_type_id, rr.number_of_rooms, rr.total_amount, rt.description FROM reservations r JOIN guests g ON r.guest_id = g.id JOIN reservation_rooms rr ON rr.reservation_id = r.id JOIN room_types rt ON rt.id = rr.room_type_id  WHERE r.property_Id = ? AND r.id = ?";
     const params = [propertyId, reservationId];
 
-    const [result] = await this.mysqlPool.execute(query, params);
+    const [result] = await (conn
+      ? conn.execute(query, params)
+      : this.mysqlPool.execute(query, params));
 
     return result;
   }
