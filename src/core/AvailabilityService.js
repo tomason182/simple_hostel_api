@@ -303,7 +303,7 @@ export class AvailabilityService {
         advancePaymentPolicy !== null &&
         advancePaymentPolicy.advance_payment_required === 1
       ) {
-        depositAmount = Number(advancePayment.deposit_amount);
+        depositAmount = Number(advancePaymentPolicy.deposit_amount);
       }
 
       reservation.setAdvancePaymentAmount(totalAmount, depositAmount);
@@ -319,7 +319,7 @@ export class AvailabilityService {
       }
 
       // Asignar camas a la reserva actual
-      reservation.setBeds(bedsAssigned.bedsToAssign);
+      reservation.setBeds(this.assignedBedsToCurrentReservation);
 
       return {
         status: "ok",
