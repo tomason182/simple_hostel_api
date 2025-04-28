@@ -269,6 +269,13 @@ export class ReservationService {
 
   async changeReservationDates(propertyId, id, newCheckIn, newCheckOut) {
     let conn;
+    if (newCheckIn >= newCheckOut) {
+      return {
+        status: "error",
+        msg: "INVALID_DATES_ORDER",
+      };
+    }
+
     try {
       conn = await this.mysqlPool.getConnection();
       await conn.beginTransaction();
@@ -300,6 +307,8 @@ export class ReservationService {
         };
       }
 
+      // Cuando se actualizan fechas si actualiza tambien el monto total y de deposito.
+      // Deberia comprobar que si el deposito ya fue pagado NO SE ACTUALICE.
       const result = await this.reservationOutport.updateReservation(
         reservation,
         conn
