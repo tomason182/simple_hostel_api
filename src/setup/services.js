@@ -132,7 +132,10 @@ export default function initializeServices() {
   const ratesAndAvailabilityService = new RatesAndAvailabilityService(
     ratesAndAvailabilityOutputPort
   );
-  const reservationService = new ReservationService(reservationOutputPort);
+  const reservationService = new ReservationService(
+    reservationOutputPort,
+    mysqlPool
+  );
   const roomTypeService = new RoomTypeService(roomTypeOutputPort);
 
   // Initialize transaction manager port

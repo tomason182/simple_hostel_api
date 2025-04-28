@@ -2,8 +2,9 @@ import { Reservation } from "./entities/Reservation.js";
 import { Guest } from "./entities/Guest.js";
 
 export class ReservationService {
-  constructor(reservationOutport) {
+  constructor(reservationOutport, mysqlPool) {
     this.reservationOutport = reservationOutport;
+    this.mysqlPool = mysqlPool;
   }
 
   async findReservationsByDate(propertyId, date) {
@@ -171,11 +172,12 @@ export class ReservationService {
     }
   }
 
-  async findReservationById(propertyId, reservationId) {
+  async findReservationById(propertyId, reservationId, conn = null) {
     try {
       const reservationList = await this.reservationOutport.findReservationById(
         propertyId,
-        reservationId
+        reservationId,
+        conn
       );
 
       if (reservationList.length === 0) {
@@ -266,15 +268,53 @@ export class ReservationService {
   }
 
   async changeReservationDates(propertyId, id, newCheckIn, newCheckOut) {
+    let conn;
     try {
+      conn = await this.mysqlPool.getConnection();
+      await conn.beginTransaction();
       // Get the reservation.
-      const { reservation } = await this.findReservationById(propertyId, id);
+      const { reservation } = await this.findReservationById(
+        propertyId,
+        id,
+        conn
+      );
 
-      console.log(reservation);
+      reservation.setCheckIn(newCheckIn);
+      reservation.setCheckOut(newCheckOut);
+
+      // Necesitamos el politica de pago por adelantado de la propiedad
+      const advancePaymentPolicy =
+        await this.reservationOutport.getAdvancePaymentPolicy(propertyId, conn);
+
+      const assignBeds =
+        await this.reservationOutport.checkAvailabilityAndAssignBeds(
+          reservation,
+          advancePaymentPolicy,
+          conn
+        );
+
+      if (assignBeds.status === "error") {
+        return {
+          status: "error",
+          msg: assignBeds.msg,
+        };
+      }
+
+      const result = await this.reservationOutport.updateReservation(
+        reservation,
+        conn
+      );
+
+      await conn.commit();
+
+      return result;
 
       // Check
     } catch (e) {
+      if (conn) await conn.rollback();
       throw e;
+    } finally {
+      if (conn) await conn.release();
     }
   }
 }

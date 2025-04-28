@@ -14,6 +14,23 @@ export class ReservationOutputPort {
     );
   }
 
+  checkAvailabilityAndAssignBeds(
+    reservation,
+    advancePaymentPolicy,
+    conn = null
+  ) {
+    return this.availabilityService.checkAvailabilityAndAssignBeds(
+      reservation,
+      advancePaymentPolicy,
+      conn
+    );
+  }
+
+  // Update reservation
+  updateReservation(reservation, conn) {
+    return this.reservationRepository.updateReservation(reservation, conn);
+  }
+
   findReservationsByDate(propertyId, date) {
     return this.reservationRepository.findReservationsByDate(propertyId, date);
   }
@@ -56,10 +73,11 @@ export class ReservationOutputPort {
     );
   }
 
-  findReservationById(propertyId, reservationId) {
+  findReservationById(propertyId, reservationId, conn) {
     return this.reservationRepository.findReservationById(
       propertyId,
-      reservationId
+      reservationId,
+      conn
     );
   }
 
@@ -77,5 +95,9 @@ export class ReservationOutputPort {
       id,
       status
     );
+  }
+
+  getAdvancePaymentPolicy(propertyId, conn = null) {
+    return this.reservationRepository.getAdvancePaymentPolicy(propertyId, conn);
   }
 }

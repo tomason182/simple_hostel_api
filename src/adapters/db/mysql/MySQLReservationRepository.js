@@ -305,7 +305,7 @@ export class MySQLReservationRepository {
   }
 
   // Update reservation dates and amount
-  async updateReservationDates(reservation, conn) {
+  async updateReservation(reservation, conn) {
     try {
       const reservationId = reservation.getId();
       // Update reservation dates
