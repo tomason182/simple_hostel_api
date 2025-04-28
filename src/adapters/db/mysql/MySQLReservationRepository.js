@@ -27,24 +27,32 @@ export class MySQLReservationRepository {
 
       reservation.setId(result.insertId);
 
-      const setRoomsQuery =
-        "INSERT INTO reservation_rooms (reservation_id, room_type_id, number_of_rooms, total_amount) VALUES (?,?,?,?)";
-      for (const room of reservation.getSelectedRooms()) {
-        const roomParams = [
+      // Insert reservation rooms (bulk)
+      const selectedRooms = reservation.getSelectedRooms();
+      if (selectedRooms.length > 0) {
+        const setRoomsQuery = `
+          INSERT INTO reservation_rooms 
+          (reservation_id, room_type_id, number_of_rooms, total_amount) 
+          VALUES ${selectedRooms.map(() => "(?,?,?,?)").join(", ")}`;
+
+        const roomParams = selectedRooms.flatMap(room => [
           reservation.getId(),
           room.room_type_id,
           room.number_of_rooms,
           room.total_amount,
-        ];
+        ]);
 
         await conn.execute(setRoomsQuery, roomParams);
       }
 
-      const setBedsQuery =
-        "INSERT INTO assigned_beds (reservation_id, bed_id) VALUES (?,?)";
+      // Insert assigned beds (bulk);
+      const beds = reservation.getBeds();
+      if (beds.length > 0) {
+        const setBedsQuery = `INSERT INTO assigned_beds (reservation_id, bed_id) VALUES ${beds
+          .maps(() => "(?,?)")
+          .join(", ")}`;
 
-      for (const bed of reservation.getBeds()) {
-        const bedsParams = [reservation.getId(), bed];
+        const bedsParams = beds.flatMap(bedId => [reservation.getId(), bedId]);
 
         await conn.execute(setBedsQuery, bedsParams);
       }
@@ -122,35 +130,40 @@ export class MySQLReservationRepository {
 
   async updateAssignedBed(data, conn) {
     try {
-      let query = "";
-      let params = [];
-
       if (data.length === 1) {
-        query = "UPDATE assigned_beds SET bed_id=? WHERE id=?";
-        params = [parseInt(data[0].bed_id), parseInt(data[0].id)];
+        const query = "UPDATE assigned_beds SET bed_id=? WHERE id=?";
+        const params = [parseInt(data[0].bed_id), parseInt(data[0].id)];
+
+        const [updateResult] = await conn.execute(query, params);
+
+        return updateResult.affectedRows || 0;
       } else if (data.length > 1) {
-        const caseStatement = data
-          .map(obj => `WHEN ${parseInt(obj.id)} THEN ${parseIt(bed_id)}`)
-          .join(" ");
+        const caseStatement = data.map(() => `WHEN ? THEN ?`).join(" ");
+        const idsPlaceholders = data.map(() => "?").join(", ");
+        const caseParams = [];
 
-        const ids = data.map(obj => parseInt(obj.id)).join(", ");
+        data.forEach(obj => {
+          caseParams.push(obj.id, obj.bed_id);
+        });
 
-        query = `
+        const idParams = data.map(obj => obj.id);
+
+        const query = `
           UPDATE assigned_beds
-          SET bed_id CASE id 
+          SET bed_id = CASE id 
           ${caseStatement} 
-          ELSE bed__id
+          ELSE bed_id
           END
-          WHERE id IN ${ids}`;
+          WHERE id IN (${idsPlaceholders})`;
+
+        const [updateResult] = await conn.execute(query, [
+          ...caseParams,
+          ...idParams,
+        ]);
+        return updateResult.affectedRows || 0;
       } else {
         return 0;
       }
-
-      const [result] = await (conn
-        ? conn.execute(query, params)
-        : this.mysqlPool.execute(query, params));
-
-      return result.changedRows;
     } catch (e) {
       throw new Error(
         `An error occurred trying to update assigned beds. Error: ${e.message}`
@@ -287,6 +300,120 @@ export class MySQLReservationRepository {
     } catch (e) {
       throw new Error(
         `An error occurred trying to get advance payment policy. Error: ${e.message}`
+      );
+    }
+  }
+
+  // Update reservation dates and amount
+  async updateReservationDates(reservation, conn) {
+    try {
+      const reservationId = reservation.getId();
+      // Update reservation dates
+      const queryReservation =
+        "UPDATE reservations SET check_in = ?, check_out = ?, advance_payment_amount = ? WHERE reservation_id = ?";
+      const paramsReservation = [
+        reservation.getCheckIn(),
+        reservation.getCheckOut(),
+        reservation.getAdvancePaymentAmount(),
+        reservationId,
+      ];
+
+      await conn.execute(queryReservation, paramsReservation);
+
+      // Update reservation amount
+      const selectedRooms = reservation.getSelectedRooms();
+
+      if (selectedRooms.length > 0) {
+        if (selectedRooms.length === 1) {
+          const queryAmount =
+            "UPDATE reservation_rooms SET total_amount = ? WHERE reservation_id = ? AND room_type_id = ?";
+          const paramsAmount = [
+            selectedRooms[0].total_amount,
+            reservationId,
+            selectedRooms[0].room_type_id,
+          ];
+
+          await conn.execute(queryAmount, paramsAmount);
+        } else {
+          const caseStatement = selectedRooms
+            .map(() => `WHEN ? THEN ?`)
+            .join(" ");
+
+          const queryAmount = `
+            UPDATE reservation_rooms 
+            SET total_amount = CASE room_type_id
+            ${caseStatement}
+            ELSE total_amount
+            END
+            WHERE reservation_id = ? AND room_type_id IN (${selectedRooms
+              .map(() => "?")
+              .join(", ")})`;
+
+          const caseParams = [];
+          selectedRooms.forEach(room => {
+            caseParams.push(room.room_type_id, room.total_amount);
+          });
+
+          const idParams = selectedRooms.map(room => room.room_type_id);
+
+          await conn.execute(queryAmount, [
+            ...caseParams,
+            reservationId,
+            ...idParams,
+          ]);
+        }
+      }
+
+      // Update assigned beds.
+      const beds = reservation.getBeds();
+
+      // Get old reservations beds [{id, reservation_id, bed_id}]
+      const queryOldBeds =
+        "SELECT * FROM assigned_beds WHERE reservation_id = ?";
+      const [oldBeds] = await conn.execute(queryOldBeds, [reservationId]);
+
+      if (oldBeds.length !== beds.length) {
+        throw new Error("UNEXPECTED_ERROR_BEDS_COUNT_DONT_MATCH");
+      }
+      const newBeds = oldBeds.map((bed, i) => {
+        bed.bed_id = beds[i];
+        return bed;
+      });
+
+      if (newBeds.length > 0) {
+        if (newBeds.length === 1) {
+          const queryBeds = "UPDATE assigned_beds SET bed_id = ? WHERE id = ?";
+          const paramsBeds = [newBeds[0].bed_id, newBeds[0].id];
+          await conn.execute(queryBeds, paramsBeds);
+        } else {
+          const caseStatementBeds = beds.map(() => `WHEN ? THEN ?`).join(" ");
+
+          const queryBeds = `
+          UPDATE assigned_beds
+          SET bed_id = CASE id
+          ${caseStatementBeds}
+          ELSE bed_id
+          END
+          WHERE id IN (${newBeds.map(() => "?").join(", ")})`;
+
+          const caseParamsBeds = [];
+          newBeds.forEach(bed => {
+            caseParamsBeds.push(bed.id, bed.bed_id);
+          });
+
+          const idParamsBeds = newBeds.map(bed => bed.id);
+
+          await conn.execute(queryBeds, [...caseParamsBeds, ...idParamsBeds]);
+        }
+      }
+
+      return {
+        status: "ok",
+        msg: "RESERVATION_UPDATED",
+      };
+    } catch (e) {
+      throw new Error(
+        `An error occurred trying to update reservation dates. Error: ${e.message}`
       );
     }
   }
