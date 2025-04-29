@@ -450,4 +450,50 @@ export class MySQLReservationRepository {
       changedRows: result.changedRows,
     };
   }
+
+  async updateReservationPrices(reservationId, newPrices) {
+    // Prices => [{room_type_id, amount}]
+    if (newPrices.length > 0) {
+      if (newPrices.length === 1) {
+        const query =
+          "UPDATE reservation_rooms SET total_amount = ? WHERE reservation_id = ? AND room_type_id = ?";
+        const params = [
+          newPrices[0].amount,
+          reservationId,
+          newPrices[0].room_type_id,
+        ];
+
+        const [result] = await this.mysqlPool.execute(query, params);
+
+        return result.affectedRows || 0;
+      } else {
+        const caseStatement = newPrices.map(() => "WHEN ? THEN ?").join(" ");
+
+        const query = `
+          UPDATE reservation_rooms
+          SET total_amount = CASE room_type_id
+          ${caseStatement}
+          ELSE total_amount
+          END
+          WHERE reservation_id = ? AND room_type_id IN (${newPrices
+            .map(() => "?")
+            .join(", ")})
+        `;
+        const caseParams = newPrices.flatMap(price => [
+          price.room_type_id,
+          price.amount,
+        ]);
+
+        const idParams = newPrices.map(price => price.room_type_id);
+
+        const [result] = await this.mysqlPool.execute(query, [
+          ...caseParams,
+          reservationId,
+          ...idParams,
+        ]);
+
+        return result.affectedRows || 0;
+      }
+    }
+  }
 }

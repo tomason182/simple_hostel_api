@@ -278,4 +278,33 @@ export class ReservationController {
       next(e);
     }
   };
+
+  changeReservationPrices = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const data = matchedData(req);
+
+      const reservationId = data.id;
+      const newAmount = data.totalAmount;
+
+      const result = await this.reservationInputPort.changeReservationPrices(
+        propertyId,
+        reservationId,
+        newAmount
+      );
+
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

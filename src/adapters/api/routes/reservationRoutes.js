@@ -6,6 +6,7 @@ import {
   reservationSchema,
   findReservationsByDatesAndName,
   changeReservationDates,
+  changeReservationPrice,
 } from "../schemas/reservationSchema.js";
 
 export function createReservationRoutes(services) {
@@ -191,6 +192,17 @@ export function createReservationRoutes(services) {
     checkSchema(changeReservationDates),
     authMiddleware(tokenService),
     reservationController.changeReservationDates
+  );
+
+  // @desc Change reservation prices
+  // @route PUT /api/v2/reservation/change-prices/:id
+  // @access Private
+  router.put(
+    "/change-prices/:id",
+    param("id").trim().isInt().withMessage("Invalid reservation ID").toInt(),
+    checkSchema(changeReservationPrice),
+    authMiddleware(tokenService),
+    reservationController.changeReservationPrices
   );
 
   return router;

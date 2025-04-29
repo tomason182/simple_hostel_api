@@ -74,4 +74,12 @@ export class ReservationInputPort {
       newCheckOut
     );
   }
+
+  changeReservationPrices(propertyId, reservationId, prices) {
+    return this.reservationService.changeReservationPrices(
+      propertyId,
+      reservationId,
+      prices
+    );
+  }
 }

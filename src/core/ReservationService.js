@@ -326,4 +326,30 @@ export class ReservationService {
       if (conn) await conn.release();
     }
   }
+
+  async changeReservationPrices(propertyId, reservationId, prices) {
+    // Check if the reservation belong to the property.
+    const reservationData = await this.reservationOutport.findReservationById(
+      propertyId,
+      reservationId
+    );
+
+    if (reservationData.length === 0) {
+      return {
+        status: "error",
+        msg: "RESERVATION_NOT_FOUND",
+      };
+    }
+
+    // Igual que cuando se actualizan las fechas. Si el deposito todavia no se pago (Estado del pago pendiente) se puede actualizar.
+    const result = await this.reservationOutport.updateReservationPrices(
+      reservationId,
+      prices
+    );
+
+    return {
+      status: "ok",
+      msg: result,
+    };
+  }
 }

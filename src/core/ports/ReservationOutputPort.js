@@ -100,4 +100,11 @@ export class ReservationOutputPort {
   getAdvancePaymentPolicy(propertyId, conn = null) {
     return this.reservationRepository.getAdvancePaymentPolicy(propertyId, conn);
   }
+
+  updateReservationPrices(reservationId, prices) {
+    return this.reservationRepository.updateReservationPrices(
+      reservationId,
+      prices
+    );
+  }
 }
