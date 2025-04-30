@@ -29,5 +29,11 @@ export function fetchDataProvider(services) {
   // Get facilities
   router.get("/facilities/:language", dataProviderService.fetchFacilities);
 
+  // Get property advance_payment_policy
+  router.get(
+    "/properties/advance-payment-policy/:id",
+    dataProviderService.propertyAdvancePaymentPolicy
+  );
+
   return router;
 }

@@ -87,4 +87,24 @@ export class DataProviderService {
       next(e);
     }
   };
+
+  propertyAdvancePaymentPolicy = async (req, res, next) => {
+    try {
+      const propertyId = parseInt(req.params.id);
+
+      if (isNaN(propertyId)) {
+        throw new Error("Invalid ID.");
+      }
+
+      const query =
+        "SELECT * FROM advance_payment_policies WHERE property_id = ?";
+      const params = [propertyId];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      return res.status(200).json(result[0] || null);
+    } catch (e) {
+      next(e);
+    }
+  };
 }
