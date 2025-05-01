@@ -286,16 +286,34 @@ export class ReservationController {
         return res.status(400).json(errors.array());
       }
 
+      const body = req.body;
+      const param = req.params;
       const propertyId = req.user.property_id;
-      const data = matchedData(req);
 
-      const reservationId = data.id;
-      const newAmount = data.totalAmount;
+      // Check if body includes deposit.
+      if (!Object.keys(body).includes("deposit")) {
+        throw new Error("Deposit must be included");
+      }
+
+      for (const [key, val] of Object.entries(body)) {
+        if (key !== "deposit") {
+          if (!/^\d+$/.test(key)) {
+            throw new Error("Invalid room ID key");
+          }
+        }
+
+        if (isNaN(Number(val))) {
+          throw new Error("Invalid values provided");
+        }
+      }
+
+      const reservationId = param.id;
+      const prices = body;
 
       const result = await this.reservationInputPort.changeReservationPrices(
         propertyId,
         reservationId,
-        newAmount
+        prices
       );
 
       if (result.status === "error") {

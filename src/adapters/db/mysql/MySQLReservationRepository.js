@@ -452,48 +452,76 @@ export class MySQLReservationRepository {
   }
 
   async updateReservationPrices(reservationId, newPrices) {
-    // Prices => [{room_type_id, amount}]
-    if (newPrices.length > 0) {
-      if (newPrices.length === 1) {
-        const query =
-          "UPDATE reservation_rooms SET total_amount = ? WHERE reservation_id = ? AND room_type_id = ?";
-        const params = [
-          newPrices[0].amount,
-          reservationId,
-          newPrices[0].room_type_id,
-        ];
+    // newPrices => {"1": "54,00", "7": "36.50", "deposit": "23.25"}
+    // Separate deposit from room prices
+    const { deposit, ...rawRoomPrices } = newPrices;
 
-        const [result] = await this.mysqlPool.execute(query, params);
+    // Normalize price strings like "54,00" to numbers
+    const roomPrices = Object.fromEntries(
+      Object.entries(rawRoomPrices).map(([key, value]) => [
+        key,
+        Number(value.replace(",", ".")),
+      ])
+    );
 
-        return result.affectedRows || 0;
-      } else {
-        const caseStatement = newPrices.map(() => "WHEN ? THEN ?").join(" ");
+    const roomTypeIds = Object.keys(roomPrices);
 
-        const query = `
+    let affectedRows = 0;
+
+    if (roomTypeIds.length === 1) {
+      const query =
+        "UPDATE reservation_rooms SET total_amount = ? WHERE reservation_id = ? AND room_type_id = ?";
+      const params = [
+        Object.values(roomPrices)[0],
+        reservationId,
+        parseInt(roomTypeIds[0]),
+      ];
+
+      const [result] = await this.mysqlPool.execute(query, params);
+
+      affectedRows += result.affectedRows || 0;
+    } else if (roomTypeIds.length > 1) {
+      const caseStatement = roomTypeIds.map(() => "WHEN ? THEN ?").join(" ");
+
+      const caseParams = Object.entries(roomPrices).flatMap(([id, val]) => [
+        id,
+        val,
+      ]);
+
+      const query = `
           UPDATE reservation_rooms
           SET total_amount = CASE room_type_id
           ${caseStatement}
           ELSE total_amount
           END
-          WHERE reservation_id = ? AND room_type_id IN (${newPrices
+          WHERE reservation_id = ? AND room_type_id IN (${roomTypeIds
             .map(() => "?")
             .join(", ")})
         `;
-        const caseParams = newPrices.flatMap(price => [
-          price.room_type_id,
-          price.amount,
-        ]);
 
-        const idParams = newPrices.map(price => price.room_type_id);
+      const [result] = await this.mysqlPool.execute(query, [
+        ...caseParams,
+        reservationId,
+        ...roomTypeIds,
+      ]);
 
-        const [result] = await this.mysqlPool.execute(query, [
-          ...caseParams,
-          reservationId,
-          ...idParams,
-        ]);
-
-        return result.affectedRows || 0;
-      }
+      affectedRows += result.affectedRows || 0;
     }
+
+    if (deposit !== undefined) {
+      const depositValue = Number(deposit.replace(",", "."));
+      const depositQuery =
+        "UPDATE reservations SET advance_payment_amount = ? WHERE id = ?";
+      const depositParams = [depositValue, reservationId];
+
+      const [depositResult] = await this.mysqlPool.execute(
+        depositQuery,
+        depositParams
+      );
+
+      affectedRows += depositResult.affectedRows || 0;
+    }
+
+    return affectedRows;
   }
 }
