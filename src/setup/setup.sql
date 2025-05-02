@@ -327,6 +327,57 @@ CREATE TABLE IF NOT EXISTS property_images (
   FOREIGN KEY (property_id) REFERENCES properties(id)
 );
 
+-- Create features table
+CREATE TABLE IF NOT EXISTS features (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+);
+
+-- Create property_features table
+CREATE TABLE IF NOT EXISTS property_features (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  feature_id INT NOT NULL,
+  enabled BOOLEAN NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY (feature_id) REFERENCES features(id) ON DELETE CASCADE
+);
+
+-- Create plans table
+CREATE TABLE IF NOT EXISTS plans (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(20) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+);
+
+-- Create plan_features
+CREATE TABLE IF NOT EXISTS plan_features (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  plan_id INT NOT NULL,
+  feature_id INT NOT NULL,
+
+  FOREIGN KEY plan_id REFERENCES plans(id) ON DELETE CASCADE,
+  FOREIGN KEY feature_id REFERENCES features(id) ON DELETE CASCADE
+);
+
+--Create table property_plans
+CREATE TABLE IF NOT EXISTS property_plans (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  plan_id INT NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE,
+  trial BOOLEAN DEFAULT false,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+
+  FOREIGN KEY property_id REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY plan_id REFERENCES plans(id) ON DELETE CASCADE
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
