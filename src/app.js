@@ -47,7 +47,12 @@ export async function createApp(services) {
     origin:
       process.env.NODE_ENV === "production"
         ? ["https://simplehostel.net", "https://www.simplehostel.net"]
-        : ["http://127.0.0.1:5173", "http://localhost:5173"],
+        : [
+            "http://127.0.0.1:5173",
+            "http://localhost:5173",
+            "http://127.0.0.1:5174",
+            "http://localhost:5174",
+          ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   };
