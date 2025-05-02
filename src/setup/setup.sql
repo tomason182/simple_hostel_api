@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS addresses (
   street VARCHAR(255),
   city VARCHAR(255),
   postal_code INT(20),
-  alfa_2_code VARCHAR(2),
+  alpha_2_code VARCHAR(2),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS facilities (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(100) UNIQUE,
   category VARCHAR(25)
-)
+);
 
 -- Create amenities translations table
 CREATE TABLE IF NOT EXISTS amenities_translations (
@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS property_facilities (
 -- Create roomType images table
 CREATE TABLE IF NOT EXISTS room_type_images (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NON NULL,
+  property_id INT NOT NULL,
   room_type_id INT NOT NULL,
   file_name VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
