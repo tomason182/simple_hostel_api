@@ -360,8 +360,8 @@ CREATE TABLE IF NOT EXISTS plan_features (
   plan_id INT NOT NULL,
   feature_id INT NOT NULL,
 
-  FOREIGN KEY plan_id REFERENCES plans(id) ON DELETE CASCADE,
-  FOREIGN KEY feature_id REFERENCES features(id) ON DELETE CASCADE
+  FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE,
+  FOREIGN KEY (feature_id) REFERENCES features(id) ON DELETE CASCADE
 );
 
 --Create table property_plans
@@ -374,8 +374,8 @@ CREATE TABLE IF NOT EXISTS property_plans (
   trial BOOLEAN DEFAULT false,
   is_active BOOLEAN NOT NULL DEFAULT true,
 
-  FOREIGN KEY property_id REFERENCES properties(id) ON DELETE CASCADE,
-  FOREIGN KEY plan_id REFERENCES plans(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
+  FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE
 );
 
 -- Create table taxes settings
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS taxes_settings (
   property_id INT PRIMARY KEY,
   embedded BOOLEAN NOT NULL DEFAULT TRUE,
 
-  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- Create taxes and fees table
@@ -394,9 +394,9 @@ CREATE TABLE IF NOT EXISTS taxes_and_fees (
   type ENUM("percentage", "fixed") NOT NULL,
   value DECIMAL(10,2) NOT NULL,
   per ENUM("booking", "night", "guest") DEFAULT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY property_id REFERENCES property(id) ON DELETE CASCADE,
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
 -- PROCEDURES
