@@ -390,7 +390,7 @@ CREATE TABLE IF NOT EXISTS taxes_settings (
 CREATE TABLE IF NOT EXISTS taxes_and_fees (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(50) NOT NULL,
   type ENUM("percentage", "fixed") NOT NULL,
   value DECIMAL(10,2) NOT NULL,
   per ENUM("booking", "night", "guest") DEFAULT NULL,
