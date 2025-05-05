@@ -29,7 +29,7 @@ export class TaxesAndFeesController {
   // @desc    Get property taxes and fees settings
   // @route   GET /api/v2/taxes/settings
   // @access  Private
-  getTaxesAndFeesSetting = async (req, res, next) => {
+  getTaxesAndFeesSettings = async (req, res, next) => {
     try {
       const propertyId = req.user.property_id;
 
@@ -46,14 +46,15 @@ export class TaxesAndFeesController {
   // @desc    Update property taxes and fees settings
   // @route   PUT /api/v2/taxes/settings
   // @access  Private
-  updateTaxesAndFeesSettings = async (req, res, next) => {
+  updateTaxesAndFeesSetting = async (req, res, next) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
 
-      const { embedded } = matchedData(req);
+      // data = {embedded = true || embedded = false }
+      const data = matchedData(req);
 
       const result = await this.taxesAnFeesInputPort.updateTaxesAndFeesSettings(
         embedded

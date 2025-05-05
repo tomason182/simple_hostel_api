@@ -1,15 +1,15 @@
 import express from "express";
-import { checkSchema } from "express-validator";
-import { taxesAndFeesSchema } from "../schemas/taxesAndFeesSchema";
-import { createTokenService } from "../../config/tokenConfig";
-import authMiddleware from "../../../middleware/authMiddleware";
+import { checkSchema, body } from "express-validator";
+import { taxesAndFeesSchema } from "../schemas/taxesAndFeesSchema.js";
+import { createTokenService } from "../../config/tokenConfig.js";
+import authMiddleware from "../../../middleware/authMiddleware.js";
 
 export function createTaxesRoutes(services) {
   const router = express.Router();
 
   const tokenService = createTokenService();
 
-  const taxesController = services.taxesController;
+  const taxesController = services.taxesAndFeesController;
 
   // Get property taxes
   router.get(
@@ -44,4 +44,6 @@ export function createTaxesRoutes(services) {
   );
 
   // Delete tax
+
+  return router;
 }
