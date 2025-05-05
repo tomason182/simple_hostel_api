@@ -378,6 +378,27 @@ CREATE TABLE IF NOT EXISTS property_plans (
   FOREIGN KEY plan_id REFERENCES plans(id) ON DELETE CASCADE
 );
 
+-- Create table taxes settings
+CREATE TABLE IF NOT EXISTS taxes_settings (
+  property_id INT PRIMARY KEY,
+  embedded BOOLEAN NOT NULL DEFAULT TRUE,
+
+  FOREIGN KEY (property_id) REFERENCES property(id) ON DELETE CASCADE
+);
+
+-- Create taxes and fees table
+CREATE TABLE IF NOT EXISTS taxes_and_fees (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  type ENUM("percentage", "fixed") NOT NULL,
+  value DECIMAL(10,2) NOT NULL,
+  per ENUM("booking", "night", "guest") DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+  FOREIGN KEY property_id REFERENCES property(id) ON DELETE CASCADE,
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
