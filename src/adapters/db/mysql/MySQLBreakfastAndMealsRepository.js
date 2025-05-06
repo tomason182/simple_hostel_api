@@ -22,12 +22,12 @@ export class MySQLBreakfastAndMealsRepository {
   async updateBreakfastSettings(propertyId, settings) {
     try {
       const query =
-        "UPDATE breakfast_settings SET is_served = ?, is_included = ?, price = ? WHERE property_id = ?";
+        "INSERT INTO breakfast_settings (property_id, is_served, is_included, price) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE is_served = VALUES(is_served), is_included = VALUES(is_included), price = VALUES(price)";
       const params = [
+        propertyId,
         settings.is_served,
         settings.is_included,
         settings.price,
-        propertyId,
       ];
 
       const [result] = await this.mysqlPool.execute(query, params);

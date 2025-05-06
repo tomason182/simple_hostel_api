@@ -29,7 +29,6 @@ export class BreakfastAndMealsController {
       const propertyId = req.user.property_id;
       const breakfastSetting = matchedData(req);
 
-      console.log(breakfastSetting);
       const result =
         await this.breakfastAndMealsInputPort.updateBreakfastSettings(
           propertyId,

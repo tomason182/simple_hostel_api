@@ -394,7 +394,7 @@ CREATE TABLE IF NOT EXISTS taxes_and_fees (
 -- Create table breakfast_settings
 CREATE TABLE IF NOT EXISTS breakfast_settings (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  property_id INT NOT NULL,
+  property_id INT NOT NULL UNIQUE,
   is_served BOOLEAN NOT NULL DEFAULT FALSE,
   is_included BOOLEAN DEFAULT NULL,
   price DECIMAL(10,2) DEFAULT NULL,
