@@ -20,7 +20,7 @@ export class TaxesAndFeesController {
         return res.status(400).json(result.msg);
       }
 
-      return res.status(200).json(result.msg);
+      return res.status(200).json(result);
     } catch (err) {
       next(err);
     }
