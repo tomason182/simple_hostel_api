@@ -9,7 +9,7 @@ export class MySQLBreakfastAndMealsRepository {
         "SELECT * FROM breakfast_settings WHERE property_id = ? LIMIT 1";
       const params = [propertyId];
 
-      const [result] = this.mysqlPool.execute(query, params);
+      const [result] = await this.mysqlPool.execute(query, params);
 
       return result || [];
     } catch (err) {
