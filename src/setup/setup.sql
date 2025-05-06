@@ -378,14 +378,6 @@ CREATE TABLE IF NOT EXISTS property_plans (
   FOREIGN KEY (plan_id) REFERENCES plans(id) ON DELETE CASCADE
 );
 
--- Create table taxes settings
-CREATE TABLE IF NOT EXISTS taxes_settings (
-  property_id INT PRIMARY KEY,
-  embedded BOOLEAN NOT NULL DEFAULT TRUE,
-
-  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
-);
-
 -- Create taxes and fees table
 CREATE TABLE IF NOT EXISTS taxes_and_fees (
   id INT AUTO_INCREMENT PRIMARY KEY,
