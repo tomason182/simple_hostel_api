@@ -7,17 +7,6 @@ export class TaxesAndFeesInputPort {
     return this.taxesAndFeesService.getTaxesAndFees(propertyId);
   }
 
-  getTaxesAndFeesSetting(propertyId) {
-    return this.taxesAndFeesService.getTaxesAndFeesSetting(propertyId);
-  }
-
-  updateTaxesAndFeesSettings(propertyId, data) {
-    return this.taxesAndFeesService.updateTaxesAndFeesSettings(
-      propertyId,
-      data
-    );
-  }
-
   addNewTax(propertyId, tax) {
     return this.taxesAndFeesService.addNewTax(propertyId, tax);
   }

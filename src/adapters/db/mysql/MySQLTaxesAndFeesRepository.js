@@ -30,7 +30,7 @@ export class MySQLTaxesAndFeesRepository {
 
       const [result] = await this.mysqlPool.execute(query, params);
 
-      return result;
+      return result.insertId || 0;
     } catch (err) {
       throw new Error(`Unable to add new tax. Error: ${err.message}`);
     }
@@ -43,6 +43,8 @@ export class MySQLTaxesAndFeesRepository {
       const params = [taxId, propertyId];
 
       const [result] = await this.mysqlPool.execute(query, params);
+
+      return result.affectedRows || 0;
     } catch (err) {
       throw new Error(`Unable to delete tax. Error: ${err.message}`);
     }

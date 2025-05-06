@@ -1,5 +1,5 @@
 import express from "express";
-import { checkSchema, body } from "express-validator";
+import { checkSchema, param } from "express-validator";
 import { taxesAndFeesSchema } from "../schemas/taxesAndFeesSchema.js";
 import { createTokenService } from "../../config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
@@ -18,23 +18,6 @@ export function createTaxesRoutes(services) {
     taxesController.getTaxesAndFees
   );
 
-  // Get taxes setting
-  router.get(
-    "/settings",
-    authMiddleware(tokenService),
-    taxesController.getTaxesAndFeesSettings
-  );
-
-  // Update taxes settings
-  router.put(
-    "/settings",
-    authMiddleware(tokenService),
-    body("embedded")
-      .isBoolean()
-      .withMessage("Embedded setting must be boolean"),
-    taxesController.updateTaxesAndFeesSetting
-  );
-
   // Add a new tax
   router.post(
     "/",
@@ -44,6 +27,12 @@ export function createTaxesRoutes(services) {
   );
 
   // Delete tax
+  router.delete(
+    "/:id",
+    authMiddleware(tokenService),
+    param("id").isInt().withMessage("Invalid taxID"),
+    taxesController.deleteTax
+  );
 
   return router;
 }
