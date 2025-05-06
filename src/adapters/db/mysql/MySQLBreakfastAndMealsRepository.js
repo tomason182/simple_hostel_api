@@ -11,7 +11,7 @@ export class MySQLBreakfastAndMealsRepository {
 
       const [result] = await this.mysqlPool.execute(query, params);
 
-      return result || [];
+      return result[0] || null;
     } catch (err) {
       throw new Error(
         `An error occurred trying to get breakfast settings. Error: ${err.message}`

@@ -8,7 +8,15 @@ export class BreakfastAndMealsService {
       const result =
         await this.breakfastAndMealsOutputPort.getBreakfastSettings(propertyId);
 
-      // If result is [] then breakfast is not included.
+      // If result is null return default breakfast settings
+      if (result === null) {
+        return {
+          property_id: propertyId,
+          is_served: 0,
+          is_included: 0,
+          price: "",
+        };
+      }
 
       return result;
     } catch (err) {
