@@ -2,7 +2,7 @@ import express from "express";
 import { checkSchema } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
-import { breakfastSchema } from "../schemas/breakfastSchemaAndMealsSchema.js";
+import { breakfastSchema } from "../schemas/breakfastAndMealsSchema.js";
 
 export function createBreakfastAndMealsRoutes(services) {
   const router = express.Router();
@@ -13,16 +13,18 @@ export function createBreakfastAndMealsRoutes(services) {
 
   // Get breakfast settings
   router.get(
-    "/breakfast-and-meals/breakfast",
+    "/breakfast",
     authMiddleware(tokenService),
     breakfastAndMealsController.getBreakfastSettings
   );
 
   // Update breakfast settings
   router.post(
-    "/breakfast-and-meals/breakfast",
+    "/breakfast",
     authMiddleware(tokenService),
     checkSchema(breakfastSchema),
     breakfastAndMealsController.updateBreakfastSettings
   );
+
+  return router;
 }

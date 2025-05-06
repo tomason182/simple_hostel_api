@@ -1,4 +1,4 @@
-export class breakfastAndMealsInputPort {
+export class BreakfastAndMealsInputPort {
   constructor(breakfastAndMealsService) {
     this.breakfastAndMealsService = breakfastAndMealsService;
   }
