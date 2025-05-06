@@ -20,6 +20,7 @@ import { createRatesAndAvailabilityRoutes } from "./adapters/api/routes/ratesAnd
 import { createReservationRoutes } from "./adapters/api/routes/reservationRoutes.js";
 import { createImagesRoutes } from "./adapters/api/routes/imagesRoutes.js";
 import { createTaxesRoutes } from "./adapters/api/routes/taxesAndFeesRoutes.js";
+import { createBreakfastAndMealsRoutes } from "./adapters/api/routes/breakfastAndMealsRoutes.js";
 
 // Disable console.log in production
 if (process.env.NODE_ENV === "production") {
@@ -98,6 +99,10 @@ export async function createApp(services) {
   app.use("/api/v2/data-provider", fetchDataProvider(services));
   app.use("/api/v2/images", createImagesRoutes(services));
   app.use("/api/v2/taxes", createTaxesRoutes(services));
+  app.use(
+    "/api/v2/breakfast-and-meals",
+    createBreakfastAndMealsRoutes(services)
+  );
 
   // Static files
   app.use(

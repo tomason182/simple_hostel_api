@@ -391,6 +391,19 @@ CREATE TABLE IF NOT EXISTS taxes_and_fees (
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
+-- Create table breakfast_settings
+CREATE TABLE IF NOT EXISTS breakfast_settings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  property_id INT NOT NULL UNIQUE,
+  is_served BOOLEAN NOT NULL DEFAULT FALSE,
+  is_included BOOLEAN DEFAULT NULL,
+  price DECIMAL(10,2) DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;

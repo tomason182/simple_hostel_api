@@ -13,6 +13,7 @@ import { MySQLAmenitiesRepository } from "../adapters/db/mysql/MySQLAmenitiesRep
 import { MySQLFacilitiesRepository } from "../adapters/db/mysql/MySQLFacilitiesRepository.js";
 import { MySQLImagesRepository } from "../adapters/db/mysql/MySQLImagesRepository.js";
 import { MySQLTaxesAndFeesRepository } from "../adapters/db/mysql/MySQLTaxesAndFeesRepository.js";
+import { MySQLBreakfastAndMealsRepository } from "../adapters/db/mysql/MySQLBreakfastAndMealsRepository.js";
 
 // SERVICES
 import { AvailabilityService } from "../core/AvailabilityService.js";
@@ -25,6 +26,7 @@ import { UserCompositeService } from "../core/UserCompositeService.js";
 import { RatesAndAvailabilityService } from "../core/RatesAndAvailabilityService.js";
 import { RoomTypeService } from "../core/RoomTypeService.js";
 import { TaxesAndFeesService } from "../core/TaxesAndFeesServices.js";
+import { BreakfastAndMealsService } from "../core/BreakfastAndMealsService.js";
 
 // PORTS
 import { AvailabilityTransactionManagerPort } from "../core/ports/AvailabilityTransactionManagerPort.js";
@@ -46,6 +48,8 @@ import { UserTransactionManagerPort } from "../core/ports/UserTransactionManager
 import { ImagesInputPort } from "../core/ports/ImagesInputPort.js";
 import { TaxesAndFeesInputPort } from "../core/ports/TaxesAndFeesInputPort.js";
 import { TaxesAndFeesOutputPort } from "../core/ports/TaxesAndFeesOutputPort.js";
+import { BreakfastAndMealsInputPort } from "../core/ports/BreakfastAndMealsInputPort.js";
+import { BreakfastAndMealsOutputPort } from "../core/ports/BreakfastAndMealsOutputPort.js";
 
 // Import nodemailer email notification service
 import { createEmailNotification } from "../adapters/config/nodemailerConfig.js";
@@ -64,6 +68,7 @@ import { RatesAndAvailabilityController } from "../adapters/api/controllers/Rate
 import { ReservationController } from "../adapters/api/controllers/ReservationController.js";
 import { ImagesController } from "../adapters/api/controllers/ImagesController.js";
 import { TaxesAndFeesController } from "../adapters/api/controllers/TaxesAndFeesController.js";
+import { BreakfastAndMealsController } from "../adapters/api/controllers/BreakfastAndMealsController.js";
 
 export default function initializeServices() {
   const mysqlPool = mysqlConnect.getPool();
@@ -81,6 +86,9 @@ export default function initializeServices() {
   const facilitiesRepository = new MySQLFacilitiesRepository(mysqlPool);
   const imagesRepository = new MySQLImagesRepository(mysqlPool);
   const taxesAndFeesRepository = new MySQLTaxesAndFeesRepository(mysqlPool);
+  const breakfastAndMealsRepository = new MySQLBreakfastAndMealsRepository(
+    mysqlPool
+  );
 
   // INITIALIZE EXTRA SERVICES.
   const emailService = createEmailNotification();
@@ -135,6 +143,10 @@ export default function initializeServices() {
     taxesAndFeesRepository
   );
 
+  const breakfastAndMealsOutputPort = new BreakfastAndMealsOutputPort(
+    breakfastAndMealsRepository
+  );
+
   // Initialize the core services
   const propertyService = new PropertyService(propertyOutputPort);
   const userService = new UserService(userOutputPort);
@@ -148,6 +160,9 @@ export default function initializeServices() {
   );
   const roomTypeService = new RoomTypeService(roomTypeOutputPort);
   const taxesAndFeesService = new TaxesAndFeesService(taxesAndFeesOutputPort);
+  const breakfastAndMealsService = new BreakfastAndMealsService(
+    breakfastAndMealsOutputPort
+  );
 
   // Initialize transaction manager port
   const userTransactionManagerPort = new UserTransactionManagerPort(
@@ -209,6 +224,9 @@ export default function initializeServices() {
   const imagesInputPort = new ImagesInputPort(imagesRepository);
 
   const taxesAndFeesInputPort = new TaxesAndFeesInputPort(taxesAndFeesService);
+  const breakfastAndMealsInputPort = new BreakfastAndMealsInputPort(
+    breakfastAndMealsService
+  );
 
   // Initialize controllers
   const bookEngineController = new BookEngineController(bookEngineInputPort);
@@ -224,6 +242,9 @@ export default function initializeServices() {
   const taxesAndFeesController = new TaxesAndFeesController(
     taxesAndFeesInputPort
   );
+  const breakfastAndMealsController = new BreakfastAndMealsController(
+    breakfastAndMealsInputPort
+  );
 
   return {
     bookEngineController,
@@ -236,5 +257,6 @@ export default function initializeServices() {
     imagesController,
     dataProviderService,
     taxesAndFeesController,
+    breakfastAndMealsController,
   };
 }
