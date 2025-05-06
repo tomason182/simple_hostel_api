@@ -53,11 +53,13 @@ export class TaxesAndFeesController {
         return res.status(400).json(errors.array());
       }
 
+      const propertyId = req.user.property_id;
       // data = {embedded = true || embedded = false }
       const data = matchedData(req);
 
       const result = await this.taxesAnFeesInputPort.updateTaxesAndFeesSettings(
-        embedded
+        propertyId,
+        data
       );
 
       if (result.status === "error") {
@@ -79,12 +81,31 @@ export class TaxesAndFeesController {
       if (!errors.isEmpty()) {
         return res.status(400).json(errors.array());
       }
-
+      const propertyId = req.user.property_id;
+      // tax =  { name: string, type: percentage || fixed, value: number, per: booking || night || guest}
       const tax = matchedData(req);
 
-      console.log(tax);
+      const result = await this.taxesAnFeesInputPort(propertyId, tax);
 
-      return res.status(200).json("ok");
+      return res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  // @desc  Delete tax
+  // @route DELETE /api/v2/taxes/:id
+  // @access Private
+  deleteTax = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+      const propertyId = req.user.property_id;
+      const { id } = matchedData(req);
+
+      const result = await this.taxesAnFeesInputPort.deleteTax(propertyId, id);
     } catch (err) {
       next(err);
     }
