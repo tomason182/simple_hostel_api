@@ -42,6 +42,9 @@ export const taxesAndFeesSchema = {
   per: {
     in: ["body"],
     optional: true,
-    isIn: [["booking", "night", "guest"]],
+    isIn: {
+      options: [["booking", "night", "guest"]],
+    },
+    errorMessage: "Tax per must be one of booking, night or guest",
   },
 };
