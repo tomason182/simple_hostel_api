@@ -308,17 +308,31 @@ export class MySQLReservationRepository {
   async updateReservation(reservation, conn) {
     try {
       const reservationId = reservation.getId();
-      // Update reservation dates
-      const queryReservation =
-        "UPDATE reservations SET check_in = ?, check_out = ?, advance_payment_amount = ? WHERE id = ?";
-      const paramsReservation = [
-        reservation.getCheckIn(),
-        reservation.getCheckOut(),
-        reservation.getAdvancePaymentAmount(),
-        reservationId,
-      ];
+      const paymentStatus = reservation.getPaymentStatus();
 
-      await conn.execute(queryReservation, paramsReservation);
+      // Update reservation dates
+      if (paymentStatus === "pending") {
+        const queryReservation =
+          "UPDATE reservations SET check_in = ?, check_out = ?, advance_payment_amount = ? WHERE id = ?";
+        const paramsReservation = [
+          reservation.getCheckIn(),
+          reservation.getCheckOut(),
+          reservation.getAdvancePaymentAmount(),
+          reservationId,
+        ];
+
+        await conn.execute(queryReservation, paramsReservation);
+      } else if (paymentStatus === "partial") {
+        const queryReservation =
+          "UPDATE reservations SET check_in = ?, check_out = ? WHERE id = ?";
+        const paramsReservation = [
+          reservation.getCheckIn(),
+          reservation.getCheckOut(),
+          reservationId,
+        ];
+
+        await conn.execute(queryReservation, paramsReservation);
+      }
 
       // Update reservation amount
       const selectedRooms = reservation.getSelectedRooms();
