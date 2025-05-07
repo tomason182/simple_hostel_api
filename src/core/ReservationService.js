@@ -286,10 +286,37 @@ export class ReservationService {
         conn
       );
 
+      const paymentStatus = reservation.getPaymentStatus();
+      const reservationStatus = reservation.getReservationStatus();
+      console.log("Payment status: ", paymentStatus);
+      console.log("Reservation status: ", reservationStatus);
+
+      // Si estado de la reserva es Canceled or no-show No se permite cambiar fechas.
+      if (reservationStatus === "canceled" || reservationStatus === "no_show") {
+        return {
+          status: "error",
+          msg: "CHANGE_RESERVATION_DATES_POLICY",
+        };
+      }
+      // Si el estado del pago es PAID, no se pueden actualizar las fechas.
+      if (paymentStatus === "paid") {
+        return {
+          status: "error",
+          msg: "CANNOT_UPDATE_FULLY_PAID_RESERVATION",
+        };
+      }
+
+      if (paymentStatus === "refunded") {
+        return {
+          status: "error",
+          msg: "CANNOT_UPDATE_REFUNDED_RESERVATION",
+        };
+      }
+
       reservation.setCheckIn(newCheckIn);
       reservation.setCheckOut(newCheckOut);
 
-      // Necesitamos el politica de pago por adelantado de la propiedad
+      // Necesitamos la politica de pago por adelantado de la propiedad
       const advancePaymentPolicy =
         await this.reservationOutport.getAdvancePaymentPolicy(propertyId, conn);
 
@@ -307,8 +334,7 @@ export class ReservationService {
         };
       }
 
-      // Cuando se actualizan fechas si actualiza tambien el monto total y de deposito.
-      // Deberia comprobar que si el deposito ya fue pagado NO SE ACTUALICE.
+      // Cuando se actualizan fechas se actualiza tambien el monto total y de deposito.
       const result = await this.reservationOutport.updateReservation(
         reservation,
         conn
