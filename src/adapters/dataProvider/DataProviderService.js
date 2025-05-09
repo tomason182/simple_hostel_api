@@ -1,3 +1,4 @@
+import { response } from "express";
 import { validationResult, matchedData } from "express-validator";
 
 export class DataProviderService {
@@ -103,6 +104,51 @@ export class DataProviderService {
       const [result] = await this.mysqlPool.execute(query, params);
 
       return res.status(200).json(result[0] || null);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  locationSearch = async (req, res, next) => {
+    try {
+      const { q, lang } = req.params;
+      if (!q || q.trim().length < 2) {
+        return res.status(400).json({
+          status: "error",
+          msg: "QUERY_TOO_SHORT",
+        });
+      }
+
+      const acceptedLanguages = ["es", "en"];
+
+      if (!acceptedLanguages.includes(lang)) {
+        return res.status(400).json({
+          status: "error",
+          msg: "INVALID_LANGUAGE_CODE",
+        });
+      }
+
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+        q
+      )}&format=json&addressdetails=1&limit=5&accept-language=${lang}`;
+
+      const result = await fetch(url, {
+        method: "GET",
+        headers: {
+          "User-Agent": "simplehostel.net (support@simplehostel.net)",
+        },
+      });
+
+      if (!result.ok) {
+        return res.status(400).json({
+          status: "error",
+          msg: "LOCATION_API_ERROR",
+        });
+      }
+
+      const data = await result.json();
+
+      return res.status(200).json(data);
     } catch (e) {
       next(e);
     }
