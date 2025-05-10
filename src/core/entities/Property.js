@@ -35,7 +35,6 @@ export class Property {
       lat,
       lon,
       osm_id,
-      osm_type,
     };
     this.contact_info = {
       phone_number,
