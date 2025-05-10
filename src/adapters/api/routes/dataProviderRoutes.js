@@ -36,7 +36,10 @@ export function fetchDataProvider(services) {
   );
 
   // Get locations data
-  router.get("/location-search/:q.:lang", dataProviderService.locationSearch);
+  router.get(
+    "/location-search/lat/:lat/lon/:lon/lang/:lang",
+    dataProviderService.locationSearch
+  );
 
   return router;
 }

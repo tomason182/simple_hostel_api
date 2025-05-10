@@ -1,4 +1,3 @@
-import { response } from "express";
 import { validationResult, matchedData } from "express-validator";
 
 export class DataProviderService {
@@ -111,11 +110,14 @@ export class DataProviderService {
 
   locationSearch = async (req, res, next) => {
     try {
-      const { q, lang } = req.params;
-      if (!q || q.trim().length < 2) {
+      const { lat, lon, lang } = req.params;
+
+      console.log(lat, lon, lang);
+
+      if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
         return res.status(400).json({
-          status: "error",
-          msg: "QUERY_TOO_SHORT",
+          error: "status",
+          msg: "INVALID_COORDINATES",
         });
       }
 
@@ -128,9 +130,7 @@ export class DataProviderService {
         });
       }
 
-      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-        q
-      )}&format=json&addressdetails=1&limit=5&accept-language=${lang}`;
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&accept-language=${lang}&zoom=18`;
 
       const result = await fetch(url, {
         method: "GET",
