@@ -49,7 +49,7 @@ export class MySQLReservationRepository {
       const beds = reservation.getBeds();
       if (beds.length > 0) {
         const setBedsQuery = `INSERT INTO assigned_beds (reservation_id, bed_id) VALUES ${beds
-          .maps(() => "(?,?)")
+          .map(() => "(?,?)")
           .join(", ")}`;
 
         const bedsParams = beds.flatMap(bedId => [reservation.getId(), bedId]);
