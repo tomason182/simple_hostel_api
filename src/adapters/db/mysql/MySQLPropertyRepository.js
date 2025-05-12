@@ -120,12 +120,18 @@ export class MySQLPropertyRepository {
       await conn.beginTransaction();
 
       const addressQuery =
-        "UPDATE addresses SET alpha_2_code = ?, street = ?, city = ?, postal_code = ? WHERE property_id = ?";
+        "UPDATE addresses SET house_number = ?, street = ?, city = ?, postal_code = ?, state = ?, country = ?, alpha_2_code = ?, lat = ?, lon = ?, osm_id = ? WHERE property_id = ?";
       const addressParams = [
-        property.getAlpha2Code(),
+        property.getHouseNumber(),
         property.getStreet(),
         property.getCity(),
         property.getPostalCode(),
+        property.getState(),
+        property.getCountry(),
+        property.getAlpha2Code(),
+        property.getLat(),
+        property.getLon(),
+        property.getOsmId(),
         property.getId(),
       ];
 
