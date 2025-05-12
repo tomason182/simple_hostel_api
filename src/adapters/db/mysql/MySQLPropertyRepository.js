@@ -26,13 +26,19 @@ export class MySQLPropertyRepository {
 
       // Insert property address in addresses table
       const addressQuery =
-        "INSERT INTO addresses (property_id, street, city, postal_code, alpha_2_code) VALUES(?,?,?,?,?)";
+        "INSERT INTO addresses (property_id, house_number, street, city, postal_code, state, country, alpha_2_code, lat, lon, osm_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
       const addressParams = [
         property.getId(),
+        property.getHouseNumber(),
         property.getStreet(),
         property.getCity(),
         property.getPostalCode(),
+        property.getState(),
+        property.getCountry(),
         property.getAlpha2Code(),
+        property.getLat(),
+        property.getLon(),
+        property.getOsmId(),
       ];
 
       await connection.execute(addressQuery, addressParams);
@@ -67,7 +73,7 @@ export class MySQLPropertyRepository {
 
   async findPropertyDetails(id, conn = null) {
     const query =
-      "SELECT properties.id as id, properties.property_name, properties.created_at, properties.updated_at, contacts_info.phone_number, contacts_info.country_code ,contacts_info.email, addresses.street, addresses.city, addresses.postal_code, addresses.alpha_2_code, currencies.base_currency, currencies.payment_currency FROM properties JOIN contacts_info ON contacts_info.property_id = properties.id JOIN addresses ON addresses.property_id = properties.id JOIN currencies ON currencies.property_id = properties.id WHERE properties.id = ? LIMIT 1";
+      "SELECT properties.id as id, properties.property_name, properties.created_at, properties.updated_at, contacts_info.phone_number, contacts_info.country_code ,contacts_info.email, addresses.house_number, addresses.street, addresses.city, addresses.postal_code, addresses.state, addresses.country, addresses.alpha_2_code, addresses.lat, addresses.lon, addresses.osm_id, currencies.base_currency, currencies.payment_currency FROM properties JOIN contacts_info ON contacts_info.property_id = properties.id JOIN addresses ON addresses.property_id = properties.id JOIN currencies ON currencies.property_id = properties.id WHERE properties.id = ? LIMIT 1";
     const params = [id];
     const [result] = await (conn || this.pool).execute(query, params);
 
@@ -114,43 +120,45 @@ export class MySQLPropertyRepository {
     }
   }
 
-  async updatePropertyDetails(property) {
-    const conn = await this.pool.getConnection();
+  async updateCurrencies(propertyId, baseCurrency, paymentCurrency) {
     try {
-      await conn.beginTransaction();
+      const query =
+        "UPDATE currencies SET base_currency = ?, payment_currency = ? WHERE property_id = ?";
+      const params = [baseCurrency, paymentCurrency, propertyId];
 
+      await this.pool.execute(query, params);
+
+      return { msg: "Property currencies updated successfully" };
+    } catch (err) {
+      throw new Error(`An error occurred trying to update property currencies`);
+    }
+  }
+
+  async updatePropertyDetails(property) {
+    try {
       const addressQuery =
-        "UPDATE addresses SET alpha_2_code = ?, street = ?, city = ?, postal_code = ? WHERE property_id = ?";
+        "UPDATE addresses SET house_number = ?, street = ?, city = ?, postal_code = ?, state = ?, country = ?, alpha_2_code = ?, lat = ?, lon = ?, osm_id = ? WHERE property_id = ?";
       const addressParams = [
-        property.getAlpha2Code(),
+        property.getHouseNumber(),
         property.getStreet(),
         property.getCity(),
         property.getPostalCode(),
+        property.getState(),
+        property.getCountry(),
+        property.getAlpha2Code(),
+        property.getLat(),
+        property.getLon(),
+        property.getOsmId(),
         property.getId(),
       ];
 
-      await conn.execute(addressQuery, addressParams);
-
-      const currenciesQuery =
-        "UPDATE currencies SET base_currency = ?, payment_currency = ? WHERE property_id = ?";
-      const currenciesParams = [
-        property.getBaseCurrency(),
-        property.getPaymentCurrency(),
-        property.getId(),
-      ];
-
-      await conn.execute(currenciesQuery, currenciesParams);
-
-      conn.commit();
+      await this.pool.execute(addressQuery, addressParams);
 
       return { msg: "Property information updated successfully" };
     } catch (e) {
-      conn.rollback();
       throw new Error(
         `An error occurred trying to update property details. Error: ${e.message}`
       );
-    } finally {
-      conn.release();
     }
   }
 

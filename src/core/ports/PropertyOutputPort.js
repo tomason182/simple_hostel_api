@@ -111,4 +111,13 @@ export class PropertyOutputPort {
   getPropertyFacilities(propertyId) {
     return this.facilitiesRepository.getPropertyFacilities(propertyId);
   }
+
+  // Currencies
+  updateCurrencies(propertyId, baseCurrency, paymentCurrency) {
+    return this.propertyRepository.updateCurrencies(
+      propertyId,
+      baseCurrency,
+      paymentCurrency
+    );
+  }
 }

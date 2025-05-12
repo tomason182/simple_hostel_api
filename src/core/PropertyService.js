@@ -66,6 +66,20 @@ export class PropertyService {
     }
   }
 
+  async updateCurrencies(propertyId, baseCurrency, paymentCurrency) {
+    try {
+      const result = await this.propertyOutputPort.updateCurrencies(
+        propertyId,
+        baseCurrency,
+        paymentCurrency
+      );
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getPropertyPolicies(propertyId) {
     try {
       const policiesResult = await this.propertyOutputPort.getPropertyPolicies(

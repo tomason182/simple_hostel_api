@@ -1,5 +1,5 @@
 import express from "express";
-import { param } from "express-validator";
+import { param, query } from "express-validator";
 
 export function fetchDataProvider(services) {
   const router = express.Router();
@@ -33,6 +33,12 @@ export function fetchDataProvider(services) {
   router.get(
     "/properties/advance-payment-policy/:id",
     dataProviderService.propertyAdvancePaymentPolicy
+  );
+
+  // Get locations data
+  router.get(
+    "/location-search/lat/:lat/lon/:lon/lang/:lang",
+    dataProviderService.locationSearch
   );
 
   return router;

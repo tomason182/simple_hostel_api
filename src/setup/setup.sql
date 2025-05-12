@@ -40,10 +40,16 @@ CREATE TABLE IF NOT EXISTS access_control (
 CREATE TABLE IF NOT EXISTS addresses (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
+  house_number VARCHAR(10),
   street VARCHAR(255),
   city VARCHAR(255),
-  postal_code INT(20),
+  postal_code VARCHAR(10),
+  state VARCHAR(255),
+  country VARCHAR(56),
   alpha_2_code VARCHAR(2),
+  lat DECIMAL(9,6),
+  lon DECIMAL(9,6),
+  osm_id VARCHAR(20),
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 

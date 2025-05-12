@@ -51,7 +51,7 @@ export class PropertyController {
   };
 
   // @desc    Update a property details
-  // @route   PUT /api/v2/properties/update
+  // @route   PUT /api/v2/properties/update/location
   // @access  Private
   updatePropertyDetails = async (req, res, next) => {
     try {
@@ -64,17 +64,46 @@ export class PropertyController {
       const propertyId = req.user.property_id;
 
       const propertyData = {
+        alpha_2_code: data.alpha_2_code || null,
+        country: data.country || null,
+        state: data.state || null,
         street: data.street || null,
+        house_number: data.house_number || null,
         city: data.city || null,
         postal_code: data.postal_code || null,
-        alpha_2_code: data.alpha_2_code || null,
-        base_currency: data.base_currency,
-        payment_currency: data.payment_currency || null,
+        lat: data.lat || null,
+        lon: data.lon || null,
+        osm_id: data.osm_id || null,
       };
 
       const result = await this.propertyInputPort.updatePropertyDetails(
         propertyId,
         propertyData
+      );
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc    Update a property currencies
+  // @route   PUT /api/v2/properties/update/currencies
+  // @access  Private
+  updateCurrencies = async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors.array());
+      }
+
+      const propertyId = req.user.property_id;
+      const { base_currency, payment_currency } = matchedData(req);
+
+      const result = await this.propertyInputPort.updateCurrencies(
+        propertyId,
+        base_currency,
+        payment_currency
       );
 
       return res.status(200).json(result);

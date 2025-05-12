@@ -107,4 +107,51 @@ export class DataProviderService {
       next(e);
     }
   };
+
+  locationSearch = async (req, res, next) => {
+    try {
+      const { lat, lon, lang } = req.params;
+
+      console.log(lat, lon, lang);
+
+      if (isNaN(parseFloat(lat)) || isNaN(parseFloat(lon))) {
+        return res.status(400).json({
+          error: "status",
+          msg: "INVALID_COORDINATES",
+        });
+      }
+
+      const acceptedLanguages = ["es", "en"];
+
+      if (!acceptedLanguages.includes(lang)) {
+        return res.status(400).json({
+          status: "error",
+          msg: "INVALID_LANGUAGE_CODE",
+        });
+      }
+
+      //const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&accept-language=${lang}&zoom=18`;
+      const url = `https://us1.locationiq.com/v1/reverse?key=pk.e6f0bb8b6ba727b6317df480bd5bfe51&lat=${lat}&lon=${lon}&format=json&`;
+
+      const result = await fetch(url, {
+        method: "GET",
+        headers: {
+          "User-Agent": "simplehostel.net (support@simplehostel.net)",
+        },
+      });
+
+      if (!result.ok) {
+        return res.status(400).json({
+          status: "error",
+          msg: "LOCATION_API_ERROR",
+        });
+      }
+
+      const data = await result.json();
+
+      return res.status(200).json(data);
+    } catch (e) {
+      next(e);
+    }
+  };
 }

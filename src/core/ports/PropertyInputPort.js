@@ -54,4 +54,13 @@ export class PropertyInputPort {
   getPropertyFacilities(propertyId) {
     return this.propertyService.getPropertyFacilities(propertyId);
   }
+
+  // Currencies
+  updateCurrencies(propertyId, baseCurrency, paymentCurrency) {
+    return this.propertyService.updateCurrencies(
+      propertyId,
+      baseCurrency,
+      paymentCurrency
+    );
+  }
 }

@@ -4,7 +4,8 @@ import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
 import {
   contactDetailsSchema,
-  propertyInfoSchema,
+  locationSchema,
+  currenciesSchema,
 } from "../schemas/propertySchema.js";
 import {
   reservationPoliciesSchema,
@@ -30,10 +31,18 @@ export function createPropertyRoutes(services) {
 
   // Update property details
   router.put(
-    "/update/property-info",
+    "/update/location",
     authMiddleware(tokenService),
-    checkSchema(propertyInfoSchema),
+    checkSchema(locationSchema),
     propertyController.updatePropertyDetails
+  );
+
+  // Update property currencies
+  router.put(
+    "/update/currencies",
+    authMiddleware(tokenService),
+    checkSchema(currenciesSchema),
+    propertyController.updateCurrencies
   );
 
   // Update property contact info
