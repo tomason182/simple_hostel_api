@@ -120,15 +120,11 @@ export class MySQLPropertyRepository {
     }
   }
 
-  async updatePropertyCurrencies(property) {
+  async updateCurrencies(propertyId, baseCurrency, paymentCurrency) {
     try {
       const query =
         "UPDATE currencies SET base_currency = ?, payment_currency = ? WHERE property_id = ?";
-      const params = [
-        property.getBaseCurrency(),
-        property.getPaymentCurrency(),
-        property.getId(),
-      ];
+      const params = [baseCurrency, paymentCurrency, propertyId];
 
       await this.pool.execute(query, params);
 
