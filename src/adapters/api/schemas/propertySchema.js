@@ -152,17 +152,21 @@ export const locationSchema = {
     isDecimal: {
       options: {
         force_decimal: false,
-        decimal_digits: 6,
+        decimal_digits: "1,6",
       },
     },
-    errorMessage: "latitude must be a decimal number of 6 digits",
+    errorMessage: "latitude must be a decimal number up to 6 digits",
+    toFloat: true,
   },
   lon: {
     in: ["body"],
     isDecimal: {
-      force_decimal: false,
-      decimal_digits: 6,
+      options: {
+        force_decimal: false,
+        decimal_digits: "1,6",
+      },
     },
+    errorMessage: "longitude must be a decimal number up t 6 digits",
   },
   osm_id: {
     in: ["body"],
