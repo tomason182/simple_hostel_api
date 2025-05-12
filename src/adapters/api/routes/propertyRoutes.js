@@ -30,7 +30,7 @@ export function createPropertyRoutes(services) {
 
   // Update property details
   router.put(
-    "/update/property-info",
+    "/update/location",
     authMiddleware(tokenService),
     checkSchema(locationSchema),
     propertyController.updatePropertyDetails
