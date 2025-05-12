@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS addresses (
   house_number VARCHAR(10),
   street VARCHAR(255),
   city VARCHAR(255),
-  postal_code INT(20),
+  postal_code VARCHAR(10),
   state VARCHAR(255),
   country VARCHAR(56),
   alpha_2_code VARCHAR(2),
