@@ -13,7 +13,6 @@ export class Property {
     lat = null,
     lon = null,
     osm_id = null,
-    osm_type = null,
     country_code = null,
     phone_number = null,
     email = null,
@@ -68,11 +67,6 @@ export class Property {
     return this.property_name;
   }
 
-  // Getter and Setter for alpha code
-  getAlpha2Code() {
-    return this.address.alpha_2_code;
-  }
-
   // Getter and Setter phone number
   setPhoneNumber(phone_number) {
     this.contact_info.phone_number = phone_number;
@@ -109,6 +103,10 @@ export class Property {
     this.address.street = street;
   }
 
+  getHouseNumber() {
+    return this.address.house_number;
+  }
+
   // Getter and Setter for city
   getCity() {
     return this.address.city;
@@ -125,6 +123,31 @@ export class Property {
 
   setPostalCode(postal_code) {
     this.address.postal_code = postal_code;
+  }
+
+  // Getter ans Setter for location
+  getAlpha2Code() {
+    return this.address.alpha_2_code;
+  }
+
+  getLat() {
+    return this.address.lat;
+  }
+
+  getLon() {
+    return this.address.lon;
+  }
+
+  getOsmId() {
+    return this.address.osm_id;
+  }
+
+  getState() {
+    return this.address.state;
+  }
+
+  getCountry() {
+    return this.address.country;
   }
 
   // Setter for currencies
