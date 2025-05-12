@@ -130,7 +130,8 @@ export class DataProviderService {
         });
       }
 
-      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&accept-language=${lang}&zoom=18`;
+      //const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1&accept-language=${lang}&zoom=18`;
+      const url = `https://us1.locationiq.com/v1/reverse?key=pk.e6f0bb8b6ba727b6317df480bd5bfe51&lat=${lat}&lon=${lon}&format=json&`;
 
       const result = await fetch(url, {
         method: "GET",
