@@ -26,13 +26,19 @@ export class MySQLPropertyRepository {
 
       // Insert property address in addresses table
       const addressQuery =
-        "INSERT INTO addresses (property_id, street, city, postal_code, alpha_2_code) VALUES(?,?,?,?,?)";
+        "INSERT INTO addresses (property_id, house_number, street, city, postal_code, state, country, alpha_2_code, lat, lon, osm_id) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
       const addressParams = [
         property.getId(),
+        property.getHouseNumber(),
         property.getStreet(),
         property.getCity(),
         property.getPostalCode(),
+        property.getState(),
+        property.getCountry(),
         property.getAlpha2Code(),
+        property.getLat(),
+        property.getLon(),
+        property.getOsmId(),
       ];
 
       await connection.execute(addressQuery, addressParams);
