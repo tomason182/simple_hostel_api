@@ -7,7 +7,6 @@ export class Property {
     state = null,
     city = null,
     postal_code = null,
-    house_number = null,
     street = null,
     house_number = null,
     lat = null,
