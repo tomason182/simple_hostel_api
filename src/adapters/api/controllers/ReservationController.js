@@ -23,7 +23,7 @@ export class ReservationController {
         last_name: data.lastName,
         id_number: data.idNumber || null,
         email: data.email,
-        phone_number: data.phoneNumber || null,
+        phone_number: (data.phoneCode || null) + (data.phoneNumber || null),
         street: data.street || null,
         city: data.city || null,
         country_code: data.countryCode || null,
