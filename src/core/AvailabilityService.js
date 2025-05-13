@@ -40,7 +40,7 @@ export class AvailabilityService {
       if (ratesAndAvailabilityRanges.length === 0) {
         return {
           status: "error",
-          msg: "No rates and availabilities created",
+          msg: "NO_RATES_CREATED",
         };
       }
 

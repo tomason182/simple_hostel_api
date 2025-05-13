@@ -336,6 +336,8 @@ export class UserService {
         propertyId
       );
 
+      console.log(userExist);
+
       if (userExist === null) {
         return {
           status: "error",
