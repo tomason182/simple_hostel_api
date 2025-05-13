@@ -71,6 +71,15 @@ export const reservationSchema = {
       errorMessage: "invalid phone number",
     },
   },
+  phoneCode: {
+    in: ["body"],
+    optional: true,
+    trim: true,
+    matches: {
+      options: [/^\+[0-9]{1,3}$/],
+      errorMessage: "Invalid phone code. Must be like +61 or +549",
+    },
+  },
   city: {
     in: ["body"],
     optional: true,
