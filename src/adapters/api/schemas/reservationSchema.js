@@ -276,6 +276,17 @@ export const reservationSchema = {
       errorMessage: "Special request maximum length is 500 characters",
     },
   },
+  sendEmail: {
+    in: ["body"],
+    exists: {
+      bail: true,
+      errorMessage: "Send email is required",
+    },
+    isBoolean: {
+      bail: true,
+      errorMessage: "Send email must be boolean.",
+    },
+  },
 };
 
 export const findReservationsByDatesAndName = {
