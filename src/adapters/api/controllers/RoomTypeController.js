@@ -33,6 +33,10 @@ export class RoomTypeController {
         roomTypeData
       );
 
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
+
       return res.status(200).json(result);
     } catch (err) {
       next(err);
@@ -104,6 +108,10 @@ export class RoomTypeController {
         roomTypeData,
         propertyId
       );
+
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
 
       return res.status(200).json(result);
     } catch (err) {
