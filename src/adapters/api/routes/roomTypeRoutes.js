@@ -2,6 +2,7 @@ import express from "express";
 import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
 import {
   roomTypeSchema,
   updateRoomTypeSchema,
@@ -19,6 +20,7 @@ export function createRoomTypeRoutes(services) {
   router.post(
     "/create",
     authMiddleware(tokenService),
+    checkPermission("create_room_type"),
     checkSchema(roomTypeSchema),
     roomTypeController.roomTypeCreate
   );
@@ -42,6 +44,7 @@ export function createRoomTypeRoutes(services) {
   router.put(
     "/update/:id",
     authMiddleware(tokenService),
+    checkPermission("update_room_type"),
     checkSchema(updateRoomTypeSchema),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     roomTypeController.roomTypeUpdate
@@ -51,6 +54,7 @@ export function createRoomTypeRoutes(services) {
   router.delete(
     "/delete/:id",
     authMiddleware(tokenService),
+    checkPermission("delete_room_type"),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     roomTypeController.roomTypeDelete
   );
