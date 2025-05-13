@@ -165,7 +165,11 @@ export class RoomTypeController {
         data
       );
 
-      res.status(200).json(result);
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
+
+      return res.status(200).json(result);
     } catch (e) {
       next(e);
     }

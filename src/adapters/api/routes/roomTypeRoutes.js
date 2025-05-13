@@ -65,6 +65,7 @@ export function createRoomTypeRoutes(services) {
     checkSchema(amenitiesSchema),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     authMiddleware(tokenService),
+    checkPermission("edit_amenities"),
     roomTypeController.addAmenities
   );
 
