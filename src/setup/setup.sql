@@ -337,7 +337,7 @@ CREATE TABLE IF NOT EXISTS property_images (
 CREATE TABLE IF NOT EXISTS features (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(50) NOT NULL,
-  price DECIMAL(10,2) NOT NULL,
+  price DECIMAL(10,2) NOT NULL
 );
 
 -- Create property_features table
@@ -357,7 +357,7 @@ CREATE TABLE IF NOT EXISTS property_features (
 CREATE TABLE IF NOT EXISTS plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(20) NOT NULL,
-  price DECIMAL(10,2) NOT NULL,
+  price DECIMAL(10,2) NOT NULL
 );
 
 -- Create plan_features
@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS plan_features (
   FOREIGN KEY (feature_id) REFERENCES features(id) ON DELETE CASCADE
 );
 
---Create table property_plans
+-- Create table property_plans
 CREATE TABLE IF NOT EXISTS property_plans (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
