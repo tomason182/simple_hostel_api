@@ -2,10 +2,8 @@ import express from "express";
 import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
-import {
-  ratesAndAvailabilitySchema,
-  checkAvailabilitySchema,
-} from "../schemas/ratesAndAvailabilitySchema.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
+import { ratesAndAvailabilitySchema } from "../schemas/ratesAndAvailabilitySchema.js";
 
 export function createRatesAndAvailabilityRoutes(service) {
   const router = express.Router();
@@ -18,8 +16,9 @@ export function createRatesAndAvailabilityRoutes(service) {
   // @access Private
   router.post(
     "/create",
-    authMiddleware(tokenService),
     checkSchema(ratesAndAvailabilitySchema),
+    authMiddleware(tokenService),
+    checkPermission("create_rates_availability"),
     ratesAndAvailabilityController.createNewRange
   );
 
@@ -61,14 +60,14 @@ export function createRatesAndAvailabilityRoutes(service) {
   // @desc Check Availability
   // @route POST /api/v2/rates-and-availability/check
   // @access Private
-  // @ NO ESTA EN UNO. SE UTILIZA GET/reservations/check-availability/:check_in-:check-out
+  // @ NO ESTA EN USO. SE UTILIZA GET/reservations/check-availability/:check_in-:check-out
   // @Ambas devuelven lo mismo
-  router.post(
+  /*   router.post(
     "/check-availability",
     authMiddleware(tokenService),
     checkSchema(checkAvailabilitySchema),
     ratesAndAvailabilityController.checkAvailability
-  );
+  ); */
 
   return router;
 }
