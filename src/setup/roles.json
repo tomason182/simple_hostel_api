@@ -21,6 +21,11 @@
         "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
+        "update_location",
+        "update_currencies",
+        "update_contact_info",
+        "update_policies",
+        "update_facilities",
         "delete_guest",
         "update_breakfast"
       ]
@@ -45,6 +50,11 @@
         "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
+        "update_location",
+        "update_currencies",
+        "update_contact_info",
+        "update_policies",
+        "update_facilities",
         "delete_guest",
         "update_breakfast"
       ]
