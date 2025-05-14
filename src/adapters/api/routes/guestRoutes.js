@@ -13,6 +13,7 @@ export function createGuestRoutes(services) {
   // @desc    Create a new Guest
   // @route   POST /api/v1/guests/create
   // @access  Private
+  // Parece que esta ruta esta en desuso, pero puede ser usada para agregar huespedes a reserva.
   router.post(
     "/create",
     authMiddleware(tokenService),
@@ -23,12 +24,13 @@ export function createGuestRoutes(services) {
   // @desc    Create a new Guest from website
   // @route   POST /api/v1/guests/new
   // @access  Publica
-  router.post(
+  // Esto no deberia ser de utilidad porque el huesped se crea junto con la reserva.
+  /*   router.post(
     "/new/:id",
     checkSchema(guestSchema),
     param("id").trim().isInt().withMessage("Invalid ID param"),
     guestController.createGuestFromWeb
-  );
+  ); */
 
   // @desc    Update an specific guest
   // @route   PUT /api/v1/guests/update/:id
