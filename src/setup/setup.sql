@@ -410,6 +410,18 @@ CREATE TABLE IF NOT EXISTS breakfast_settings (
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
 
+-- Create table upgrade_request
+CREATE TABLE IF NOT EXISTS upgrade_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  property_id INT NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  status VARCHAR(10) NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (property_id) REFERENCES properties(id)
+);
+
 -- PROCEDURES
 -- Create procedure for handle rates and availability insertions
 DROP PROCEDURE IF EXISTS InsertOrUpdateRate;
