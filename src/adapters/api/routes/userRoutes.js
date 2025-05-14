@@ -145,5 +145,13 @@ export function createUserRoutes(services) {
     userController.getAllPropertyUsers
   );
 
+  // Upgrade Plan request
+  router.get(
+    "/upgrade-request",
+    authMiddleware(tokenService),
+    checkPermission("request-upgrade"),
+    userController.requestUpgrade
+  );
+
   return router;
 }

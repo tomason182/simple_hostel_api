@@ -89,4 +89,9 @@ export class UserInputPort {
   getAllPropertyUsers(propertyId) {
     return this.userService.getAllPropertyUsers(propertyId);
   }
+
+  // Request upgrade
+  requestUpgrade(userId, propertyId) {
+    return this.userService.requestUpgrade(userId, propertyId);
+  }
 }

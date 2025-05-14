@@ -24,7 +24,8 @@
         "delete_guest",
         "update_breakfast",
         "add_tax",
-        "delete_tax"
+        "delete_tax",
+        "request-upgrade"
       ]
     },
     {
@@ -50,7 +51,8 @@
         "delete_guest",
         "update_breakfast",
         "add_tax",
-        "delete_tax"
+        "delete_tax",
+        "request-upgrade"
       ]
     },
     {

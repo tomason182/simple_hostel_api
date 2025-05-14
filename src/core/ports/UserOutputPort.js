@@ -99,4 +99,16 @@ export class UserOutputPort {
   getPropertyName(propertyId) {
     return this.userRepository.getPropertyName(propertyId);
   }
+
+  findPropertyDetails(propertyId) {
+    return this.propertyRepository.findPropertyDetails(propertyId);
+  }
+
+  saveRequest(userId, propertyId, email, status) {
+    return this.userRepository.saveRequest(userId, propertyId, email, status);
+  }
+
+  findUpgradeRequest(propertyId) {
+    return this.userRepository.findUpgradeRequest(propertyId);
+  }
 }

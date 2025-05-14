@@ -517,4 +517,46 @@ export class UserService {
       throw e;
     }
   }
+
+  async requestUpgrade(userId, propertyId) {
+    try {
+      // Check if property already request and upgrade.
+      const hasRequest = await this.userOutputPort.findUpgradeRequest(
+        propertyId
+      );
+
+      if (hasRequest !== null) {
+        return {
+          status: "error",
+          msg: "ALREADY_REQUEST",
+        };
+      }
+      // Get property contact info
+      const contactInfo = await this.userOutputPort.findPropertyDetails(
+        propertyId
+      );
+
+      // Save the request in the database
+      const status = "pending";
+      await this.userOutputPort.saveRequest(
+        userId,
+        propertyId,
+        contactInfo.email,
+        status
+      );
+
+      const to = contactInfo.email;
+      const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;
+      const subject = "Account Upgrade Request";
+      const body = `<p>${contactInfo.property_name} request an account upgrade. Property email is: ${contactInfo.email} and phone number is: ${contactInfo.country_code}-${contactInfo.phone_number}</p>`;
+
+      await this.userOutputPort.sendEmail(to, subject, body, from);
+      return {
+        status: "ok",
+        msg: "EMAIL_SENT",
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
 }

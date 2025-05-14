@@ -256,4 +256,36 @@ export class MySQLUserRepository {
       );
     }
   }
+
+  async saveRequest(userId, propertyId, email, status) {
+    try {
+      const query =
+        "INSERT INTO upgrade_requests (user_id, property_id, email, status) VALUES (?,?,?,?)";
+      const params = [userId, propertyId, email, status];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return { insertId: result.insertId };
+    } catch (err) {
+      throw new Error(
+        `An error occurred trying to save upgrade request. Error: ${err.message}`
+      );
+    }
+  }
+
+  async findUpgradeRequest(propertyId) {
+    try {
+      const query =
+        "SELECT * FROM upgrade_requests WHERE property_id = ? LIMIT 1";
+      const params = [propertyId];
+
+      const [result] = await this.pool.execute(query, params);
+
+      return result[0] || null;
+    } catch (err) {
+      throw new Error(
+        `An error occurred trying to get find upgrade request. Error: ${err.message}`
+      );
+    }
+  }
 }
