@@ -14,11 +14,6 @@
         "update_room_type",
         "delete_room_type",
         "edit_amenities",
-        "create_reservation",
-        "update_reservation_status",
-        "update_reservation_payment",
-        "update_reservation_info",
-        "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
         "update_location",
@@ -27,7 +22,9 @@
         "update_policies",
         "update_facilities",
         "delete_guest",
-        "update_breakfast"
+        "update_breakfast",
+        "add_tax",
+        "delete_tax"
       ]
     },
     {
@@ -43,11 +40,6 @@
         "update_room_type",
         "delete_room_type",
         "edit_amenities",
-        "create_reservation",
-        "update_reservation_status",
-        "update_reservation_payment",
-        "update_reservation_info",
-        "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
         "update_location",
@@ -56,21 +48,14 @@
         "update_policies",
         "update_facilities",
         "delete_guest",
-        "update_breakfast"
+        "update_breakfast",
+        "add_tax",
+        "delete_tax"
       ]
     },
     {
       "name": "employee",
-      "permissions": [
-        "update_profile",
-        "update_password",
-        "read_room_type",
-        "create_reservation",
-        "update_reservation_status",
-        "update_reservation_payment",
-        "update_reservation_info",
-        "update_reservation_date_guest"
-      ]
+      "permissions": ["update_profile", "update_password", "read_room_type"]
     }
   ]
 }

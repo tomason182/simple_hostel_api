@@ -3,6 +3,7 @@ import { checkSchema, param } from "express-validator";
 import { taxesAndFeesSchema } from "../schemas/taxesAndFeesSchema.js";
 import { createTokenService } from "../../config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
 
 export function createTaxesRoutes(services) {
   const router = express.Router();
@@ -21,16 +22,18 @@ export function createTaxesRoutes(services) {
   // Add a new tax
   router.post(
     "/",
-    authMiddleware(tokenService),
     checkSchema(taxesAndFeesSchema),
+    authMiddleware(tokenService),
+    checkPermission("add_tax"),
     taxesController.addNewTax
   );
 
   // Delete tax
   router.delete(
     "/:id",
-    authMiddleware(tokenService),
     param("id").isInt().withMessage("Invalid taxID"),
+    authMiddleware(tokenService),
+    checkPermission("delete_tax"),
     taxesController.deleteTax
   );
 
