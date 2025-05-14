@@ -345,9 +345,13 @@ CREATE TABLE IF NOT EXISTS property_features (
   id INT AUTO_INCREMENT PRIMARY KEY,
   property_id INT NOT NULL,
   feature_id INT NOT NULL,
-  enabled BOOLEAN NOT NULL,
+  expires_at DATETIME,
+  graceful_until DATETIME,
+  type ENUM("trial", "paid") NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  UNIQUE (property_id, feature_id),
 
   FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE,
   FOREIGN KEY (feature_id) REFERENCES features(id) ON DELETE CASCADE
