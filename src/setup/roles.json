@@ -21,7 +21,8 @@
         "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
-        "delete_guest"
+        "delete_guest",
+        "update_breakfast"
       ]
     },
     {
@@ -44,7 +45,8 @@
         "update_reservation_date_guest",
         "create_rates_availability",
         "update_property",
-        "delete_guest"
+        "delete_guest",
+        "update_breakfast"
       ]
     },
     {
