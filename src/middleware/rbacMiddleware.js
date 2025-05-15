@@ -8,15 +8,16 @@ function getPermissionByRoleName(roleName) {
 
 
 export default function checkPermission (permission) {
-    return async(req, res, next) => {
-      const userRole = await userOutputPort.findUserRole(req.user);
+    return (req, res, next) => {
+
+      const userRole = req.user.role
       const userPermission = getPermissionByRoleName(userRole);
 
       if(userPermission.includes(permission)) {
         return next();
       } else {
         res.status(403);
-        throw new Error("Access denied")
+        throw new Error("ACCESS_DENIED")
       }
     }  
 }

@@ -2,6 +2,7 @@ import express from "express";
 import { checkSchema, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
 import {
   contactDetailsSchema,
   locationSchema,
@@ -34,6 +35,7 @@ export function createPropertyRoutes(services) {
     "/update/location",
     authMiddleware(tokenService),
     checkSchema(locationSchema),
+    checkPermission("update_location"),
     propertyController.updatePropertyDetails
   );
 
@@ -41,6 +43,7 @@ export function createPropertyRoutes(services) {
   router.put(
     "/update/currencies",
     authMiddleware(tokenService),
+    checkPermission("update_currencies"),
     checkSchema(currenciesSchema),
     propertyController.updateCurrencies
   );
@@ -50,6 +53,7 @@ export function createPropertyRoutes(services) {
     "/update/contact-info",
     checkSchema(contactDetailsSchema),
     authMiddleware(tokenService),
+    checkPermission("update_contact_info"),
     propertyController.updateContactInfo
   );
 
@@ -65,6 +69,7 @@ export function createPropertyRoutes(services) {
     "/policies/reservations-policies",
     checkSchema(reservationPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.reservationsPolicies
   );
 
@@ -73,6 +78,7 @@ export function createPropertyRoutes(services) {
     "/policies/advance-payment-policies",
     checkSchema(advancePaymentPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.advancePaymentPolicies
   );
 
@@ -80,6 +86,7 @@ export function createPropertyRoutes(services) {
     "/policies/cancellation-policies",
     checkSchema(cancellationPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.cancellationPolicies
   );
 
@@ -88,6 +95,7 @@ export function createPropertyRoutes(services) {
     param("id").trim().isInt().withMessage("Invalid param ID").toInt(),
     checkSchema(cancellationPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.updateCancellationPolicies
   );
 
@@ -95,6 +103,7 @@ export function createPropertyRoutes(services) {
     "/policies/delete-cancellation-policies/:id",
     param("id").trim().isInt().withMessage("Invalid param ID").toInt(),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.deleteCancellationPolicies
   );
 
@@ -102,6 +111,7 @@ export function createPropertyRoutes(services) {
     "/policies/children-policies",
     checkSchema(childrenPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.childrenPolicies
   );
 
@@ -109,6 +119,7 @@ export function createPropertyRoutes(services) {
     "/policies/other-policies",
     checkSchema(otherPoliciesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_policies"),
     propertyController.otherPolicies
   );
 
@@ -117,6 +128,7 @@ export function createPropertyRoutes(services) {
     "/facilities",
     checkSchema(facilitiesSchema),
     authMiddleware(tokenService),
+    checkPermission("update_facilities"),
     propertyController.addOrUpdateFacilities
   );
 

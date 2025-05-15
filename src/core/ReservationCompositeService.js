@@ -69,7 +69,7 @@ export class ReservationCompositeService {
 
       if (
         reservation.getBookingSource() === "book-engine" ||
-        reservation.getBookingSource() === "direct"
+        guestData.sendEmail === true
       ) {
         const to = guest.getEmail();
         const from = `Simple Hostel <${process.env.ACCOUNT_USER}>`;

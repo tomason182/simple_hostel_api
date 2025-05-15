@@ -2,6 +2,7 @@ import express from "express";
 import { checkSchema } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
 import { breakfastSchema } from "../schemas/breakfastAndMealsSchema.js";
 
 export function createBreakfastAndMealsRoutes(services) {
@@ -22,6 +23,7 @@ export function createBreakfastAndMealsRoutes(services) {
   router.post(
     "/breakfast",
     authMiddleware(tokenService),
+    checkPermission("update_breakfast"),
     checkSchema(breakfastSchema),
     breakfastAndMealsController.updateBreakfastSettings
   );

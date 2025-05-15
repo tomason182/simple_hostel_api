@@ -28,6 +28,7 @@ export class ReservationController {
         city: data.city || null,
         country_code: data.countryCode || null,
         postal_code: data.postalCode || null,
+        sendEmail: data.sendEmail || false,
       };
 
       const reservationData = {

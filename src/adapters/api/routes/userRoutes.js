@@ -2,6 +2,7 @@ import express from "express";
 import { checkSchema, body, param } from "express-validator";
 import { createTokenService } from "../../../adapters/config/tokenConfig.js";
 import authMiddleware from "../../../middleware/authMiddleware.js";
+import checkPermission from "../../../middleware/rbacMiddleware.js";
 import {
   userRegistrationSchema,
   userLoginSchema,
@@ -55,6 +56,7 @@ export function createUserRoutes(services) {
   router.post(
     "/create",
     authMiddleware(tokenService),
+    checkPermission("create_user"),
     checkSchema(userEditSchema),
     body("role")
       .trim()
@@ -87,9 +89,11 @@ export function createUserRoutes(services) {
   );
 
   // update user account
+  // Esta ruta es de profile en settings. Para actualizar un usuario se usa la misma que para crearlo.
   router.put(
     "/profile",
     authMiddleware(tokenService),
+    checkPermission("update_profile"),
     checkSchema(userUpdateSchema),
     userController.updateUserProfile
   );
@@ -98,11 +102,14 @@ export function createUserRoutes(services) {
   router.delete(
     "/profile/delete/:id",
     authMiddleware(tokenService),
+    checkPermission("delete_profile"),
     param("id").trim().isInt().withMessage("Not a valid ID"),
     userController.deleteUserProfile
   );
 
   // Delete account
+  // PARA UN USUARIO NO ADMIN DEBERIA ELIMINAR AL USUARIO
+  // PARA ADMIN HAY QUE ESTUDIARLO.
   router.delete(
     "/accounts/delete/",
     authMiddleware(tokenService),
@@ -136,6 +143,14 @@ export function createUserRoutes(services) {
     "/all",
     authMiddleware(tokenService),
     userController.getAllPropertyUsers
+  );
+
+  // Upgrade Plan request
+  router.get(
+    "/upgrade-request",
+    authMiddleware(tokenService),
+    checkPermission("request-upgrade"),
+    userController.requestUpgrade
   );
 
   return router;

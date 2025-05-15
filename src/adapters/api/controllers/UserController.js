@@ -225,7 +225,7 @@ export class UserController {
   };
 
   // @desc    Logout a user
-  // @route   GET /api/v1/users/logout
+  // @route   GET /api/v2/users/logout
   // @access  Private
   logoutUser = (req, res, next) => {
     return res
@@ -253,7 +253,7 @@ export class UserController {
   };
 
   // @desc    Get user profile
-  // @route   GET /api/v1/users/profile/
+  // @route   GET /api/v2/users/profile/
   // @access  Private
   getUserProfile = async (req, res, next) => {
     try {
@@ -271,7 +271,7 @@ export class UserController {
   };
 
   // @desc    Update user profile
-  // @route   PUT /api/v1/users/profile/
+  // @route   PUT /api/v2/users/profile/
   // @access  Private
   updateUserProfile = async (req, res, next) => {
     try {
@@ -298,7 +298,7 @@ export class UserController {
   };
 
   // @desc    Delete user profile
-  // @route   DELETE /api/v1/users/profile/:id
+  // @route   DELETE /api/v2/users/profile/:id
   // @access  Private
   deleteUserProfile = async (req, res, next) => {
     try {
@@ -335,7 +335,7 @@ export class UserController {
   };
 
   // @desc    Delete account
-  // @route   DELETE /api/v1/users/account/delete/
+  // @route   DELETE /api/v2/users/account/delete/
   // @access  Private
   deleteUserAccount = async (req, res, next) => {
     try {
@@ -356,7 +356,7 @@ export class UserController {
   };
 
   // @desc    Update password
-  // @route   PUT /api/v1/users/profile/change-password
+  // @route   PUT /api/v2/users/profile/change-password
   // @access  Private
   updateUserPassword = async (req, res, next) => {
     try {
@@ -382,7 +382,7 @@ export class UserController {
   };
 
   // @desc    Reset password
-  // @route   POST /api/v1/users/reset-password/init-change-pass/
+  // @route   POST /api/v2/users/reset-password/init-change-pass/
   // @access  Public
   resetUserPassword = async (req, res, next) => {
     try {
@@ -405,7 +405,7 @@ export class UserController {
   };
 
   // @desc    Reset password last step
-  // @route   PUT /api/v1/users/reset-password/finish-pass-change/:token
+  // @route   PUT /api/v2/users/reset-password/finish-pass-change/:token
   // @access  Private
   resetUserPasswordLastStep = async (req, res, next) => {
     try {
@@ -433,13 +433,36 @@ export class UserController {
   };
 
   // @desc Get all property users
-  // @route GET /api/v1/users/all
+  // @route GET /api/v2/users/all
   // @access Private
   getAllPropertyUsers = async (req, res, next) => {
     try {
       const propertyId = req.user.property_id;
 
       const result = await this.userInputPort.getAllPropertyUsers(propertyId);
+
+      return res.status(200).json(result);
+    } catch (e) {
+      next(e);
+    }
+  };
+
+  // @desc Request upgrade
+  // @route GET /api/v2/users/upgrade-request
+  // @ access Private
+  requestUpgrade = async (req, res, next) => {
+    try {
+      const userId = req.user._id;
+      const propertyId = req.user.property_id;
+
+      const result = await this.userInputPort.requestUpgrade(
+        userId,
+        propertyId
+      );
+
+      if (result.status === "error") {
+        return res.status(400).json(result);
+      }
 
       return res.status(200).json(result);
     } catch (e) {
