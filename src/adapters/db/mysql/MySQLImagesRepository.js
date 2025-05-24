@@ -119,7 +119,7 @@ export class MySQLImagesRepository {
     }
   }
 
-  async deletePropertyImages(propertyId, imageId) {
+  async deletePropertyImage(propertyId, imageId) {
     const query =
       "DELETE FROM property_images WHERE id = ? AND property_id = ?";
     const params = [imageId, propertyId];

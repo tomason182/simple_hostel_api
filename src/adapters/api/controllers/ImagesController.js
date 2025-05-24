@@ -1,5 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
+import sharp from "sharp";
+import { rename, legend } from "../../../utils/stringHandler.js";
 
 export class ImagesController {
   constructor(imagesInputPort) {
@@ -32,9 +34,47 @@ export class ImagesController {
           .json({ msg: "Maximum amount of images reached" });
       }
 
-      const propertyId = req.user.property_id;
+      
+      const listMetadatas = await Promise.all(
+        files.map(file => sharp(file.buffer).metadata())
+      );
+      
+      let smallImageNames = "";
+      const rejectedList = [];
+      const rejectedIndexes = [];
+      listMetadatas.forEach((metadata, index) => {
+        if (metadata.height < 1000) {
+          rejectedList.push(files[index].originalname);
+          rejectedIndexes.push(index);
+          smallImageNames += files[index].originalname + ", ";
+        }
+      });
 
-      const filePaths = files.map(file => file.filename);
+      let msg = "All images are of the correct height";
+      if ((rejectedList.length !== 0) && (rejectedList.length === files.length)) {
+        msg = legend(smallImageNames);
+        return res.status(400).json({ msg: msg, rejected_images: rejectedList});
+      } else if (rejectedList.length !== 0) {
+        msg = legend(smallImageNames);
+      }
+
+      let route = "";
+      const filePaths = [];
+      for (let i=0; i < files.length; i++) {
+        if (!rejectedIndexes.includes(i)) {
+          const file_name = files[i].originalname;
+          const newName = rename(file_name);
+          route = path.join("public", "uploads", newName);
+          filePaths.push(newName);
+
+          await sharp(files[i].buffer)
+            .resize({ height: 960 })
+            .toFormat('webp')
+            .toFile(route);
+        };
+      };
+
+      const propertyId = req.user.property_id;
 
       const result = await this.imagesInputPort.saveRoomTypesImagesFilenames(
         propertyId,
@@ -42,17 +82,9 @@ export class ImagesController {
         filePaths
       );
 
-      return res.status(200).json(result);
+      return res.status(200).json({result: result, msg: msg, rejected_images: rejectedList});
     } catch (e) {
-      await Promise.all(
-        req.files.map(file =>
-          fs
-            .unlink(path.join("public", "uploads", file.filename))
-            .catch(err => {
-              console.error("Error deleting file: ", err);
-            })
-        )
-      );
+      console.log(e);
       next(e);
     }
   };
@@ -80,22 +112,52 @@ export class ImagesController {
           .json({ msg: "Maximum amount of images reached" });
       }
 
-      const filePaths = files.map(file => file.filename);
+      const listMetadatas = await Promise.all(
+        files.map(file => sharp(file.buffer).metadata())
+      );
+      
+      let smallImageNames = "";
+      const rejectedList = [];
+      const rejectedIndexes = [];
+      listMetadatas.forEach((metadata, index) => {
+        if (metadata.height < 1000) {
+          rejectedList.push(files[index].originalname);
+          rejectedIndexes.push(index);
+          smallImageNames += files[index].originalname + ", ";
+        }
+      });
 
-      const result = await this.imagesInputPort.savePropertyImages(
+      let msg = "All images are of the correct height";
+      if ((rejectedList.length !== 0) && (rejectedList.length === files.length)) {
+        msg = legend(smallImageNames);
+        return res.status(400).json({ msg: msg, rejected_images: rejectedList});
+      } else if (rejectedList.length !== 0) {
+        msg = legend(smallImageNames);
+      }
+
+      let route = "";
+      const filePaths = [];
+      for (let i=0; i < files.length; i++) {
+        if (!rejectedIndexes.includes(i)) {
+          const file_name = files[i].originalname;
+          const newName = rename(file_name);
+          route = path.join("public", "uploads", newName);
+          filePaths.push(newName);
+
+          await sharp(files[i].buffer)
+            .resize({ height: 960 })
+            .toFormat('webp')
+            .toFile(route);
+        };
+      };
+
+      const result = await this.imagesInputPort.savePropertyImagesFilenames(
         propertyId,
         filePaths
       );
 
-      return res.status(200).json(result);
+      return res.status(200).json({result: result, msg: msg, rejected_images: rejectedList});
     } catch (e) {
-      await Promise.all(
-        req.files
-          .map(file => fs.unlink(path.join("public", "uploads", file.filename)))
-          .catch(err => {
-            console.error("Error deleting file: ", err);
-          })
-      );
       next(e);
     }
   };
