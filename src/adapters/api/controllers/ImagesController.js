@@ -1,7 +1,8 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
 import path from "path";
 import sharp from "sharp";
-import { rename, legend } from "../../../utils/stringHandler.js";
+import { legend } from "../../../utils/stringHandler.js";
+import { Buffer } from "node:buffer";
 
 export class ImagesController {
   constructor(imagesInputPort) {
@@ -12,7 +13,7 @@ export class ImagesController {
   // @router  POST /api/v2/images/upload/room-types/:id
   // @access  Private
   uploadRoomTypeImages = async (req, res, next) => {
-    try {
+    try {      
       const roomTypeId = parseInt(req.params.id, 10);
       if (isNaN(roomTypeId)) {
         return res.status(400).json({ msg: "Invalid Room Type ID" });
@@ -34,55 +35,55 @@ export class ImagesController {
           .json({ msg: "Maximum amount of images reached" });
       }
 
-      
-      const listMetadatas = await Promise.all(
-        files.map(file => sharp(file.buffer).metadata())
-      );
-      
+      let filehandle;
+      const listRejectedImages = [];
+      const fileNames = [];
       let smallImageNames = "";
-      const rejectedList = [];
-      const rejectedIndexes = [];
-      listMetadatas.forEach((metadata, index) => {
+      let j = 0;
+      for (let i = 0; i < files.length; i++) {
+        const metadata = await sharp(files[i].path).metadata();
         if (metadata.height < 1000) {
-          rejectedList.push(files[index].originalname);
-          rejectedIndexes.push(index);
-          smallImageNames += files[index].originalname + ", ";
-        }
-      });
-
-      let msg = "All images are of the correct height";
-      if ((rejectedList.length !== 0) && (rejectedList.length === files.length)) {
-        msg = legend(smallImageNames);
-        return res.status(400).json({ msg: msg, rejected_images: rejectedList});
-      } else if (rejectedList.length !== 0) {
-        msg = legend(smallImageNames);
-      }
-
-      let route = "";
-      const filePaths = [];
-      for (let i=0; i < files.length; i++) {
-        if (!rejectedIndexes.includes(i)) {
-          const file_name = files[i].originalname;
-          const newName = rename(file_name);
-          route = path.join("public", "uploads", newName);
-          filePaths.push(newName);
-
-          await sharp(files[i].buffer)
+          const thirdDash = [...files[i].filename.matchAll(/-/g)][2].index;
+          const objRejectedImage = {originalname: files[i].filename.slice(thirdDash+1), originalindex: i};
+          listRejectedImages.push(objRejectedImage);
+          smallImageNames += listRejectedImages[j].originalname + ", ";
+          j++;
+        } else {
+          const newFilename = files[i].filename.substring(0, files[i].filename.lastIndexOf("."))+".webp";
+          const pathOfImagesUpload = path.join("public", "uploads", newFilename);
+          fileNames.push(newFilename);
+          filehandle = await fs.open(files[i].path, 'r');
+          const newBuffer = Buffer.alloc(files[i].size);
+          const readingObject = await filehandle.read( {buffer: newBuffer} );
+          //console.log(readingObject)
+          await sharp(readingObject.buffer)
             .resize({ height: 960 })
             .toFormat('webp')
-            .toFile(route);
-        };
+            .toFile(pathOfImagesUpload);
+
+          await filehandle.close();
+        }
+        await fs.unlink(files[i].path);
       };
+
+
+      let msg = "All images are of the correct height";
+      if ((listRejectedImages.length !== 0) && (listRejectedImages.length === files.length)) {
+        msg = legend(smallImageNames);
+        return res.status(400).json({ msg: msg, list_rejected_images: listRejectedImages});
+      } else if (listRejectedImages.length !== 0) {
+        msg = legend(smallImageNames);
+      }
 
       const propertyId = req.user.property_id;
 
       const result = await this.imagesInputPort.saveRoomTypesImagesFilenames(
         propertyId,
         roomTypeId,
-        filePaths
+        fileNames
       );
-
-      return res.status(200).json({result: result, msg: msg, rejected_images: rejectedList});
+      
+      return res.status(200).json({result: result, msg: msg, list_rejected_images: listRejectedImages});
     } catch (e) {
       console.log(e);
       next(e);
@@ -112,51 +113,53 @@ export class ImagesController {
           .json({ msg: "Maximum amount of images reached" });
       }
 
-      const listMetadatas = await Promise.all(
-        files.map(file => sharp(file.buffer).metadata())
-      );
-      
+
+      let filehandle;
+      const listRejectedImages = [];
+      const fileNames = [];
       let smallImageNames = "";
-      const rejectedList = [];
-      const rejectedIndexes = [];
-      listMetadatas.forEach((metadata, index) => {
+      let j = 0;
+      for (let i = 0; i < files.length; i++) {
+        const metadata = await sharp(files[i].path).metadata();
         if (metadata.height < 1000) {
-          rejectedList.push(files[index].originalname);
-          rejectedIndexes.push(index);
-          smallImageNames += files[index].originalname + ", ";
+          const thirdDash = [...files[i].filename.matchAll(/-/g)][2].index;
+          const objRejectedImage = {originalname: files[i].filename.slice(thirdDash+1), originalindex: i};
+          listRejectedImages.push(objRejectedImage);
+          smallImageNames += listRejectedImages[j].originalname + ", ";
+          j++;
+        } else {
+          const newFilename = files[i].filename.substring(0, files[i].filename.lastIndexOf("."))+".webp";
+          const pathOfImagesUpload = path.join("public", "uploads", newFilename);
+          fileNames.push(newFilename);
+          filehandle = await fs.open(files[i].path, 'r');
+          const newBuffer = Buffer.alloc(files[i].size);
+          const readingObject = await filehandle.read( {buffer: newBuffer} );
+          //console.log(readingObject)
+          await sharp(readingObject.buffer)
+            .resize({ height: 960 })
+            .toFormat('webp')
+            .toFile(pathOfImagesUpload);
+
+          await filehandle.close();
         }
-      });
+        await fs.unlink(files[i].path);
+      };
+
 
       let msg = "All images are of the correct height";
-      if ((rejectedList.length !== 0) && (rejectedList.length === files.length)) {
+      if ((listRejectedImages.length !== 0) && (listRejectedImages.length === files.length)) {
         msg = legend(smallImageNames);
-        return res.status(400).json({ msg: msg, rejected_images: rejectedList});
-      } else if (rejectedList.length !== 0) {
+        return res.status(400).json({ msg: msg, list_rejected_images: listRejectedImages});
+      } else if (listRejectedImages.length !== 0) {
         msg = legend(smallImageNames);
       }
 
-      let route = "";
-      const filePaths = [];
-      for (let i=0; i < files.length; i++) {
-        if (!rejectedIndexes.includes(i)) {
-          const file_name = files[i].originalname;
-          const newName = rename(file_name);
-          route = path.join("public", "uploads", newName);
-          filePaths.push(newName);
-
-          await sharp(files[i].buffer)
-            .resize({ height: 960 })
-            .toFormat('webp')
-            .toFile(route);
-        };
-      };
-
       const result = await this.imagesInputPort.savePropertyImagesFilenames(
         propertyId,
-        filePaths
+        fileNames
       );
 
-      return res.status(200).json({result: result, msg: msg, rejected_images: rejectedList});
+      return res.status(200).json({result: result, msg: msg, list_rejected_images: listRejectedImages});
     } catch (e) {
       next(e);
     }
